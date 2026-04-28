@@ -652,7 +652,70 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
 .settings-card-title{font-family:var(--fmono);font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .settings-card-title::after{content:'';flex:1;height:1px;background:var(--border2)}
 .adm-save-bar{display:flex;justify-content:flex-end;padding:16px 0 4px;border-top:1px solid var(--border2);margin-top:20px}
+/* ── IPTV VIEW ── */
+.iptv-shell{flex:1;display:flex;flex-direction:column;min-height:0;background:var(--bg)}
+.iptv-body{flex:1;display:flex;min-height:0;overflow:hidden}
+.iptv-sidebar{width:270px;flex-shrink:0;display:flex;flex-direction:column;background:var(--bg2);border-right:1px solid var(--border2);min-height:0;overflow:hidden}
+.iptv-sidebar-head{flex-shrink:0;padding:14px 14px 10px;border-bottom:1px solid var(--border2)}
+.iptv-sidebar-title{font-family:var(--fmono);font-size:.62rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.iptv-s-wrap{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border2);border-radius:3px;padding:0 8px}
+.iptv-s-wrap:focus-within{border-color:var(--gold)}
+.iptv-s-wrap input{flex:1;background:none;border:none;color:var(--cream);font-family:var(--fr);font-size:.82rem;outline:none;padding:7px 0}
+.iptv-s-wrap input::placeholder{color:var(--muted)}
+.iptv-groups{display:flex;gap:4px;flex-wrap:wrap;padding:8px 12px 6px;flex-shrink:0;border-bottom:1px solid var(--border);max-height:76px;overflow-y:auto}
+.iptv-gc{font-family:var(--fmono);font-size:.55rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border:1px solid var(--border);border-radius:2px;background:none;color:var(--muted);cursor:pointer;transition:all .12s;white-space:nowrap}
+.iptv-gc:hover{color:var(--cream2);border-color:var(--border2)}
+.iptv-gc.on{color:var(--gold);border-color:var(--gold);background:rgba(201,146,42,.08)}
+.iptv-ch-list{flex:1;overflow-y:auto}
+.iptv-ch{display:flex;align-items:center;gap:10px;padding:7px 12px;cursor:pointer;transition:background .1s;border-left:3px solid transparent}
+.iptv-ch:hover{background:rgba(255,255,255,.035)}
+.iptv-ch.on{background:rgba(201,146,42,.07);border-left-color:var(--gold)}
+.iptv-ch-logo{width:38px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:2px;overflow:hidden}
+.iptv-ch-logo img{width:100%;height:100%;object-fit:contain}
+.iptv-ch-logo-ph{font-size:.9rem;opacity:.3}
+.iptv-ch-info{min-width:0;flex:1}
+.iptv-ch-name{font-family:var(--fs);font-size:.82rem;font-weight:700;color:var(--cream);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2}
+.iptv-ch.on .iptv-ch-name{color:var(--gold-l)}
+.iptv-ch-grp{font-family:var(--fmono);font-size:.56rem;color:var(--muted);letter-spacing:.5px;margin-top:1px}
+.iptv-ch-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px rgba(201,146,42,.8);flex-shrink:0;display:none}
+.iptv-ch.on .iptv-ch-dot{display:block}
+.iptv-grp-sep{font-family:var(--fmono);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--amber);padding:10px 12px 3px;font-weight:700;border-top:1px solid var(--border);margin-top:4px}
+.iptv-grp-sep:first-child{border-top:none;margin-top:0}
+.iptv-ch-empty{padding:24px 14px;font-family:var(--fmono);font-size:.7rem;color:var(--muted);line-height:1.8;text-align:center}
+.iptv-player{flex:1;position:relative;background:#000;min-width:0}
+#iptv-video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
+.iptv-state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.iptv-state-ico{font-size:5rem;opacity:.15}
+.iptv-state-txt{font-family:var(--fs);font-size:1.2rem;font-weight:700;color:var(--border2);letter-spacing:1px}
+.iptv-state-sub{font-family:var(--fmono);font-size:.65rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;text-align:center;line-height:1.8}
+.iptv-spinner{width:44px;height:44px;border:3px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:iptvspin .8s linear infinite}
+@keyframes iptvspin{to{transform:rotate(360deg)}}
+.iptv-err-msg{font-family:var(--fmono);font-size:.78rem;color:#d9635a;letter-spacing:.5px;text-align:center;max-width:420px;line-height:1.7;padding:0 24px}
+.iptv-nowbar{flex-shrink:0;display:flex;align-items:center;gap:14px;padding:9px 18px;background:var(--bg2);border-top:2px solid var(--border2);min-height:56px}
+.iptv-now-logo{width:48px;height:34px;object-fit:contain;flex-shrink:0;border-radius:2px}
+.iptv-now-info-wrap{flex:1;min-width:0}
+.iptv-now-name{font-family:var(--fs);font-size:1rem;font-weight:800;color:var(--white);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1}
+.iptv-now-grp{font-family:var(--fmono);font-size:.6rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px}
+.iptv-vol-wrap{display:flex;align-items:center;gap:8px;font-family:var(--fmono);font-size:.62rem;color:var(--muted);flex-shrink:0}
+.iptv-vol-wrap input[type=range]{width:90px;accent-color:var(--gold)}
+.iptv-nowbar-empty{font-family:var(--fmono);font-size:.72rem;color:var(--muted);letter-spacing:.5px;display:flex;align-items:center;gap:10px}
+.iptv-src-methods{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.iptv-src-card{background:var(--bg);border:1px solid var(--border2);border-radius:4px;padding:14px 16px}
+.iptv-src-title{font-family:var(--fmono);font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.iptv-adm-cnt{font-family:var(--fmono);font-size:.68rem;color:var(--muted);letter-spacing:1px}
+.iptv-adm-list{display:flex;flex-direction:column;gap:3px;max-height:420px;overflow-y:auto;border:1px solid var(--border);border-radius:3px;background:var(--bg);padding:4px;margin-top:8px}
+.iptv-adm-ch{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:2px;transition:background .1s}
+.iptv-adm-ch:hover{background:var(--bg2)}
+.iptv-adm-tgl{width:32px;height:17px;border-radius:9px;background:var(--border2);border:none;cursor:pointer;position:relative;flex-shrink:0;transition:background .2s}
+.iptv-adm-tgl.on{background:var(--gold-d)}
+.iptv-adm-tgl::after{content:'';position:absolute;width:11px;height:11px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .2s}
+.iptv-adm-tgl.on::after{left:18px}
+.iptv-adm-logo{width:32px;height:22px;object-fit:contain;flex-shrink:0;border-radius:2px;background:var(--bg3)}
+.iptv-adm-name{flex:1;font-family:var(--fs);font-size:.85rem;font-weight:700;color:var(--cream);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.iptv-adm-grp{font-family:var(--fmono);font-size:.58rem;color:var(--muted);letter-spacing:1px;white-space:nowrap;min-width:80px;text-transform:uppercase}
+.iptv-adm-url{font-family:var(--fmono);font-size:.56rem;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.5}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
 </head>
 <body class="theme-a">
 <nav id="nav">
@@ -660,6 +723,7 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
   <div class="tabs">
     <button class="tab on" id="t-tv"   onclick="sw('tv')">📺 TV Меню</button>
     <button class="tab"    id="t-list" onclick="sw('list')">📋 Список</button>
+    <button class="tab"    id="t-iptv" onclick="sw('iptv')">📡 IPTV</button>
     <button class="tab"    id="t-led"  onclick="swLed()">🔴 Сповіщення</button>
     <button class="tab"    id="t-adm"  onclick="sw('adm')">⚙ Адмін</button>
   </div>
@@ -723,6 +787,54 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
   </div>
 </div>
 
+<!-- IPTV VIEW -->
+<div class="view" id="iptv-view">
+  <div class="iptv-shell">
+    <div class="iptv-body">
+      <div class="iptv-sidebar">
+        <div class="iptv-sidebar-head">
+          <div class="iptv-sidebar-title">📡 Канали</div>
+          <div class="iptv-s-wrap">
+            <span style="color:var(--muted);font-size:.82rem">🔍</span>
+            <input type="text" placeholder="Пошук каналу…" oninput="iptvSearchFn(this.value)">
+          </div>
+        </div>
+        <div class="iptv-groups" id="iptv-groups"></div>
+        <div class="iptv-ch-list" id="iptv-ch-list">
+          <div class="iptv-ch-empty">Завантажте M3U<br>у <b>Адмін → IPTV</b></div>
+        </div>
+      </div>
+      <div class="iptv-player">
+        <video id="iptv-video" autoplay playsinline></video>
+        <div class="iptv-state" id="iptv-state-empty">
+          <div class="iptv-state-ico">📡</div>
+          <div class="iptv-state-txt">Оберіть канал</div>
+          <div class="iptv-state-sub">зі списку ліворуч</div>
+        </div>
+        <div class="iptv-state" id="iptv-state-loading" style="display:none">
+          <div class="iptv-spinner"></div>
+        </div>
+        <div class="iptv-state" id="iptv-state-error" style="display:none">
+          <div style="font-size:3rem;opacity:.3">⚠️</div>
+          <div class="iptv-err-msg" id="iptv-err-msg">Не вдалося завантажити потік.</div>
+          <button class="btn btn-g sm" style="pointer-events:all" onclick="iptvRetry()">↺ Повторити</button>
+        </div>
+      </div>
+    </div>
+    <div class="iptv-nowbar">
+      <div class="iptv-nowbar-empty" id="iptv-bar-empty">📡 Немає каналів — завантажте M3U у <b style="color:var(--cream2)">Адмін → IPTV</b></div>
+      <div id="iptv-bar-playing" style="display:none;width:100%;align-items:center;gap:14px">
+        <div id="iptv-bar-logo"></div>
+        <div class="iptv-now-info-wrap">
+          <div class="iptv-now-name" id="iptv-bar-name">—</div>
+          <div class="iptv-now-grp" id="iptv-bar-grp">—</div>
+        </div>
+        <div class="iptv-vol-wrap">🔊 <input type="range" min="0" max="1" step="0.05" value="1" oninput="iptvVol(this.value)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- LED OVERLAY -->
 <div id="led">
   <div class="led-head">
@@ -760,6 +872,7 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
     <button class="adm-tab" data-tab="settings" onclick="admTab('settings')"><span class="adm-tab-ico">⚙️</span>Налаштування</button>
     <button class="adm-tab" data-tab="notify" onclick="admTab('notify')"><span class="adm-tab-ico">🔴</span>Сповіщення</button>
     <button class="adm-tab" data-tab="data" onclick="admTab('data')"><span class="adm-tab-ico">📊</span>Дані</button>
+    <button class="adm-tab" data-tab="iptv" onclick="admTab('iptv')"><span class="adm-tab-ico">📡</span>IPTV</button>
   </div>
 
   <!-- ══ TAB: MENU ══ -->
@@ -931,6 +1044,50 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
     </div>
   </div>
 
+  <!-- ══ TAB: IPTV ══ -->
+  <div class="adm-pane" id="adm-iptv">
+    <div class="sec">📡 IPTV — Завантаження плейлиста</div>
+    <div class="box">
+      <div class="iptv-src-methods">
+        <div class="iptv-src-card">
+          <div class="iptv-src-title">🔗 URL M3U</div>
+          <div class="fg">
+            <label class="lbl">Посилання на M3U / M3U8</label>
+            <div style="display:flex;gap:6px">
+              <input class="inp" id="iptv-url-inp" placeholder="http://…/playlist.m3u" style="flex:1">
+              <button class="btn btn-p sm" onclick="iptvLoadUrl()">Завантажити</button>
+            </div>
+          </div>
+        </div>
+        <div class="iptv-src-card">
+          <div class="iptv-src-title">📁 Файл M3U</div>
+          <div class="fg">
+            <label class="lbl">Виберіть файл з диску</label>
+            <label class="btn btn-g sm" style="cursor:pointer;display:inline-flex">
+              <input type="file" accept=".m3u,.m3u8" onchange="iptvLoadFile(this)" style="display:none">
+              📂 Обрати файл
+            </label>
+          </div>
+        </div>
+      </div>
+      <div id="iptv-adm-status" style="font-family:var(--fmono);font-size:.7rem;color:var(--muted);margin-bottom:10px;min-height:18px"></div>
+      <div id="iptv-adm-list-wrap" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:10px">
+          <div class="iptv-adm-cnt" id="iptv-adm-cnt">0 каналів</div>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-g sm" onclick="iptvToggleAll(true)">Увімкнути всі</button>
+            <button class="btn btn-g sm" onclick="iptvToggleAll(false)">Вимкнути всі</button>
+            <button class="btn btn-d sm" onclick="iptvClearAll()">🗑 Очистити</button>
+          </div>
+        </div>
+        <div class="iptv-adm-list" id="iptv-adm-list"></div>
+        <div style="text-align:right;margin-top:10px">
+          <button class="btn btn-p" onclick="iptvSave()">💾 Зберегти</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 </div>
 
@@ -1085,7 +1242,7 @@ async function load(){
   try{const r=await stGet('pb:g');if(r)gv=JSON.parse(r.value)}catch{}
   try{const r=await stGet('pb:l');if(r){const d=JSON.parse(r.value);ledMsgs=d.msgs||ledMsgs;ledSpeed=d.speed||ledSpeed}}catch{}
   try{const r=await stGet('pb:d');if(r){slideDur=+r.value;const e=document.getElementById('s-dur'),v=document.getElementById('s-dv'),te=document.getElementById('tw-dur'),tv=document.getElementById('tw-dv');if(e)e.value=slideDur;if(v)v.textContent=slideDur+' с';if(te)te.value=slideDur;if(tv)tv.textContent=slideDur+' с'}}catch{}
-  applyTheme();applySettings();renderAll();
+  applyTheme();applySettings();renderAll();iptvLoadFromStorage();
 }
 const persist=()=>stSet('pb:b',JSON.stringify(beers));
 const persS=()=>stSet('pb:s',JSON.stringify(settings));
@@ -1155,6 +1312,7 @@ function admTab(name){
   document.querySelector(`.adm-tab[data-tab="${name}"]`).classList.add('on');
   document.getElementById('adm-'+name).classList.add('on');
   document.getElementById('adm-view').scrollTop=0;
+  if(name==='iptv')iptvRenderAdm();
 }
 
 // ── VIEW SWITCHING ──
@@ -1165,6 +1323,7 @@ function sw(v){
   document.getElementById('t-'+v).classList.add('on');
   if(v==='tv'){ltStopAll();renderTV();startAuto()}
   if(v==='list'){stopAuto();renderList()}
+  if(v==='iptv'){stopAuto();ltStopAll();iptvRender();}
   if(v==='adm'){stopAuto();ltStopAll();admTab('beer');renderAdm();renderLedAdm();renderFeatSel();applySettings()}
 }
 function swLed(){
@@ -1835,6 +1994,232 @@ window.addEventListener('message',e=>{
   else if(d.type==='__deactivate_edit_mode'){editMode=false;document.getElementById('tweaks').classList.remove('on')}
 });
 try{window.parent.postMessage({type:'__edit_mode_available'},'*')}catch{}
+
+// ── IPTV ──
+let iptvChannels=[];       // all channels from M3U
+let iptvEnabled=new Set(); // enabled channel indices
+let iptvCurIdx=null;       // currently playing index
+let iptvSearchQ='';        // search query
+let iptvGroupFilter='all'; // group filter
+let iptvHls=null;          // HLS.js instance
+
+async function iptvLoadFromStorage(){
+  try{const r=await stGet('pb:iptv');if(r){const d=JSON.parse(r.value);iptvChannels=d.channels||[];iptvEnabled=new Set(d.enabled||iptvChannels.map((_,i)=>i));}}catch{}
+  iptvRender();iptvRenderAdm();
+}
+
+function iptvSave(){
+  stSet('pb:iptv',JSON.stringify({channels:iptvChannels,enabled:[...iptvEnabled]}));
+  toast('IPTV збережено ✓','ok');
+  iptvRender();
+}
+
+function iptvClearAll(){
+  if(!confirm('Видалити всі канали?'))return;
+  iptvChannels=[];iptvEnabled=new Set();iptvCurIdx=null;
+  iptvStopPlayback();
+  stSet('pb:iptv',JSON.stringify({channels:[],enabled:[]}));
+  iptvRender();iptvRenderAdm();
+  toast('Канали видалено','ok');
+}
+
+function iptvToggleAll(on){
+  if(on)iptvChannels.forEach((_,i)=>iptvEnabled.add(i));
+  else iptvEnabled.clear();
+  iptvRenderAdm();
+}
+
+// ── M3U parser ──
+function parseM3U(text){
+  const lines=text.split(/\r?\n/);
+  const channels=[];let cur=null;
+  for(const raw of lines){
+    const line=raw.trim();
+    if(line.startsWith('#EXTINF')){
+      cur={name:'',group:'',logo:'',url:''};
+      const nameM=line.match(/,(.+)$/);if(nameM)cur.name=nameM[1].trim();
+      const grpM=line.match(/group-title="([^"]*)"/);if(grpM)cur.group=grpM[1];
+      const logoM=line.match(/tvg-logo="([^"]*)"/);if(logoM)cur.logo=logoM[1];
+    } else if(line&&!line.startsWith('#')&&cur){
+      cur.url=line;channels.push(cur);cur=null;
+    }
+  }
+  return channels;
+}
+
+function iptvLoadUrl(){
+  const inp=document.getElementById('iptv-url-inp');
+  const url=(inp?.value||'').trim();
+  if(!url){toast('Введіть URL','err');return}
+  const st=document.getElementById('iptv-adm-status');
+  if(st)st.textContent='Завантаження…';
+  fetch(url)
+    .then(r=>r.text())
+    .then(txt=>{iptvApplyParsed(parseM3U(txt));if(st)st.textContent='';})
+    .catch(()=>{if(st)st.textContent='Помилка завантаження URL';toast('Не вдалося завантажити','err')});
+}
+
+function iptvLoadFile(input){
+  const file=input.files[0];if(!file)return;
+  const st=document.getElementById('iptv-adm-status');
+  if(st)st.textContent='Читання файлу…';
+  const fr=new FileReader();
+  fr.onload=e=>{iptvApplyParsed(parseM3U(e.target.result));if(st)st.textContent='';};
+  fr.onerror=()=>{if(st)st.textContent='Помилка читання файлу';};
+  fr.readAsText(file);
+}
+
+function iptvApplyParsed(channels){
+  iptvChannels=channels;
+  iptvEnabled=new Set(channels.map((_,i)=>i));
+  toast(`Завантажено ${channels.length} каналів`,'ok');
+  iptvRenderAdm();
+  const w=document.getElementById('iptv-adm-list-wrap');
+  if(w)w.style.display=channels.length?'':'none';
+}
+
+// ── Admin render ──
+function iptvRenderAdm(){
+  const list=document.getElementById('iptv-adm-list');
+  const cnt=document.getElementById('iptv-adm-cnt');
+  const wrap=document.getElementById('iptv-adm-list-wrap');
+  if(!list)return;
+  if(wrap)wrap.style.display=iptvChannels.length?'':'none';
+  if(cnt)cnt.textContent=iptvChannels.length+' каналів';
+  list.innerHTML=iptvChannels.map((ch,i)=>`
+    <div class="iptv-adm-ch">
+      <button class="iptv-adm-tgl${iptvEnabled.has(i)?' on':''}" onclick="iptvToggleCh(${i})" title="${iptvEnabled.has(i)?'Вимкнути':'Увімкнути'}"></button>
+      ${ch.logo?`<img class="iptv-adm-logo" src="${esc(ch.logo)}" onerror="this.style.display='none'" alt="">`:'<div class="iptv-adm-logo"></div>'}
+      <span class="iptv-adm-name">${esc(ch.name||'—')}</span>
+      <span class="iptv-adm-grp">${esc(ch.group||'')}</span>
+      <span class="iptv-adm-url">${esc(ch.url)}</span>
+    </div>`).join('');
+}
+
+function iptvToggleCh(i){
+  if(iptvEnabled.has(i))iptvEnabled.delete(i);else iptvEnabled.add(i);
+  iptvRenderAdm();
+}
+
+// ── Channel list render ──
+function iptvRender(){
+  const visible=iptvChannels.filter((_,i)=>iptvEnabled.has(i));
+  const groups=[...new Set(visible.map(c=>c.group||'').filter(Boolean))];
+
+  // groups filter bar
+  const gEl=document.getElementById('iptv-groups');
+  if(gEl){
+    gEl.innerHTML=`<button class="iptv-gc${iptvGroupFilter==='all'?' on':''}" onclick="iptvSetGroup('all')">Всі</button>`
+      +groups.map(g=>`<button class="iptv-gc${iptvGroupFilter===g?' on':''}" onclick="iptvSetGroup(${JSON.stringify(g)})">${esc(g)}</button>`).join('');
+  }
+
+  const list=document.getElementById('iptv-ch-list');
+  if(!list)return;
+
+  const q=iptvSearchQ.toLowerCase();
+  let filtered=visible;
+  if(iptvGroupFilter!=='all')filtered=filtered.filter(c=>(c.group||'')===iptvGroupFilter);
+  if(q)filtered=filtered.filter(c=>(c.name||'').toLowerCase().includes(q));
+
+  const barEmpty=document.getElementById('iptv-bar-empty');
+  const barPlaying=document.getElementById('iptv-bar-playing');
+  if(visible.length){
+    if(barEmpty)barEmpty.style.display='none';
+    if(barPlaying)barPlaying.style.display='flex';
+  } else {
+    if(barEmpty)barEmpty.style.display='';
+    if(barPlaying)barPlaying.style.display='none';
+  }
+
+  if(!filtered.length){
+    list.innerHTML=`<div class="iptv-ch-empty">${q||iptvGroupFilter!=='all'?'Канали не знайдено':'Завантажте M3U<br>у <b>Адмін → IPTV</b>'}</div>`;
+    return;
+  }
+
+  // group by group-title
+  const byGroup={};
+  filtered.forEach(ch=>{const g=ch.group||'';if(!byGroup[g])byGroup[g]=[];byGroup[g].push(ch);});
+
+  let html='';
+  // find real index back in iptvChannels for playing highlight
+  for(const [g,chs] of Object.entries(byGroup)){
+    if(g)html+=`<div class="iptv-grp-sep">${esc(g)}</div>`;
+    chs.forEach(ch=>{
+      const realIdx=iptvChannels.indexOf(ch);
+      const on=realIdx===iptvCurIdx?' on':'';
+      html+=`<div class="iptv-ch${on}" onclick="iptvPlay(${realIdx})">
+        <div class="iptv-ch-logo">${ch.logo?`<img src="${esc(ch.logo)}" onerror="this.style.display='none'" alt="">`:'<span class="iptv-ch-logo-ph">📺</span>'}</div>
+        <div class="iptv-ch-info">
+          <div class="iptv-ch-name">${esc(ch.name||'—')}</div>
+          ${g?'':''}
+        </div>
+        <div class="iptv-ch-dot"></div>
+      </div>`;
+    });
+  }
+  list.innerHTML=html;
+}
+
+function iptvSetGroup(g){iptvGroupFilter=g;iptvRender();}
+function iptvSearchFn(v){iptvSearchQ=v;iptvRender();}
+
+// ── Playback ──
+function iptvPlay(idx){
+  const ch=iptvChannels[idx];if(!ch)return;
+  iptvCurIdx=idx;
+  iptvRender();
+  iptvShowState('loading');
+  iptvStopPlayback();
+
+  const video=document.getElementById('iptv-video');
+  const url=ch.url;
+
+  if(Hls.isSupported()&&(url.includes('.m3u8')||url.includes('hls')||url.includes('/live')||!url.match(/\.(mp4|webm|ogg)$/i))){
+    iptvHls=new Hls();
+    iptvHls.loadSource(url);
+    iptvHls.attachMedia(video);
+    iptvHls.on(Hls.Events.MANIFEST_PARSED,()=>{video.play().catch(()=>{});iptvShowState(null);iptvUpdateBar(ch);});
+    iptvHls.on(Hls.Events.ERROR,(_,data)=>{if(data.fatal){iptvShowState('error',`Помилка HLS: ${data.details}`);iptvHls.destroy();iptvHls=null;}});
+  } else if(video.canPlayType('application/vnd.apple.mpegurl')){
+    video.src=url;
+    video.addEventListener('loadedmetadata',()=>{video.play().catch(()=>{});iptvShowState(null);iptvUpdateBar(ch);},{once:true});
+    video.addEventListener('error',()=>iptvShowState('error','Не вдалося відтворити потік.'),{once:true});
+  } else {
+    video.src=url;
+    video.onloadedmetadata=()=>{video.play().catch(()=>{});iptvShowState(null);iptvUpdateBar(ch);};
+    video.onerror=()=>iptvShowState('error','Формат не підтримується або помилка потоку.');
+  }
+}
+
+function iptvStopPlayback(){
+  const video=document.getElementById('iptv-video');
+  if(iptvHls){iptvHls.destroy();iptvHls=null;}
+  if(video){video.pause();video.src='';}
+}
+
+function iptvShowState(state,msg){
+  ['iptv-state-empty','iptv-state-loading','iptv-state-error'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display='none';
+  });
+  if(state==='loading'){const e=document.getElementById('iptv-state-loading');if(e)e.style.display='';}
+  else if(state==='error'){
+    const e=document.getElementById('iptv-state-error');if(e)e.style.display='';
+    const m=document.getElementById('iptv-err-msg');if(m)m.textContent=msg||'Не вдалося завантажити потік.';
+  } else if(state==='empty'){const e=document.getElementById('iptv-state-empty');if(e)e.style.display='';}
+}
+
+function iptvRetry(){if(iptvCurIdx!==null)iptvPlay(iptvCurIdx);}
+
+function iptvVol(v){const video=document.getElementById('iptv-video');if(video)video.volume=parseFloat(v);}
+
+function iptvUpdateBar(ch){
+  const barName=document.getElementById('iptv-bar-name');
+  const barGrp=document.getElementById('iptv-bar-grp');
+  const barLogo=document.getElementById('iptv-bar-logo');
+  if(barName)barName.textContent=ch.name||'—';
+  if(barGrp)barGrp.textContent=ch.group||'';
+  if(barLogo)barLogo.innerHTML=ch.logo?`<img class="iptv-now-logo" src="${esc(ch.logo)}" onerror="this.style.display='none'" alt="">`:'';
+}
 
 // ── BOOT ──
 clock();setInterval(clock,1000);
