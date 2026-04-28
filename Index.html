@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PubBoard — TV</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Direction A — Tavern Bold (default) */
+  --bg:#0a0908;--bg2:#111009;--bg3:#1a1812;--surface:#201d16;
+  --border:#2e2a20;--border2:#3e3828;
+  --gold:#c9922a;--gold-l:#e8b84b;--gold-d:#a07320;
+  --amber:#d4721a;--cream:#f2e8d5;--cream2:#c8b99a;--muted:#7a7060;
+  --red:#b83c2b;--green:#2d8a58;--white:#fdfaf5;
+  --fm:'Inter',sans-serif;--fr:'Inter',sans-serif;--fs:'Inter',sans-serif;--fmono:'JetBrains Mono',monospace;
+  --price-color:var(--gold-l);
+}
+/* Direction B — Chalkboard Editorial */
+body.theme-b{
+  --bg:#1a140e;--bg2:#221a12;--bg3:#2a2015;--surface:#352818;
+  --border:#4a3820;--border2:#6b5028;
+  --gold:#e8b84b;--gold-l:#f5d47a;--gold-d:#c9922a;
+  --amber:#e89055;--cream:#f5ead0;--cream2:#d6c598;--muted:#8a7a5a;
+  --white:#fff8e8;
+  --fm:'Fraunces',serif;--fr:'Inter',sans-serif;--fs:'Fraunces',serif;
+}
+
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--fr);background:var(--bg);color:var(--cream);-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+#nav{display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;height:50px;background:var(--bg2);
+  border-bottom:1px solid var(--border);position:relative;z-index:100}
+.logo{font-family:var(--fs);font-size:1.35rem;font-weight:800;color:var(--gold);letter-spacing:1.5px}
+.logo span{color:var(--cream2);font-weight:400}
+.tabs{display:flex;gap:3px}
+.tab{height:34px;padding:0 14px;border:1px solid transparent;background:none;
+  color:var(--muted);font-family:var(--fr);font-size:.68rem;font-weight:600;letter-spacing:1.2px;
+  text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all .15s}
+.tab:hover{color:var(--cream2);border-color:var(--border2)}
+.tab.on{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.tab.led-on{background:rgba(255,50,0,.15);color:#ff5500;border-color:rgba(255,50,0,.4)}
+
+/* ── VIEWS ── */
+.view{position:absolute;top:50px;left:0;right:0;bottom:0;display:none;flex-direction:column;overflow:hidden}
+.view.on{display:flex}
+
+/* ═══════════════════════════════════════════════════════
+   TV VIEW — shared scaffolding
+═══════════════════════════════════════════════════════ */
+.tv-shell{flex:1;display:flex;flex-direction:column;min-height:0;background:var(--bg);position:relative}
+
+/* Top bar */
+.tv-top{flex-shrink:0;display:grid;grid-template-columns:1.3fr 1fr 1.3fr;align-items:center;
+  padding:18px 36px;background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);
+  border-bottom:1px solid var(--border2);gap:24px}
+.tv-top-l{display:flex;flex-direction:column;gap:2px}
+.tv-name{font-family:var(--fs);font-size:2.3rem;font-weight:800;color:var(--gold);letter-spacing:2px;line-height:1}
+.theme-b .tv-name{letter-spacing:1px;font-weight:900}
+.tv-tag{font-size:.85rem;color:var(--cream2);letter-spacing:1.5px;text-transform:uppercase;font-weight:500;margin-top:4px}
+.theme-b .tv-tag{font-family:var(--fs);font-style:italic;text-transform:none;letter-spacing:.5px;font-size:1rem}
+.tv-top-c{display:flex;align-items:center;justify-content:center;gap:14px}
+.tv-weather{display:flex;align-items:center;gap:14px;padding:10px 18px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px}
+.wx-ico{font-size:1.8rem;line-height:1}
+.wx-txt{display:flex;flex-direction:column;gap:1px}
+.wx-temp{font-family:var(--fmono);font-size:1.15rem;font-weight:700;color:var(--cream);line-height:1}
+.wx-cond{font-size:.6rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;font-weight:500}
+.tv-top-r{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.tv-clock{font-family:var(--fmono);font-size:2.3rem;font-weight:700;color:var(--gold-l);letter-spacing:1px;line-height:1}
+.tv-date{font-size:.7rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:4px;font-weight:500}
+
+/* Featured hero band — Direction A */
+.tv-featured{flex-shrink:0;display:flex;align-items:center;gap:20px;
+  padding:12px 36px;background:linear-gradient(90deg,rgba(201,146,42,.12) 0%,rgba(201,146,42,.02) 50%,rgba(201,146,42,0) 100%);
+  border-bottom:1px solid var(--border);min-height:58px}
+.feat-label{display:inline-flex;align-items:center;gap:8px;font-family:var(--fmono);font-size:.65rem;
+  letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:700;padding:5px 10px;
+  background:rgba(201,146,42,.08);border:1px solid rgba(201,146,42,.3);border-radius:3px;white-space:nowrap}
+.feat-label::before{content:'★';color:var(--gold-l)}
+.feat-name{font-family:var(--fs);font-weight:800;color:var(--white);font-size:1.35rem;letter-spacing:.3px}
+.theme-b .feat-name{font-weight:700;letter-spacing:0}
+.feat-meta{font-size:.8rem;color:var(--cream2);letter-spacing:.5px}
+.feat-price{margin-left:auto;display:flex;align-items:baseline;gap:6px;font-family:var(--fmono)}
+.feat-price .was{font-size:.95rem;color:var(--muted);text-decoration:line-through}
+.feat-price .now{font-size:1.7rem;font-weight:800;color:var(--gold-l)}
+.feat-price .cur{font-size:1rem;color:var(--gold)}
+
+/* Category header */
+.tv-cat{flex-shrink:0;display:flex;align-items:center;gap:16px;padding:14px 36px 12px;
+  background:var(--bg);border-bottom:1px solid var(--border)}
+.tv-cat-ico{width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  background:rgba(201,146,42,.1);border:1px solid rgba(201,146,42,.3);border-radius:4px;font-size:1.15rem}
+.tv-cat-name{font-family:var(--fs);font-size:1.5rem;font-weight:700;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase}
+.theme-b .tv-cat-name{font-weight:800;letter-spacing:1px;text-transform:none;font-style:italic}
+.tv-cat-count{font-family:var(--fmono);font-size:.75rem;color:var(--muted);letter-spacing:1.5px}
+.tv-cat-pg{margin-left:auto;font-family:var(--fmono);font-size:.85rem;color:var(--cream2);letter-spacing:2px}
+.tv-cat-pg b{color:var(--gold-l);font-weight:700}
+
+/* Slideshow container */
+.tv-stage{flex:1;position:relative;overflow:hidden;min-height:0}
+.tv-slide{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transition:opacity .55s;pointer-events:none}
+.tv-slide.on{opacity:1;pointer-events:all}
+
+/* ── Grid of cards ── */
+.tv-grid{flex:1;display:grid;gap:14px;padding:16px 28px 10px;min-height:0}
+.tv-grid.cols-3{grid-template-columns:repeat(3,1fr)}
+.tv-grid.cols-4{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,1fr)}
+.tv-grid.cols-6{grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr)}
+.tv-grid.cols-8{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr)}
+
+/* ── TV CARD — Direction A (horizontal) ── */
+.tvc{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;overflow:hidden;
+  display:grid;grid-template-columns:180px 1fr auto;gap:0;min-width:0;min-height:0;
+  animation:tvcin .45s ease both;position:relative}
+.cols-3 .tvc{grid-template-columns:220px 1fr auto}
+.cols-6 .tvc{grid-template-columns:100px 1fr auto}
+.cols-8 .tvc{grid-template-columns:90px 1fr auto}
+@keyframes tvcin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.tvc-img{background:var(--surface);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.tvc-img img{width:100%;height:100%;object-fit:cover;display:block}
+.tvc-img-ph{font-size:2.4rem;opacity:.2}
+.tvc-img::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,9,8,0) 60%,rgba(10,9,8,.85));pointer-events:none}
+.tvc-body{padding:14px 16px 12px;display:flex;flex-direction:column;gap:6px;min-width:0;overflow:hidden}
+.tvc-top-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.tvc-name{font-family:var(--fs);font-size:1.5rem;font-weight:800;color:var(--white);line-height:1.1;letter-spacing:-.3px;
+  flex:1;min-width:0;overflow-wrap:break-word;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:balance}
+.theme-b .tvc-name{font-weight:700;letter-spacing:-.5px}
+.cols-3 .tvc-name{font-size:2rem;letter-spacing:-.5px}
+.cols-6 .tvc-name{font-size:1.1rem;-webkit-line-clamp:2}
+.cols-8 .tvc-name{font-size:.95rem;-webkit-line-clamp:2;letter-spacing:-.4px}
+.cols-3 .tvc-body{padding:22px 24px 20px;gap:10px}
+.cols-3 .tvc-desc{font-size:1rem;-webkit-line-clamp:3}
+.cols-3 .tvc-meta{font-size:1rem}
+.cols-3 .tvc-abv{font-size:1rem;padding:5px 12px}
+.tvc-abv{font-family:var(--fmono);font-size:.85rem;font-weight:700;color:var(--amber);padding:3px 8px;
+  background:rgba(212,114,26,.1);border:1px solid rgba(212,114,26,.35);border-radius:3px;white-space:nowrap;flex-shrink:0}
+.tvc-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.82rem;color:var(--cream2)}
+.tvc-style{color:var(--gold-l);font-weight:600;letter-spacing:.3px}
+.tvc-dot{width:3px;height:3px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.tvc-brew{font-family:var(--fs);font-style:italic;color:var(--muted);font-weight:500}
+.tvc-flag{display:inline-flex;align-items:center;gap:4px;font-family:var(--fmono);font-size:.65rem;color:var(--muted);
+  letter-spacing:1.5px;text-transform:uppercase}
+.tvc-desc{font-size:.82rem;color:rgba(242,232,213,.58);line-height:1.45;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:2px}
+.cols-6 .tvc-desc,.cols-8 .tvc-desc{-webkit-line-clamp:1;font-size:.75rem}
+.tvc-srv{display:inline-flex;align-items:center;gap:5px;font-family:var(--fmono);font-size:.62rem;
+  padding:2px 7px;border-radius:2px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700}
+.tvc-srv.tap{color:#4db87a;background:rgba(45,138,88,.1);border:1px solid rgba(45,138,88,.3)}
+.tvc-srv.bot{color:#7aaae8;background:rgba(100,140,200,.1);border:1px solid rgba(100,140,200,.3)}
+
+/* Prices column — HERO treatment */
+.tvc-prices{display:flex;flex-direction:column;justify-content:center;padding:10px 18px 10px 14px;
+  background:linear-gradient(180deg,rgba(201,146,42,.04),rgba(201,146,42,.12));
+  border-left:1px solid rgba(201,146,42,.2);min-width:120px;gap:4px}
+.tvc-prow{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.tvc-pml{font-family:var(--fmono);font-size:.72rem;color:var(--muted);letter-spacing:.5px;font-weight:500}
+.tvc-ppx{font-family:var(--fmono);font-size:1.6rem;font-weight:800;color:var(--price-color);line-height:1;letter-spacing:-.5px}
+.theme-b .tvc-ppx{font-family:var(--fs);font-weight:800}
+.tvc-pcur{font-size:.7em;color:var(--gold);margin-right:1px}
+.cols-3 .tvc-ppx{font-size:2.2rem}
+.cols-3 .tvc-prices{min-width:150px;padding:14px 22px;gap:8px}
+.cols-3 .tvc-pml{font-size:.9rem}
+.cols-6 .tvc-ppx{font-size:1.25rem}
+.cols-8 .tvc-ppx{font-size:1.05rem}
+.cols-6 .tvc-prices{padding:8px 10px;min-width:78px;gap:3px}
+.cols-8 .tvc-prices{padding:6px 9px;min-width:68px;gap:2px}
+.cols-6 .tvc-pml,.cols-8 .tvc-pml{font-size:.62rem}
+.cols-6 .tvc-body,.cols-8 .tvc-body{padding:10px 12px 9px;gap:4px}
+.cols-6 .tvc-meta,.cols-8 .tvc-meta{font-size:.72rem;gap:6px}
+.cols-6 .tvc-abv,.cols-8 .tvc-abv{font-size:.72rem;padding:2px 6px}
+.cols-6 .tvc-srv,.cols-8 .tvc-srv{font-size:.55rem;padding:1px 5px}
+.tvc:not(.avail)::after{content:'НЕМАЄ';position:absolute;top:10px;right:10px;font-family:var(--fmono);font-size:.6rem;
+  padding:3px 8px;background:rgba(184,60,43,.18);color:#d9635a;border:1px solid rgba(184,60,43,.4);border-radius:3px;letter-spacing:1.5px;font-weight:700}
+
+/* Direction B overrides */
+.theme-b .tvc{background:var(--bg2);border:1px solid var(--border2);border-radius:3px;
+  box-shadow:0 2px 0 rgba(0,0,0,.4), inset 0 1px 0 rgba(245,234,208,.04)}
+.theme-b .tvc-prices{background:linear-gradient(180deg,rgba(232,184,75,.06),rgba(232,184,75,.15));
+  border-left:2px dashed rgba(232,184,75,.25)}
+.theme-b .tvc-img::after{background:linear-gradient(90deg,rgba(26,20,14,0) 55%,rgba(26,20,14,.95))}
+
+/* Bottom ticker */
+.tv-bot{flex-shrink:0;background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-d));
+  padding:8px 0;overflow:hidden;border-top:1px solid var(--gold-d)}
+.tv-bot-inner{display:flex;white-space:nowrap;animation:tickanim 55s linear infinite}
+.tv-bot-item{font-family:var(--fr);font-size:.78rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--bg);padding:0 56px;font-weight:700}
+.tv-bot-item .sep{opacity:.5;margin:0 18px}
+@keyframes tickanim{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* Progress */
+.tv-prog{flex-shrink:0;height:3px;background:var(--border2);overflow:hidden;position:relative;z-index:2}
+.tv-prog-fill{height:100%;background:linear-gradient(to right,var(--gold-d),var(--gold-l));width:0%;transition:width linear}
+
+/* Dots */
+.tv-dots{flex-shrink:0;display:flex;justify-content:center;align-items:center;gap:7px;padding:6px 0;background:var(--bg)}
+.tv-dot{width:7px;height:7px;border-radius:50%;background:var(--border2);border:1px solid var(--border2);cursor:pointer;transition:all .3s}
+.tv-dot.on{background:var(--gold);border-color:var(--gold-l);transform:scale(1.35);box-shadow:0 0 8px rgba(201,146,42,.6)}
+
+/* ═══════════════════════════════════════════════════════
+   LIST VIEW — dense card-row layout, same DNA as TV
+═══════════════════════════════════════════════════════ */
+.lt-slide{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transition:opacity .55s;pointer-events:none}
+.lt-slide.on{opacity:1;pointer-events:all}
+.lt-wrap{flex:1;overflow:hidden;padding:10px 28px 14px;display:flex;flex-direction:column;gap:6px;min-height:0}
+
+.ltr{display:grid;grid-template-columns:60px 1fr auto auto auto;gap:16px;align-items:center;
+  padding:7px 14px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--gold-d);border-radius:3px;
+  position:relative;transition:filter .3s,opacity .3s,background .3s;min-height:0;flex:1;
+  animation:ltrIn .45s cubic-bezier(.25,.9,.35,1) both}
+
+/* Density-based scaling — fewer rows = larger content */
+.lt-wrap[data-per="3"]{gap:12px;padding:14px 32px 18px}
+.lt-wrap[data-per="3"] .ltr{padding:14px 22px;grid-template-columns:140px 1fr auto auto auto;gap:26px;border-left-width:4px}
+.lt-wrap[data-per="3"] .ltr-img{width:140px;height:140px}
+.lt-wrap[data-per="3"] .ltr-nm{font-size:2rem}
+.lt-wrap[data-per="3"] .ltr-st{font-size:.88rem;padding:4px 12px}
+.lt-wrap[data-per="3"] .ltr-meta{font-size:1rem;gap:10px;margin-top:4px}
+.lt-wrap[data-per="3"] .ltr-desc{font-size:1rem;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.45}
+.lt-wrap[data-per="3"] .ltr-abv{font-size:1.25rem;padding:6px 14px}
+.lt-wrap[data-per="3"] .ltr-srv{font-size:.78rem;padding:5px 12px}
+.lt-wrap[data-per="3"] .ltr-ppx{font-size:1.7rem}
+.lt-wrap[data-per="3"] .ltr-pml{font-size:.88rem;min-width:50px}
+.lt-wrap[data-per="3"] .ltr-prices{min-width:170px;gap:6px}
+.lt-wrap[data-per="3"] .ltr.oos::before{font-size:1rem;letter-spacing:3px;padding:5px 14px;right:200px}
+
+.lt-wrap[data-per="4"]{gap:10px;padding:12px 30px 16px}
+.lt-wrap[data-per="4"] .ltr{padding:11px 18px;grid-template-columns:110px 1fr auto auto auto;gap:22px}
+.lt-wrap[data-per="4"] .ltr-img{width:110px;height:110px}
+.lt-wrap[data-per="4"] .ltr-nm{font-size:1.65rem}
+.lt-wrap[data-per="4"] .ltr-st{font-size:.8rem;padding:3px 10px}
+.lt-wrap[data-per="4"] .ltr-meta{font-size:.92rem;gap:9px;margin-top:3px}
+.lt-wrap[data-per="4"] .ltr-desc{font-size:.92rem;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.4}
+.lt-wrap[data-per="4"] .ltr-abv{font-size:1.1rem;padding:5px 12px}
+.lt-wrap[data-per="4"] .ltr-srv{font-size:.72rem;padding:4px 10px}
+.lt-wrap[data-per="4"] .ltr-ppx{font-size:1.45rem}
+.lt-wrap[data-per="4"] .ltr-pml{font-size:.8rem;min-width:46px}
+.lt-wrap[data-per="4"] .ltr-prices{min-width:150px;gap:5px}
+.lt-wrap[data-per="4"] .ltr.oos::before{font-size:.9rem;letter-spacing:2.5px;padding:4px 12px;right:180px}
+
+.lt-wrap[data-per="6"]{gap:7px;padding:10px 28px 14px}
+.lt-wrap[data-per="6"] .ltr{padding:8px 15px;grid-template-columns:75px 1fr auto auto auto;gap:18px}
+.lt-wrap[data-per="6"] .ltr-img{width:75px;height:75px}
+.lt-wrap[data-per="6"] .ltr-nm{font-size:1.3rem}
+.lt-wrap[data-per="6"] .ltr-meta{font-size:.84rem}
+.lt-wrap[data-per="6"] .ltr-abv{font-size:.98rem}
+.lt-wrap[data-per="6"] .ltr-ppx{font-size:1.15rem}
+.lt-wrap[data-per="6"] .ltr-prices{min-width:130px}
+
+.lt-wrap[data-per="8"]{gap:5px;padding:8px 26px 12px}
+.lt-wrap[data-per="8"] .ltr{padding:5px 12px;grid-template-columns:50px 1fr auto auto auto;gap:14px}
+.lt-wrap[data-per="8"] .ltr-img{width:50px;height:50px}
+.lt-wrap[data-per="8"] .ltr-nm{font-size:1.05rem}
+.lt-wrap[data-per="8"] .ltr-meta{font-size:.74rem;gap:6px}
+.lt-wrap[data-per="8"] .ltr-abv{font-size:.82rem;padding:2px 7px}
+.lt-wrap[data-per="8"] .ltr-srv{font-size:.56rem;padding:2px 6px}
+.lt-wrap[data-per="8"] .ltr-ppx{font-size:.95rem}
+.lt-wrap[data-per="8"] .ltr-pml{font-size:.62rem;min-width:34px}
+.lt-wrap[data-per="8"] .ltr-prices{min-width:108px;gap:1px}
+.ltr:nth-child(even){background:rgba(255,255,255,.015)}
+.ltr.oos{filter:grayscale(.85) brightness(.6);opacity:.75;border-left-color:rgba(184,60,43,.55)}
+.ltr.low{border-left-color:#d8421e;background:rgba(216,66,30,.06)}
+@keyframes ltrIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:translateX(0)}}
+
+.ltr-img{width:60px;height:60px;border-radius:3px;overflow:hidden;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;border:1px solid var(--border2);position:relative;flex-shrink:0}
+.ltr-img img{width:100%;height:100%;object-fit:cover}
+.ltr-img-ph{font-size:1.5rem;color:var(--muted);opacity:.4}
+
+.ltr-body{min-width:0;display:flex;flex-direction:column;gap:3px}
+.ltr-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.ltr-nm{font-family:var(--fs);font-weight:800;color:var(--white);font-size:1.15rem;letter-spacing:-.3px;line-height:1.15;text-wrap:balance}
+.theme-b .ltr-nm{font-weight:700;letter-spacing:-.4px}
+.ltr-st{display:inline-block;font-family:var(--fmono);font-size:.68rem;color:var(--gold-l);
+  padding:2px 8px;background:rgba(201,146,42,.08);border:1px solid rgba(201,146,42,.25);border-radius:2px;letter-spacing:1px;font-weight:700;text-transform:uppercase;white-space:nowrap}
+.ltr-meta{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;margin-top:1px;color:var(--cream2);font-size:.78rem;font-family:var(--fs);overflow:hidden}
+.ltr-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.ltr-br{font-style:italic;color:var(--cream2);font-weight:500}
+.ltr-cn{font-family:var(--fmono);color:var(--muted);font-size:.68rem;letter-spacing:1.4px;text-transform:uppercase;font-weight:600}
+.ltr-desc{color:rgba(242,232,213,.55);font-size:.78rem;line-height:1.4;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+
+.ltr-srv{display:inline-flex;align-items:center;gap:5px;font-family:var(--fmono);font-size:.62rem;
+  padding:3px 8px;border-radius:2px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;white-space:nowrap}
+.ltr-srv.tap{color:#5cc88a;background:rgba(45,138,88,.1);border:1px solid rgba(45,138,88,.35)}
+.ltr-srv.bot{color:#88b8f0;background:rgba(100,140,200,.1);border:1px solid rgba(100,140,200,.35)}
+
+.ltr-abv{font-family:var(--fmono);color:var(--amber);font-size:.9rem;font-weight:800;padding:3px 9px;
+  background:rgba(232,184,75,.08);border:1px solid rgba(232,184,75,.28);border-radius:3px;letter-spacing:.5px;white-space:nowrap}
+
+.ltr-prices{display:flex;flex-direction:column;gap:2px;min-width:120px;align-items:stretch;justify-content:center}
+.ltr-prow{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-family:var(--fmono);line-height:1}
+.ltr-pml{color:var(--muted);font-size:.68rem;font-weight:500;letter-spacing:.5px;white-space:nowrap;flex-shrink:0}
+.ltr-ppx{font-weight:800;color:var(--gold-l);font-size:1rem;letter-spacing:-.3px;transition:all .2s;text-align:right;white-space:nowrap;margin-left:auto}
+.ltr-pcur{font-size:.72em;color:var(--gold);margin-right:1px}
+.ltr-ppx.flash{animation:priceflash 1.2s ease-out;border-radius:3px;padding:0 3px;margin:0 -3px}
+
+/* OOS stamp on list rows */
+.ltr.oos::before{content:'НЕМАЄ';position:absolute;top:50%;right:150px;transform:translateY(-50%) rotate(-4deg);
+  font-family:var(--fmono);font-size:.72rem;font-weight:800;letter-spacing:2px;
+  padding:3px 10px;background:rgba(10,9,8,.88);color:#d9635a;
+  border:1.5px solid rgba(184,60,43,.7);border-radius:3px;z-index:2;pointer-events:none}
+
+/* Low-keg ribbon on list rows */
+.ltr-low{position:absolute;top:50%;left:-3px;transform:translateY(-50%);font-family:var(--fmono);font-size:.52rem;font-weight:800;letter-spacing:1.2px;
+  padding:3px 7px;background:#d8421e;color:#fff;border-radius:0 2px 2px 0;z-index:3;
+  animation:lowpulse 1.8s ease-in-out infinite;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);line-height:1;white-space:nowrap}
+
+.body.nightboost .ltr-nm,body.nightboost .ltr-nm{color:#fff !important}
+body.nightboost .ltr-ppx{color:#ffd970 !important}
+
+/* ═══════════════════════════════════════════════════════
+   LED OVERLAY — TV scaled
+═══════════════════════════════════════════════════════ */
+#led{position:fixed;top:50px;left:0;right:0;bottom:0;background:#000;z-index:9999;display:none;flex-direction:column}
+#led.on{display:flex}
+.led-head{flex-shrink:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  padding:18px 48px;background:#080000;border-bottom:2px solid #2a0800;gap:24px}
+.led-name{font-family:var(--fs);font-size:1.6rem;font-weight:800;letter-spacing:2.5px;color:#e85a20}
+.led-mid{display:flex;justify-content:center}
+.led-wx{display:flex;align-items:center;gap:12px;padding:8px 16px;background:#140400;border:1px solid #3a0800;border-radius:5px}
+.led-wx-ico{font-size:1.5rem}
+.led-wx-temp{font-family:var(--fmono);font-size:1.1rem;font-weight:700;color:#ffaa66}
+.led-right{display:flex;align-items:center;justify-content:flex-end;gap:18px}
+.led-clk{font-family:var(--fmono);font-size:1.6rem;font-weight:700;letter-spacing:3px;color:#ff7730}
+.led-x{background:rgba(255,50,0,.15);border:1px solid rgba(255,50,0,.5);
+  color:#ff4400;font-size:1.15rem;width:40px;height:40px;border-radius:4px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--fmono)}
+.led-x:hover{background:rgba(255,50,0,.35)}
+.led-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 80px;overflow:hidden;position:relative}
+.led-badge{font-family:var(--fmono);font-size:1.1rem;letter-spacing:5px;text-transform:uppercase;font-weight:700;
+  display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.led-dot{width:14px;height:14px;border-radius:50%;animation:blink 1s step-start infinite;box-shadow:0 0 12px currentColor}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.p-info .led-dot{background:#00aaff}.p-info{color:#00ccff}
+.p-warn .led-dot{background:#ffaa00}.p-warn{color:#ffcc33}
+.p-alrt .led-dot{background:#ff3300}.p-alrt{color:#ff5522}
+.led-msg-wrap{width:100%;overflow:hidden}
+.led-msg{font-family:var(--fs);font-size:clamp(3.5rem,8.5vw,9rem);font-weight:900;text-align:center;white-space:nowrap;line-height:1;letter-spacing:-2px}
+.theme-b .led-msg{font-weight:800;letter-spacing:-3px}
+.c-info{color:#33ddff;text-shadow:0 0 30px rgba(0,150,255,.4)}
+.c-warn{color:#ffd23f;text-shadow:0 0 30px rgba(255,180,0,.4)}
+.c-alrt{color:#ff5522;text-shadow:0 0 30px rgba(255,50,0,.5)}
+.led-sub{font-family:var(--fmono);font-size:1.6rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,200,100,.6);margin-top:26px;text-align:center;font-weight:500}
+.led-qdots{flex-shrink:0;display:flex;justify-content:center;gap:10px;padding:12px 0;background:#000}
+.led-qdot{width:10px;height:10px;border-radius:50%;background:#331100;border:1px solid #552200;cursor:pointer;transition:all .3s}
+.led-qdot.on{background:#ff5522;border-color:#ff7744;box-shadow:0 0 10px rgba(255,80,30,.7)}
+.led-ticker{flex-shrink:0;background:#080000;border-top:2px solid #2a0800;padding:8px 0;overflow:hidden}
+.led-tick-inner{display:flex;white-space:nowrap;animation:tickanim 45s linear infinite}
+.led-tick-item{font-family:var(--fmono);font-size:1rem;letter-spacing:3px;text-transform:uppercase;color:#dd4422;padding:0 70px;font-weight:600}
+
+/* ═══════════════════════════════════════════════════════
+   ADMIN (unchanged structurally, mild visual tune)
+═══════════════════════════════════════════════════════ */
+#adm-view{overflow-y:auto !important}
+.adm{max-width:1200px;margin:0 auto;padding:32px 24px 80px}
+.sec{font-family:var(--fs);font-size:1rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);
+  display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.sec::after{content:'';flex:1;height:1px;background:var(--border2)}
+.box{background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:22px 24px;margin-bottom:24px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg{margin-bottom:12px}
+.lbl{display:block;font-family:var(--fmono);font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-weight:600}
+.inp,.sel,.ta{width:100%;background:var(--bg);border:1px solid var(--border2);color:var(--cream);
+  padding:8px 10px;border-radius:3px;font-family:var(--fr);font-size:.88rem;outline:none;transition:border-color .15s}
+.inp:focus,.sel:focus,.ta:focus{border-color:var(--gold)}
+.sel option{background:var(--bg2)}.ta{resize:vertical;min-height:70px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:16px 18px}
+.stat-n{font-family:var(--fs);font-size:2rem;font-weight:800;color:var(--gold);line-height:1}
+.stat-l{font-family:var(--fmono);font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:5px;font-weight:600}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border:1px solid;border-radius:3px;cursor:pointer;
+  font-family:var(--fmono);font-size:.68rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;transition:all .15s;background:none;white-space:nowrap}
+.btn-p{color:var(--bg);background:var(--gold);border-color:var(--gold)}
+.btn-p:hover{background:var(--gold-l);border-color:var(--gold-l)}
+.btn-g{color:var(--muted);border-color:var(--border2)}
+.btn-g:hover{color:var(--cream2);border-color:var(--muted)}
+.btn-d{color:var(--red);border-color:rgba(184,60,43,.25)}
+.btn-d:hover{background:rgba(184,60,43,.1)}
+.sm{padding:5px 10px;font-size:.6rem}
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.search-w{position:relative}
+.search-w input{background:var(--bg2);border:1px solid var(--border2);color:var(--cream);
+  padding:8px 10px 8px 30px;border-radius:3px;font-family:var(--fr);font-size:.85rem;outline:none;width:220px}
+.search-w input:focus{border-color:var(--gold)}
+.s-ico{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.85rem;pointer-events:none}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{font-family:var(--fmono);font-size:.6rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+  padding:5px 11px;border:1px solid var(--border);border-radius:2px;background:none;color:var(--muted);cursor:pointer;transition:all .15s}
+.chip:hover{color:var(--cream2);border-color:var(--border2)}
+.chip.on{color:var(--gold);border-color:var(--gold);background:rgba(201,146,42,.08)}
+.btbl{width:100%;border-collapse:collapse}
+.btbl th{font-family:var(--fmono);font-size:.6rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);padding:9px 10px;text-align:left;border-bottom:1px solid var(--border2);white-space:nowrap}
+.btbl td{padding:10px;border-bottom:1px solid rgba(46,42,32,.5);vertical-align:middle}
+.btbl tr:hover td{background:var(--bg2)}
+.td-nm{font-family:var(--fs);font-weight:700;font-size:.95rem;color:var(--white)}
+.td-pr{font-family:var(--fmono);color:var(--gold);font-size:.76rem;line-height:1.7;font-weight:600}
+.td-ab{font-family:var(--fmono);color:var(--amber);font-size:.76rem;font-weight:600}
+.td-im{width:48px}
+.thumb{width:42px;height:42px;object-fit:cover;border-radius:3px;border:1px solid var(--border2);display:block}
+.thumb-ph{width:42px;height:42px;background:var(--surface);border-radius:3px;border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;opacity:.4}
+.badge{font-family:var(--fmono);font-size:.6rem;padding:3px 7px;border-radius:2px;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;font-weight:700}
+.b-style{background:rgba(201,146,42,.13);color:var(--gold-l);border:1px solid rgba(201,146,42,.25)}
+.b-tap{background:rgba(45,138,88,.1);color:#4db87a;border:1px solid rgba(45,138,88,.25)}
+.b-bot{background:rgba(100,140,200,.1);color:#7aaae8;border:1px solid rgba(100,140,200,.25)}
+.sbadge{display:inline-flex;align-items:center;gap:4px;font-family:var(--fmono);font-size:.58rem;
+  letter-spacing:1px;text-transform:uppercase;padding:3px 7px;border-radius:2px;font-weight:700}
+.s-on{background:rgba(45,138,88,.12);color:#4db87a;border:1px solid rgba(45,138,88,.25)}
+.s-off{background:rgba(184,60,43,.1);color:#d9635a;border:1px solid rgba(184,60,43,.25)}
+.s-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.acts{display:flex;gap:4px}
+.del-row{display:flex;align-items:center;gap:6px;background:rgba(184,60,43,.08);
+  border:1px solid rgba(184,60,43,.3);border-radius:3px;padding:3px 8px;
+  font-family:var(--fmono);font-size:.6rem;color:var(--red);white-space:nowrap;font-weight:600}
+.del-row button{background:none;border:1px solid;border-radius:2px;cursor:pointer;
+  font-family:var(--fmono);font-size:.58rem;padding:2px 6px;font-weight:700}
+.del-y{color:var(--red);border-color:rgba(184,60,43,.4)}.del-y:hover{background:rgba(184,60,43,.15)}
+.del-n{color:var(--muted);border-color:var(--border2)}.del-n:hover{background:var(--bg3)}
+.empty{text-align:center;padding:40px;color:var(--muted);font-style:italic;font-size:.95rem}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;
+  z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s}
+.ov.on{opacity:1;pointer-events:all}
+.mod{background:var(--bg2);border:1px solid var(--border2);width:620px;max-width:96vw;
+  max-height:90vh;overflow-y:auto;padding:28px;border-radius:5px;transform:translateY(14px);transition:transform .2s}
+.ov.on .mod{transform:translateY(0)}
+.mod-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.mod-head h2{font-family:var(--fs);font-size:1rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.mod-x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem;line-height:1}
+.mod-x:hover{color:var(--cream)}
+.mod-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--border2)}
+.divider{height:1px;background:var(--border2);margin:12px 0}
+.photo-up{border:2px dashed var(--border2);border-radius:4px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;height:90px;position:relative;overflow:hidden;cursor:pointer}
+.photo-up:hover{border-color:var(--gold)}
+.photo-up input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.photo-up img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:3px}
+.photo-up-lbl{font-family:var(--fmono);font-size:.62rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.photo-up-ico{font-size:1.5rem;opacity:.3}
+.serve-tgl{display:flex;border:1px solid var(--border2);border-radius:4px;overflow:hidden}
+.serve-opt{flex:1}.serve-opt input{display:none}
+.serve-opt label{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 12px;
+  cursor:pointer;font-family:var(--fmono);font-size:.68rem;letter-spacing:1px;text-transform:uppercase;font-weight:700;
+  color:var(--muted);border-right:1px solid var(--border2);transition:all .15s}
+.serve-opt:last-child label{border-right:none}
+.serve-opt input:checked+label{background:rgba(201,146,42,.12);color:var(--gold-l)}
+.pvol-tbl{width:100%;border-collapse:collapse;margin-top:4px}
+.pvol-tbl th{font-family:var(--fmono);font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;
+  color:var(--muted);padding:5px 7px;text-align:left;border-bottom:1px solid var(--border2)}
+.pvol-tbl td{padding:7px;border-bottom:1px solid rgba(46,42,32,.4);vertical-align:middle}
+.pvol-cb{width:14px;height:14px;accent-color:var(--gold);cursor:pointer}
+.pvol-pi{background:var(--bg);border:1px solid var(--border2);color:var(--cream);
+  padding:5px 7px;border-radius:2px;font-family:var(--fmono);font-size:.78rem;outline:none;width:95px}
+.pvol-pi:focus{border-color:var(--gold)}.pvol-pi:disabled{opacity:.3;cursor:not-allowed}
+.pvol-df{font-family:var(--fmono);font-size:.62rem;color:var(--muted);font-style:italic}
+.gvrow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.gvcb{width:15px;height:15px;accent-color:var(--gold);cursor:pointer;flex-shrink:0}
+.gvlbl{font-family:var(--fmono);font-size:.72rem;color:var(--cream2);min-width:54px;letter-spacing:1px;font-weight:600}
+.gvpi{background:var(--bg);border:1px solid var(--border2);color:var(--cream);
+  padding:5px 9px;border-radius:3px;font-family:var(--fmono);font-size:.8rem;outline:none;width:100px}
+.gvpi:focus{border-color:var(--gold)}.gvpi:disabled{opacity:.3;cursor:not-allowed}
+.gvlb2{font-family:var(--fmono);font-size:.65rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;
+  color:var(--amber);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.gvlb2::after{content:'';flex:1;height:1px;background:var(--border2)}
+.sctrl{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:4px;padding:10px 16px;margin-bottom:20px;font-family:var(--fmono);font-size:.66rem;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.sctrl input[type=range]{width:110px;accent-color:var(--gold)}
+.sctrl span{color:var(--gold-l);min-width:28px;font-weight:700}
+.sctrl label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.sctrl input[type=checkbox]{accent-color:var(--gold);width:13px;height:13px}
+.led-adm-list{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+.led-adm-item{display:flex;align-items:center;gap:8px;background:var(--bg);
+  border:1px solid var(--border2);border-radius:3px;padding:8px 11px}
+.led-adm-item.active{border-color:rgba(255,80,0,.35);background:rgba(255,50,0,.04)}
+.led-ti{flex:1;background:transparent;border:none;color:var(--cream);font-family:var(--fr);font-size:.88rem;outline:none;min-width:0;font-weight:600}
+.led-ti::placeholder{color:var(--muted)}
+.led-si{width:160px;background:var(--bg3);border:1px solid var(--border2);color:var(--cream2);
+  font-family:var(--fr);font-size:.78rem;padding:4px 7px;border-radius:2px;outline:none;flex-shrink:0}
+.led-si:focus{border-color:var(--gold)}
+.led-pi{background:var(--bg3);border:1px solid var(--border2);color:var(--cream2);
+  font-family:var(--fmono);font-size:.6rem;letter-spacing:1px;padding:4px 7px;border-radius:2px;outline:none;cursor:pointer;flex-shrink:0;font-weight:600}
+.led-pi:focus{border-color:var(--gold)}
+.led-cb{width:14px;height:14px;accent-color:#ff5500;cursor:pointer;flex-shrink:0}
+.led-adm-foot{display:flex;align-items:center;gap:10px;padding-top:10px;border-top:1px solid var(--border2)}
+.led-srow{display:flex;align-items:center;gap:7px;font-family:var(--fmono);font-size:.62rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.led-srow input[type=range]{width:90px;accent-color:var(--gold)}
+.led-sv{color:var(--gold-l);min-width:22px}
+#toast{position:fixed;bottom:20px;right:20px;background:var(--bg3);border:1px solid var(--border2);
+  padding:10px 14px;border-radius:4px;font-family:var(--fmono);font-size:.68rem;letter-spacing:1px;font-weight:600;
+  color:var(--cream);opacity:0;transform:translateY(6px);transition:all .25s;z-index:9999;pointer-events:none;max-width:280px}
+#toast.on{opacity:1;transform:translateY(0)}
+#toast.ok{border-left:3px solid var(--green)}
+#toast.err{border-left:3px solid var(--red)}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ── NEW: Out-of-stock, low-stock, price flash, QR, night mode ── */
+.tvc{position:relative;transition:filter .3s, opacity .3s}
+.tvc.oos{filter:grayscale(.85) brightness(.55);opacity:.72}
+.tvc.oos .tvc-ppx{text-decoration:line-through;text-decoration-thickness:2px;opacity:.6}
+.tvc.oos::before{content:'НЕМАЄ';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-6deg);
+  font-family:var(--fmono);font-size:1.8rem;font-weight:800;letter-spacing:3px;
+  padding:8px 22px;background:rgba(10,9,8,.85);color:#d9635a;
+  border:2px solid rgba(184,60,43,.7);border-radius:4px;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,.6)}
+.cols-6 .tvc.oos::before,.cols-8 .tvc.oos::before{font-size:1.1rem;padding:6px 14px}
+
+.tvc-low{position:absolute;top:8px;left:8px;font-family:var(--fmono);font-size:.58rem;font-weight:800;letter-spacing:1.5px;
+  padding:3px 8px;background:rgba(216,66,30,.92);color:#fff;border-radius:2px;z-index:4;
+  animation:lowpulse 1.8s ease-in-out infinite;box-shadow:0 2px 8px rgba(216,66,30,.5)}
+@keyframes lowpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.06);opacity:.85}}
+.cols-6 .tvc-low,.cols-8 .tvc-low{font-size:.52rem;padding:2px 6px}
+
+@keyframes priceflash{0%{background:rgba(232,184,75,.6);transform:scale(1)}60%{background:rgba(232,184,75,.15)}100%{background:transparent;transform:scale(1)}}
+.tvc-ppx.flash{animation:priceflash 1.2s ease-out;border-radius:3px;padding:0 3px;margin:0 -3px}
+
+/* QR code corner */
+.tv-qr{position:absolute;bottom:96px;right:16px;width:96px;background:#fff;padding:8px;border-radius:6px;
+  display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 4px 24px rgba(0,0,0,.6);
+  border:1px solid rgba(0,0,0,.1);z-index:10}
+.tv-qr canvas,.tv-qr svg,.tv-qr img{width:80px;height:80px;display:block}
+.tv-qr-lbl{font-family:var(--fmono);font-size:.52rem;font-weight:700;letter-spacing:1px;color:#222;text-transform:uppercase;text-align:center;line-height:1.2}
+
+/* Night-mode contrast boost */
+body.nightboost .tvc-name,body.nightboost .tv-name,body.nightboost .lt-nm{color:#fff !important;text-shadow:0 1px 0 rgba(0,0,0,.3)}
+body.nightboost .tvc-ppx,body.nightboost .lt-vp-px{color:#ffd970 !important}
+body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) !important}
+
+/* Weather stale indicator */
+.wx-stale{position:relative}
+.wx-stale::after{content:'';position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:#d9635a;box-shadow:0 0 6px #d9635a;animation:blink 1.5s ease-in-out infinite}
+.wx-check{display:inline-flex;align-items:center;gap:5px;font-family:var(--fmono);font-size:.62rem;font-weight:700;letter-spacing:1px;
+  margin-top:6px;padding:4px 9px;border-radius:3px;text-transform:uppercase}
+.wx-check.ok{background:rgba(45,138,88,.15);color:#5cc88a;border:1px solid rgba(45,138,88,.35)}
+.wx-check.err{background:rgba(184,60,43,.12);color:#d9635a;border:1px solid rgba(184,60,43,.35)}
+.wx-check.pending{background:var(--bg3);color:var(--muted);border:1px solid var(--border2)}
+
+/* Admin bulk actions bar */
+.bulk-bar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;
+  padding:10px 14px;margin-bottom:12px;background:var(--bg3);border:1px solid var(--gold-d);
+  border-radius:4px;box-shadow:0 4px 14px rgba(0,0,0,.4);opacity:0;transform:translateY(-6px);pointer-events:none;transition:all .2s}
+.bulk-bar.on{opacity:1;transform:translateY(0);pointer-events:all}
+.bulk-cnt{font-family:var(--fmono);font-size:.78rem;font-weight:700;color:var(--gold-l);letter-spacing:1.5px}
+.bulk-bar .btn{font-size:.62rem}
+
+.td-sel{width:28px}.td-sel input{width:15px;height:15px;accent-color:var(--gold);cursor:pointer}
+
+/* Admin: EN/UA / audit / kbd hint */
+.kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;
+  font-family:var(--fmono);font-size:.62rem;font-weight:700;background:var(--bg);border:1px solid var(--border2);
+  border-bottom-width:2px;border-radius:3px;color:var(--cream2);line-height:1}
+.kbd-hint{margin-left:auto;display:flex;gap:5px;font-family:var(--fmono);font-size:.58rem;color:var(--muted);letter-spacing:1px;align-items:center}
+
+.audit-list{max-height:220px;overflow-y:auto;background:var(--bg);border:1px solid var(--border);border-radius:3px}
+.audit-row{display:grid;grid-template-columns:130px 1fr;gap:14px;padding:7px 12px;border-bottom:1px solid var(--border);
+  font-family:var(--fmono);font-size:.72rem;color:var(--cream2);font-weight:500}
+.audit-row:last-child{border-bottom:none}
+.audit-row .ts{color:var(--muted);letter-spacing:.5px}
+.audit-row .act{color:var(--cream)}
+.audit-row.add{border-left:2px solid var(--green)}
+.audit-row.del{border-left:2px solid var(--red)}
+.audit-row.upd{border-left:2px solid var(--gold)}
+
+/* Side-by-side preview card */
+.preview-card{position:sticky;top:12px;background:var(--bg2);border:1px solid var(--border2);border-radius:5px;padding:14px;
+  display:none}
+.preview-card.on{display:block}
+.preview-ttl{font-family:var(--fmono);font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;font-weight:700}
+
+/* LED schedule input */
+.led-sched{background:var(--bg3);border:1px solid var(--border2);color:var(--cream2);
+  font-family:var(--fmono);font-size:.65rem;padding:4px 7px;border-radius:2px;outline:none;width:100px;flex-shrink:0}
+.led-sched:focus{border-color:var(--gold)}
+.led-sched::placeholder{color:var(--muted)}
+
+/* Undo toast */
+#toast.undo{padding:12px 14px;max-width:340px;cursor:pointer}
+#toast.undo .btn{margin-left:10px}
+
+/* Language toggle */
+.lang-tgl{display:inline-flex;margin-left:10px;border:1px solid var(--border2);border-radius:3px;overflow:hidden}
+.lang-tgl button{background:none;border:none;padding:4px 9px;font-family:var(--fmono);font-size:.6rem;font-weight:700;
+  letter-spacing:1px;color:var(--muted);cursor:pointer;border-right:1px solid var(--border2)}
+.lang-tgl button:last-child{border-right:none}
+.lang-tgl button.on{background:var(--gold);color:var(--bg)}
+
+/* Print menu */
+@media print{
+  body *{visibility:hidden}
+  #print-view,#print-view *{visibility:visible}
+  #print-view{position:absolute;left:0;top:0;width:100%;color:#111;font-family:Georgia,serif}
+  @page{margin:18mm}
+}
+#print-view{display:none}
+
+/* Pause indicator */
+.tv-paused{position:absolute;top:80px;right:16px;background:rgba(0,0,0,.6);color:var(--gold-l);
+  font-family:var(--fmono);font-size:.7rem;font-weight:700;letter-spacing:2px;padding:6px 12px;border-radius:3px;
+  border:1px solid var(--gold-d);z-index:15;display:none}
+.tv-paused.on{display:flex;align-items:center;gap:6px}
+.tv-paused::before{content:'';width:6px;height:6px;background:var(--gold-l);box-shadow:0 0 6px var(--gold-l)}
+
+/* CSV import modal */
+.csv-area{width:100%;min-height:180px;background:var(--bg);border:1px dashed var(--border2);color:var(--cream);
+  padding:10px;border-radius:3px;font-family:var(--fmono);font-size:.75rem;outline:none;resize:vertical}
+
+/* Mobile menu page styles (standalone route) */
+.mm-shell{max-width:720px;margin:0 auto;padding:20px 16px 40px}
+
+/* ── TWEAKS PANEL ── */
+#tweaks{position:fixed;bottom:18px;right:18px;z-index:500;width:280px;background:var(--bg2);
+  border:1px solid var(--border2);border-radius:8px;padding:16px;display:none;box-shadow:0 12px 40px rgba(0,0,0,.6);backdrop-filter:blur(8px)}
+#tweaks.on{display:block}
+.tw-ttl{font-family:var(--fmono);font-size:.72rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.tw-ttl::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold-l);box-shadow:0 0 8px var(--gold-l)}
+.tw-g{margin-bottom:12px}
+.tw-l{font-family:var(--fmono);font-size:.58rem;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block}
+.tw-opts{display:flex;gap:4px}
+.tw-opt{flex:1;background:var(--bg);border:1px solid var(--border2);color:var(--muted);
+  padding:6px 8px;border-radius:3px;font-family:var(--fmono);font-size:.65rem;font-weight:700;cursor:pointer;letter-spacing:.8px;text-transform:uppercase;transition:all .15s}
+.tw-opt:hover{color:var(--cream2);border-color:var(--muted)}
+.tw-opt.on{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.tw-slider{display:flex;align-items:center;gap:8px}
+.tw-slider input{flex:1;accent-color:var(--gold)}
+.tw-slider span{font-family:var(--fmono);font-size:.7rem;color:var(--gold-l);font-weight:700;min-width:44px;text-align:right}
+.tw-cats{display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto}
+.tw-cat-row{display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:3px;cursor:move;font-family:var(--fmono);font-size:.7rem;color:var(--cream);font-weight:600}
+.tw-cat-row:hover{border-color:var(--muted)}
+.tw-cat-row .handle{color:var(--muted);cursor:move}
+.tw-cat-row .arrows{margin-left:auto;display:flex;gap:2px}
+.tw-cat-row .arrows button{background:none;border:1px solid var(--border2);color:var(--muted);width:20px;height:20px;border-radius:2px;cursor:pointer;font-family:var(--fmono);font-size:.7rem;line-height:1;padding:0}
+.tw-cat-row .arrows button:hover{color:var(--cream);border-color:var(--muted)}
+</style>
+</head>
+<body class="theme-a">
+<nav id="nav">
+  <div class="logo">Pub<span>Board</span></div>
+  <div class="tabs">
+    <button class="tab on" id="t-tv"   onclick="sw('tv')">📺 TV Меню</button>
+    <button class="tab"    id="t-list" onclick="sw('list')">📋 Список</button>
+    <button class="tab"    id="t-led"  onclick="swLed()">🔴 Сповіщення</button>
+    <button class="tab"    id="t-adm"  onclick="sw('adm')">⚙ Адмін</button>
+  </div>
+</nav>
+
+<!-- TV VIEW -->
+<div class="view on" id="tv-view">
+  <div class="tv-shell">
+    <div class="tv-top">
+      <div class="tv-top-l">
+        <div class="tv-name" id="tv-nm">THE GOLDEN HOP</div>
+        <div class="tv-tag" id="tv-tg">Craft beer & good vibes</div>
+      </div>
+      <div class="tv-top-c">
+        <div class="tv-weather" id="tv-wx">
+          <div class="wx-ico">🌙</div>
+          <div class="wx-txt"><div class="wx-temp">+12°C</div><div class="wx-cond">Ясна ніч · Київ</div></div>
+        </div>
+      </div>
+      <div class="tv-top-r">
+        <div class="tv-clock" id="tv-clk">00:00</div>
+        <div class="tv-date" id="tv-dt"></div>
+      </div>
+    </div>
+    <div class="tv-featured" id="tv-feat"></div>
+    <div class="tv-prog"><div class="tv-prog-fill" id="tv-prog"></div></div>
+    <div class="tv-stage" id="tv-ss"></div>
+    <div class="tv-paused" id="tv-paused">ПАУЗА</div>
+    <div class="tv-qr" id="tv-qr" style="display:none">
+      <div id="tv-qr-img"></div>
+      <div class="tv-qr-lbl" id="tv-qr-lbl">МЕНЮ НА ТЕЛЕФОН</div>
+    </div>
+    <div class="tv-dots" id="tv-dots"></div>
+    <div class="tv-bot"><div class="tv-bot-inner" id="tv-tick"></div></div>
+  </div>
+</div>
+
+<!-- LIST VIEW -->
+<div class="view" id="list-view">
+  <div class="tv-shell">
+    <div class="tv-top">
+      <div class="tv-top-l">
+        <div class="tv-name" id="lv-nm">THE GOLDEN HOP</div>
+        <div class="tv-tag" id="lv-tg">Craft beer & good vibes</div>
+      </div>
+      <div class="tv-top-c">
+        <div class="tv-weather" id="lv-wx">
+          <div class="wx-ico">🌙</div>
+          <div class="wx-txt"><div class="wx-temp">+12°C</div><div class="wx-cond">Ясна ніч · Київ</div></div>
+        </div>
+      </div>
+      <div class="tv-top-r">
+        <div class="tv-clock" id="lv-clk">00:00</div>
+        <div class="tv-date" id="lv-dt"></div>
+      </div>
+    </div>
+    <div class="tv-prog"><div class="tv-prog-fill" id="lv-prog"></div></div>
+    <div class="tv-stage" id="lv-ss"></div>
+    <div class="tv-dots" id="lv-dots"></div>
+    <div class="tv-bot"><div class="tv-bot-inner" id="lv-tick"></div></div>
+  </div>
+</div>
+
+<!-- LED OVERLAY -->
+<div id="led">
+  <div class="led-head">
+    <div class="led-name" id="led-nm">THE GOLDEN HOP</div>
+    <div class="led-mid">
+      <div class="led-wx" id="led-wx">
+        <div class="led-wx-ico">🌙</div>
+        <div class="led-wx-temp">+12°C</div>
+      </div>
+    </div>
+    <div class="led-right">
+      <div class="led-clk" id="led-clk">00:00</div>
+      <button class="led-x" onclick="swLed()">✕</button>
+    </div>
+  </div>
+  <div class="led-stage">
+    <div class="led-badge" id="led-badge"><span class="led-dot"></span><span id="led-plbl">INFO</span></div>
+    <div class="led-msg-wrap" id="led-mw"><div class="led-msg" id="led-msg"></div></div>
+    <div class="led-sub" id="led-sub"></div>
+  </div>
+  <div class="led-qdots" id="led-qdots"></div>
+  <div class="led-ticker"><div class="led-tick-inner" id="led-tick"></div></div>
+</div>
+
+<!-- ADMIN VIEW -->
+<div class="view" id="adm-view">
+<div class="adm">
+  <div class="stats" id="adm-stats"></div>
+
+  <div class="sec">Тема TV</div>
+  <div class="box">
+    <div class="tw-opts" style="max-width:500px">
+      <button class="tw-opt" id="th-a" onclick="setTheme('a')">🏺 Tavern Bold</button>
+      <button class="tw-opt" id="th-b" onclick="setTheme('b')">✒ Chalkboard Editorial</button>
+    </div>
+    <div style="margin-top:10px;font-family:var(--fmono);font-size:.68rem;color:var(--muted);line-height:1.6">
+      <b style="color:var(--cream2)">Tavern Bold</b> — темний паб-стиль, акцент на цінах, великі числа, жирний Inter.<br>
+      <b style="color:var(--cream2)">Chalkboard Editorial</b> — теплі тони, серифний Fraunces, магазинний настрій.
+    </div>
+  </div>
+
+  <div class="sec">Налаштування закладу</div>
+  <div class="box">
+    <div class="row2">
+      <div class="fg"><label class="lbl">Назва</label><input class="inp" id="s-nm" placeholder="THE GOLDEN HOP"></div>
+      <div class="fg"><label class="lbl">Слоган</label><input class="inp" id="s-tg" placeholder="Craft beer & good vibes"></div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label class="lbl">Карток на слайді</label>
+        <select class="sel" id="s-cols"><option value="3">3</option><option value="4" selected>4</option><option value="6">6</option><option value="8">8</option></select>
+      </div>
+      <div class="fg">
+        <label class="lbl">🌤 Місто для погоди (або очистіть — геолокація)</label>
+        <div style="display:flex;gap:6px">
+          <input class="inp" id="s-city" placeholder="Київ" style="flex:1">
+          <button class="btn btn-g sm" onclick="wxCheck()" id="wx-check-btn">Перевірити</button>
+        </div>
+        <div id="wx-check" class="wx-check pending" style="display:none">⏳ Очікування…</div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label class="lbl">🌍 Мова TV (EN/UA)</label>
+        <div class="lang-tgl" style="margin-left:0">
+          <button id="lang-uk" onclick="setLang('uk')">UA</button>
+          <button id="lang-en" onclick="setLang('en')">EN</button>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">📱 QR-код на TV (посилання)</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input class="inp" id="s-qr" placeholder="https://menu.example.com" style="flex:1">
+          <label style="display:flex;align-items:center;gap:5px;font-family:var(--fmono);font-size:.62rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:600"><input type="checkbox" id="s-qr-on" style="accent-color:var(--gold)"> Показ</label>
+        </div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label class="lbl">🌙 Авто-контраст вночі</label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border:1px solid var(--border2);border-radius:3px;cursor:pointer;font-family:var(--fmono);font-size:.75rem;color:var(--cream2)">
+          <input type="checkbox" id="s-night" style="accent-color:var(--gold);width:14px;height:14px"> Збільшити яскравість після 19:00
+        </label>
+      </div>
+      <div class="fg"><label class="lbl">💤 Показувати «немає» на TV</label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border:1px solid var(--border2);border-radius:3px;cursor:pointer;font-family:var(--fmono);font-size:.75rem;color:var(--cream2)">
+          <input type="checkbox" id="s-show-oos" style="accent-color:var(--gold);width:14px;height:14px"> Сіра картка + штамп
+        </label>
+      </div>
+    </div>
+    <div class="fg"><label class="lbl">📢 Бігучий рядок (тікер)</label><textarea class="ta" id="s-tick" placeholder="Оголошення, акції, події…" style="min-height:54px"></textarea></div>
+    <div class="row2">
+      <div class="fg">
+        <label class="lbl">💰 Знижка в тікері (%)</label>
+        <input class="inp" id="s-disc" type="number" min="0" max="90" step="5" placeholder="20">
+      </div>
+      <div class="fg">
+        <label class="lbl">🎯 Режим знижки</label>
+        <select class="sel" id="s-disc-mode">
+          <option value="off">— Без знижки</option>
+          <option value="all">Знижка на все</option>
+          <option value="cat">Тільки категорія</option>
+          <option value="feat">Тільки пиво дня</option>
+        </select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="fg">
+        <label class="lbl">Категорія знижки (якщо "Тільки категорія")</label>
+        <select class="sel" id="s-disc-cat"><option value="">—</option><option>Крафт</option><option>Класика</option><option>Імпорт</option><option>Безалкогольне</option><option>Сезонне</option></select>
+      </div>
+      <div class="fg">
+        <label class="lbl">Розклад знижки (години)</label>
+        <input class="inp" id="s-disc-hrs" placeholder="напр. 17:00–19:00 (порожнє = завжди)">
+      </div>
+    </div>
+    <div class="fg"><label class="lbl">⭐ Пиво дня — виділяється на TV (−20%)</label><select class="sel" id="s-feat"></select></div>
+    <div style="text-align:right"><button class="btn btn-p" onclick="saveSettings()">Зберегти</button></div>
+  </div>
+
+  <div class="sec">🔴 LED Сповіщення</div>
+  <div class="box">
+    <div class="led-adm-list" id="led-adm-list"></div>
+    <button class="btn btn-g sm" onclick="ledAdd()" style="margin-bottom:4px">+ Додати</button>
+    <div class="led-adm-foot">
+      <div class="led-srow">Швидкість<input type="range" id="led-spd" min="20" max="200" step="10" value="80" oninput="document.getElementById('led-sv').textContent=this.value"><span class="led-sv" id="led-sv">80</span></div>
+      <div style="margin-left:auto;display:flex;gap:7px">
+        <button class="btn btn-g sm" onclick="swLed()">▶ Перегляд</button>
+        <button class="btn btn-p" onclick="ledSave()">Зберегти</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">Глобальні об'єми</div>
+  <div class="box">
+    <div style="margin-bottom:16px">
+      <div class="gvlb2">🍺 Кранове</div><div id="gv-tap"></div>
+    </div>
+    <div>
+      <div class="gvlb2">🍾 Пляшкове</div><div id="gv-bot"></div>
+    </div>
+    <div style="text-align:right;margin-top:12px"><button class="btn btn-p" onclick="saveGv()">Зберегти об'єми</button></div>
+  </div>
+
+  <div class="sec">📜 Журнал змін (аудит)</div>
+  <div class="box">
+    <div class="audit-list" id="audit-list"></div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn btn-g sm" onclick="clearAudit()">Очистити</button>
+      <button class="btn btn-g sm" onclick="exportAudit()">Експорт CSV</button>
+      <div class="kbd-hint" style="margin-left:auto">Гарячі клавіші: <span class="kbd">N</span>новий <span class="kbd">/</span>пошук <span class="kbd">1-4</span>вид <span class="kbd">Space</span>пауза <span class="kbd">←→</span></div>
+    </div>
+  </div>
+
+  <div class="sec">📥 Імпорт та експорт</div>
+  <div class="box">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="btn btn-g sm" onclick="exportCsv()">⬇ Експорт пива в CSV</button>
+      <button class="btn btn-g sm" onclick="exportJson()">⬇ Повний бекап (JSON)</button>
+      <button class="btn btn-g sm" onclick="printMenu()">🖨 Друк меню</button>
+      <label class="btn btn-g sm" style="cursor:pointer"><input type="file" accept=".json" onchange="importJson(this)" style="display:none">⬆ Відновити з JSON</label>
+    </div>
+    <div class="fg"><label class="lbl">Вставте CSV (колонки: name,style,brewery,country,abv,serve,cat,avail,desc,img,vols)</label>
+      <textarea class="csv-area" id="csv-in" placeholder="Varvar IPA,IPA,Varvar Brew,Україна,6.5,tap,Крафт,1,Яскраві цитруси,,400:145;1000:320"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-p sm" onclick="importCsv()">Імпортувати</button>
+        <button class="btn btn-g sm" onclick="document.getElementById('csv-in').value=csvTpl()">Шаблон</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sctrl">
+    <span>Слайд кожні</span>
+    <input type="range" id="s-dur" min="5" max="60" step="5" value="10" oninput="durInp(this)">
+    <span id="s-dv">10 с</span>
+    <label style="margin-left:8px"><input type="checkbox" id="s-auto" checked onchange="togAuto(this)"> Авто</label>
+    <button class="btn btn-g sm" style="margin-left:auto" onclick="prevSlide()">←</button>
+    <button class="btn btn-g sm" onclick="nextSlide()">→</button>
+  </div>
+
+  <div class="toolbar">
+    <div class="sec" style="margin-bottom:0;flex:1">Список пива</div>
+    <div class="search-w"><span class="s-ico">🔍</span><input id="s-search" placeholder="Пошук… ( / )" oninput="renderTbl()"></div>
+    <button class="btn btn-p" onclick="openMod()">+ Додати <span class="kbd" style="margin-left:4px;background:rgba(0,0,0,.15);border-color:rgba(0,0,0,.2);color:var(--bg)">N</span></button>
+  </div>
+  <div class="bulk-bar" id="bulk-bar">
+    <span class="bulk-cnt" id="bulk-cnt">0 вибрано</span>
+    <button class="btn btn-g sm" onclick="bulkAvail(true)">✓ В наявності</button>
+    <button class="btn btn-g sm" onclick="bulkAvail(false)">✗ Немає</button>
+    <button class="btn btn-g sm" onclick="bulkLow(true)">⚠ Останній кег</button>
+    <button class="btn btn-g sm" onclick="bulkLow(false)">✕ Зняти мітку</button>
+    <button class="btn btn-d sm" onclick="bulkDelete()">🗑 Видалити</button>
+    <button class="btn btn-g sm" style="margin-left:auto" onclick="bulkClear()">Скасувати</button>
+  </div>
+  <div class="chips" id="adm-chips"></div>
+  <table class="btbl">
+    <thead><tr><th class="td-sel"><input type="checkbox" id="bulk-all" onchange="bulkToggleAll(this.checked)"></th><th>Фото</th><th>Назва</th><th>Стиль</th><th>Пивоварня / Країна</th><th>ABV</th><th>Тип</th><th>Об'єми/Ціни</th><th>Статус</th><th>Дії</th></tr></thead>
+    <tbody id="adm-tbody"></tbody>
+  </table>
+</div>
+</div>
+
+<!-- PRINT VIEW -->
+<div id="print-view"></div>
+
+<!-- TWEAKS PANEL -->
+<div id="tweaks">
+  <div class="tw-ttl">Налаштування TV</div>
+  <div class="tw-g">
+    <label class="tw-l">Тема</label>
+    <div class="tw-opts">
+      <button class="tw-opt" id="tw-th-a" onclick="setTheme('a')">Tavern</button>
+      <button class="tw-opt" id="tw-th-b" onclick="setTheme('b')">Chalkboard</button>
+    </div>
+  </div>
+  <div class="tw-g">
+    <label class="tw-l">Карток на слайді</label>
+    <div class="tw-opts">
+      <button class="tw-opt" data-cols="3" onclick="setCols(3)">3</button>
+      <button class="tw-opt" data-cols="4" onclick="setCols(4)">4</button>
+      <button class="tw-opt" data-cols="6" onclick="setCols(6)">6</button>
+      <button class="tw-opt" data-cols="8" onclick="setCols(8)">8</button>
+    </div>
+  </div>
+  <div class="tw-g">
+    <label class="tw-l">Тривалість слайду</label>
+    <div class="tw-slider">
+      <input type="range" id="tw-dur" min="5" max="60" step="5" value="10" oninput="twDurInp(this)">
+      <span id="tw-dv">10 с</span>
+    </div>
+  </div>
+  <div class="tw-g">
+    <label class="tw-l">Порядок категорій</label>
+    <div class="tw-cats" id="tw-cats"></div>
+  </div>
+</div>
+
+<!-- MODAL (unchanged) -->
+<div class="ov" id="modal" onclick="ovClick(event)">
+<div class="mod">
+  <div class="mod-head"><h2 id="mod-ttl">Нова позиція</h2><button class="mod-x" onclick="closeMod()">✕</button></div>
+  <div class="fg">
+    <label class="lbl">Фото</label>
+    <div class="photo-up" id="photo-up">
+      <span class="photo-up-ico">🍺</span><span class="photo-up-lbl">Клікніть або перетягніть</span>
+      <input type="file" accept="image/*" onchange="onPhoto(this)">
+      <img id="photo-prev" style="display:none" alt="">
+    </div>
+    <div style="display:flex;gap:7px;margin-top:5px">
+      <input class="inp" id="f-img" placeholder="або URL зображення" style="flex:1" oninput="prevUrl(this.value)">
+      <button class="btn btn-g sm" onclick="clrPhoto()">✕</button>
+    </div>
+  </div>
+  <div class="row2">
+    <div class="fg"><label class="lbl">Назва *</label><input class="inp" id="f-nm" placeholder="Kyiv Blonde Ale"></div>
+    <div class="fg"><label class="lbl">Стиль *</label><input class="inp" id="f-st" placeholder="IPA, Stout…"></div>
+  </div>
+  <div class="row2">
+    <div class="fg"><label class="lbl">Пивоварня</label><input class="inp" id="f-br" placeholder="Varvar Brew"></div>
+    <div class="fg"><label class="lbl">Країна</label><input class="inp" id="f-cn" placeholder="Україна"></div>
+  </div>
+  <div class="row2">
+    <div class="fg"><label class="lbl">ABV (%)</label><input class="inp" id="f-ab" type="number" step="0.1" min="0" max="30" placeholder="5.2"></div>
+    <div class="fg"><label class="lbl">Категорія</label>
+      <select class="sel" id="f-cat"><option>Крафт</option><option>Класика</option><option>Імпорт</option><option>Безалкогольне</option><option>Сезонне</option></select>
+    </div>
+  </div>
+  <div class="fg">
+    <label class="lbl">Тип подачі</label>
+    <div class="serve-tgl">
+      <div class="serve-opt"><input type="radio" name="f-srv" id="f-tap" value="tap" checked onchange="onSrv()"><label for="f-tap">🍺 Кран</label></div>
+      <div class="serve-opt"><input type="radio" name="f-srv" id="f-bot" value="bottle" onchange="onSrv()"><label for="f-bot">🍾 Пляшка</label></div>
+    </div>
+  </div>
+  <div class="fg">
+    <label class="lbl">Об'єми та ціни</label>
+    <table class="pvol-tbl"><thead><tr><th></th><th>Об'єм</th><th>Ціна (₴)</th><th>Глобальна</th></tr></thead><tbody id="pvol-body"></tbody></table>
+  </div>
+  <div class="divider"></div>
+  <div class="fg"><label class="lbl">Опис</label><textarea class="ta" id="f-ds" placeholder="Тропічні фрукти…"></textarea></div>
+  <div class="fg"><label class="lbl">Наявність</label>
+    <select class="sel" id="f-av"><option value="1">✓ В наявності</option><option value="0">✗ Відсутнє</option></select>
+  </div>
+  <div class="mod-foot">
+    <button class="btn btn-g" onclick="closeMod()">Скасувати</button>
+    <button class="btn btn-p" onclick="saveBeer()">Зберегти</button>
+  </div>
+</div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "a",
+  "cols": 4,
+  "slideDur": 10,
+  "catOrder": [
+    "Крафт",
+    "Класика",
+    "Імпорт",
+    "Сезонне",
+    "Безалкогольне"
+  ]
+}/*EDITMODE-END*/;
+
+// ── CONSTANTS ──
+const TAP_SZ=[300,400,500,1000], BOT_SZ=[330,500];
+const LT_ROWS=9;
+const LED_COL={info:{b:'p-info',m:'c-info',l:'INFO'},warning:{b:'p-warn',m:'c-warn',l:'УВАГА'},alert:{b:'p-alrt',m:'c-alrt',l:'ТЕРМІН.'}};
+const CAT_ICON={Крафт:'🍺',Класика:'🥂',Імпорт:'🌍',Безалкогольне:'🫧',Сезонне:'🌿'};
+
+// ── STATE ──
+let beers=[], settings={name:'THE GOLDEN HOP',tag:'Craft beer & good vibes',ticker:'Happy Hour 17:00–19:00 · -20% на крафти · Жива музика щоп\'ятниці',cols:4,city:'',featId:'',theme:'a',catOrder:TWEAK_DEFAULTS.catOrder.slice(),
+  qrUrl:'',qrOn:false,showOos:true,night:true,lang:'uk',
+  discPct:20,discMode:'off',discCat:'',discHrs:''};
+let gv={tap:{300:{on:false,price:0},400:{on:true,price:130},500:{on:false,price:0},1000:{on:true,price:290}},bottle:{330:{on:true,price:95},500:{on:true,price:120}}};
+let slideDur=10,autoPlay=true,editId=null,activeF='all',photoDraft=null;
+let slides=[],curSlide=0,slideTimer=null;
+let ltSlides=[],ltCur=0,ltTimer=null;
+let ledMsgs=[{id:'l1',text:'HAPPY HOUR 17:00–19:00',sub:'-20% на крафти',priority:'warning',active:true,sched:''},{id:'l2',text:'ЖИВА МУЗИКА ЩОП\'ЯТНИЦІ О 20:00',sub:'Вхід вільний',priority:'info',active:true,sched:''},{id:'l3',text:'КУХНЯ ЗАЧИНЯЄТЬСЯ О 22:30',sub:'',priority:'alert',active:true,sched:''}];
+let ledSpeed=80,ledCur=0,ledTimer=null,ledRaf=null;
+let editMode=false;
+// New state
+let selected=new Set();           // bulk selection
+let auditLog=[];                   // change history
+let undoStack=[];                  // undo stack for delete
+let wxState={ico:'⏳',temp:'—',cond:'Завантаження…',city:'',lastUpdate:0,ok:false};
+let priorPrices=new Map();         // id → first-volume price (for flash detection)
+let pausedByUser=false;
+
+// ── I18N ──
+const I18N={
+  uk:{allCat:'Всі',pos:'позицій',pos1:'позиція',oos:'НЕМАЄ',last:'ОСТАННІЙ КЕГ',tap:'Кран',bottle:'Пляшка',onTap:'На крані',cat:'Категорій',pubDay:'Пиво дня',happyH:'Happy Hour',menu:'МЕНЮ НА ТЕЛЕФОН',paused:'ПАУЗА',unavail:'Меню тимчасово недоступне'},
+  en:{allCat:'All',pos:'items',pos1:'item',oos:'OUT',last:'LAST KEG',tap:'Draft',bottle:'Bottle',onTap:'On tap',cat:'Categories',pubDay:'Beer of the Day',happyH:'Happy Hour',menu:'MENU ON YOUR PHONE',paused:'PAUSED',unavail:'Menu temporarily unavailable'}
+};
+const T=k=>(I18N[settings.lang||'uk']||I18N.uk)[k]||k;
+
+// ── STORAGE ──
+function isCS(){try{return typeof window.storage==='object'&&typeof window.storage.get==='function'}catch{return false}}
+const CS=isCS();
+async function stGet(k){if(CS){try{const r=await window.storage.get(k);if(r&&r.value!==undefined)return r}catch{}}try{const v=localStorage.getItem(k);if(v!==null)return{value:v}}catch{}return null}
+async function stSet(k,v){if(CS){try{await window.storage.set(k,v)}catch{}}try{localStorage.setItem(k,v)}catch{}}
+
+async function load(){
+  try{const r=await stGet('pb:b');beers=r?JSON.parse(r.value):seed()}catch{beers=seed()}
+  if(!Array.isArray(beers)||!beers.length)beers=seed();
+  stSet('pb:b',JSON.stringify(beers));
+  try{const r=await stGet('pb:s');if(r)Object.assign(settings,JSON.parse(r.value))}catch{}
+  if(!settings.catOrder)settings.catOrder=TWEAK_DEFAULTS.catOrder.slice();
+  try{const r=await stGet('pb:g');if(r)gv=JSON.parse(r.value)}catch{}
+  try{const r=await stGet('pb:l');if(r){const d=JSON.parse(r.value);ledMsgs=d.msgs||ledMsgs;ledSpeed=d.speed||ledSpeed}}catch{}
+  try{const r=await stGet('pb:d');if(r){slideDur=+r.value;const e=document.getElementById('s-dur'),v=document.getElementById('s-dv'),te=document.getElementById('tw-dur'),tv=document.getElementById('tw-dv');if(e)e.value=slideDur;if(v)v.textContent=slideDur+' с';if(te)te.value=slideDur;if(tv)tv.textContent=slideDur+' с'}}catch{}
+  applyTheme();applySettings();renderAll();
+}
+const persist=()=>stSet('pb:b',JSON.stringify(beers));
+const persS=()=>stSet('pb:s',JSON.stringify(settings));
+const persG=()=>stSet('pb:g',JSON.stringify(gv));
+const persL=()=>stSet('pb:l',JSON.stringify({msgs:ledMsgs,speed:ledSpeed}));
+const persD=()=>stSet('pb:d',String(slideDur));
+
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+
+// ── SEED ──
+function seed(){return[
+  {id:uid(),name:'Varvar IPA',style:'IPA',brewery:'Varvar Brew',country:'Україна',abv:6.5,serve:'tap',vo:{400:{on:true,price:145},1000:{on:true,price:320}},cat:'Крафт',avail:true,desc:'Тропічні ноти манго, грейпфрут, насичена хмелева гіркота',img:'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400&q=80'},
+  {id:uid(),name:'Pravda Leopolis',style:'Pale Ale',brewery:'Правда Пиво',country:'Україна',abv:5.0,serve:'tap',vo:{400:{on:true,price:130},1000:{on:true,price:285}},cat:'Крафт',avail:true,desc:'Квітковий аромат, легка хмелева гіркота, чисте завершення',img:'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&q=80'},
+  {id:uid(),name:'Varvar Porter',style:'Baltic Porter',brewery:'Varvar Brew',country:'Україна',abv:7.8,serve:'tap',vo:{400:{on:true,price:175},1000:{on:true,price:390}},cat:'Крафт',avail:true,desc:'Шоколад, ірис, легкий димок — повнотілий',img:'https://images.unsplash.com/photo-1566633806327-68e152aaf26d?w=400&q=80'},
+  {id:uid(),name:'Правда Бандерівець',style:'DIPA',brewery:'Правда Пиво',country:'Україна',abv:8.2,serve:'tap',vo:{400:{on:true,price:195},1000:{on:false}},cat:'Крафт',avail:true,desc:'Подвійний IPA, смола, цитрус, смакова бомба',img:'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400&q=80'},
+  {id:uid(),name:'Varvar Blanche',style:'Witbier',brewery:'Varvar Brew',country:'Україна',abv:4.8,serve:'tap',vo:{400:{on:true,price:125},1000:{on:true,price:275}},cat:'Крафт',avail:true,desc:'Апельсинова цедра, коріандр, легка і освіжаюча',img:'https://images.unsplash.com/photo-1554672408-17469a8c4fc1?w=400&q=80'},
+  {id:uid(),name:'Підземний Хміль',style:'Hazy IPA',brewery:'Правда Пиво',country:'Україна',abv:6.8,serve:'tap',vo:{400:{on:true,price:165},1000:{on:true,price:365}},cat:'Крафт',avail:true,desc:'Хмарний, соковитий, персик і ананас',img:'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400&q=80'},
+  {id:uid(),name:'Robota Pale',style:'Pale Ale',brewery:'Robota Brew',country:'Україна',abv:5.3,serve:'tap',vo:{400:{on:true,price:140},1000:{on:true,price:305}},cat:'Крафт',avail:true,desc:'Цитрус, трохи сосни, чисте завершення',img:'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&q=80'},
+  {id:uid(),name:'Varvar Stout',style:'Milk Stout',brewery:'Varvar Brew',country:'Україна',abv:5.6,serve:'tap',vo:{400:{on:true,price:150},1000:{on:true,price:330}},cat:'Крафт',avail:true,desc:'Кава, молочний шоколад, кремова текстура',img:'https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?w=400&q=80'},
+  {id:uid(),name:'Kovalska Saison',style:'Saison',brewery:'Коваль',country:'Україна',abv:6.2,serve:'tap',vo:{400:{on:true,price:155},1000:{on:true,price:340}},cat:'Крафт',avail:true,desc:'Перець, спеції, фруктовість — бельгійський характер',img:'https://images.unsplash.com/photo-1555658636-6e4a36218be7?w=400&q=80'},
+  {id:uid(),name:'Carlsberg Pilsner',style:'Pilsner',brewery:'Carlsberg',country:'Данія',abv:4.6,serve:'tap',vo:{300:{on:true,price:70},400:{on:true,price:90},1000:{on:true,price:200}},cat:'Класика',avail:true,desc:'Класичний скандинавський лагер — чистий, злегка хмелевий',img:'https://images.unsplash.com/photo-1570088935530-4b48b8fd45ea?w=400&q=80'},
+  {id:uid(),name:'Stella Artois',style:'Euro Lager',brewery:'AB InBev',country:'Бельгія',abv:5.0,serve:'bottle',vo:{330:{on:true,price:85},500:{on:true,price:105}},cat:'Класика',avail:true,desc:'Чистий бельгійський лагер з нотою хмелю',img:'https://images.unsplash.com/photo-1559526324-c1f275fbfa32?w=400&q=80'},
+  {id:uid(),name:'Corona Extra',style:'Pale Lager',brewery:'Grupo Modelo',country:'Мексика',abv:4.5,serve:'bottle',vo:{330:{on:true,price:90}},cat:'Класика',avail:true,desc:'Легке і освіжаюче, ідеально з лаймом',img:'https://images.unsplash.com/photo-1559526324-c1f275fbfa32?w=400&q=80'},
+  {id:uid(),name:'Heineken',style:'Euro Lager',brewery:'Heineken',country:'Нідерланди',abv:5.0,serve:'tap',vo:{400:{on:true,price:95},1000:{on:true,price:210}},cat:'Класика',avail:true,desc:'Чистий лагер з легкою гіркотою',img:'https://images.unsplash.com/photo-1570088935530-4b48b8fd45ea?w=400&q=80'},
+  {id:uid(),name:'Paulaner Münchner Hell',style:'Helles',brewery:'Paulaner',country:'Німеччина',abv:4.9,serve:'tap',vo:{400:{on:true,price:110},1000:{on:true,price:245}},cat:'Класика',avail:true,desc:'М\'який мюнхенський лагер — злаки, шовкова текстура',img:'https://images.unsplash.com/photo-1570088935530-4b48b8fd45ea?w=400&q=80'},
+  {id:uid(),name:'Guinness Draught',style:'Dry Stout',brewery:'Guinness',country:'Ірландія',abv:4.2,serve:'tap',vo:{400:{on:true,price:160},1000:{on:false}},cat:'Імпорт',avail:true,desc:'Оксамитова текстура, кава та темний шоколад',img:'https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?w=400&q=80'},
+  {id:uid(),name:'Hoegaarden White',style:'Witbier',brewery:'Hoegaarden',country:'Бельгія',abv:4.9,serve:'bottle',vo:{330:{on:true,price:115},500:{on:true,price:140}},cat:'Імпорт',avail:true,desc:'Апельсин, коріандр, кремова хмара — еталон',img:'https://images.unsplash.com/photo-1554672408-17469a8c4fc1?w=400&q=80'},
+  {id:uid(),name:'Weihenstephaner Hefe',style:'Hefeweizen',brewery:'Weihenstephaner',country:'Німеччина',abv:5.4,serve:'bottle',vo:{330:{on:false},500:{on:true,price:155}},cat:'Імпорт',avail:true,desc:'Банан, гвоздика, естери — найстаріша пивоварня',img:'https://images.unsplash.com/photo-1555658636-6e4a36218be7?w=400&q=80'},
+  {id:uid(),name:'Leffe Blonde',style:'Belgian Blonde',brewery:'Leffe',country:'Бельгія',abv:6.6,serve:'bottle',vo:{330:{on:true,price:130}},cat:'Імпорт',avail:true,desc:'Квіти, ваніль, легка пряність — монастирська традиція',img:'https://images.unsplash.com/photo-1554672408-17469a8c4fc1?w=400&q=80'},
+  {id:uid(),name:'Chimay Red',style:'Dubbel',brewery:'Chimay',country:'Бельгія',abv:7.0,serve:'bottle',vo:{330:{on:true,price:175}},cat:'Імпорт',avail:true,desc:'Карамель, темні фрукти — справжнє трапістське',img:'https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?w=400&q=80'},
+  {id:uid(),name:'Pravda Imperial Stout',style:'Imperial Stout',brewery:'Правда Пиво',country:'Україна',abv:9.0,serve:'tap',vo:{400:{on:true,price:195},1000:{on:true,price:440}},cat:'Сезонне',avail:true,desc:'Ваніль, чорна смородина, дуб — зимовий десерт',img:'https://images.unsplash.com/photo-1436076863939-06870fe779c2?w=400&q=80'},
+  {id:uid(),name:'Варвар Зимовий',style:'Winter Ale',brewery:'Varvar Brew',country:'Україна',abv:7.2,serve:'tap',vo:{400:{on:true,price:165},1000:{on:true,price:365}},cat:'Сезонне',avail:true,desc:'Пряники, сухофрукти, імбир — різдвяний настрій',img:'https://images.unsplash.com/photo-1436076863939-06870fe779c2?w=400&q=80'},
+  {id:uid(),name:'Heineken 0.0',style:'Lager NA',brewery:'Heineken',country:'Нідерланди',abv:0.0,serve:'bottle',vo:{330:{on:true,price:85}},cat:'Безалкогольне',avail:true,desc:'Той самий Heineken без алкоголю',img:'https://images.unsplash.com/photo-1570088935530-4b48b8fd45ea?w=400&q=80'},
+  {id:uid(),name:'Erdinger Alkoholfrei',style:'Weissbier NA',brewery:'Erdinger',country:'Німеччина',abv:0.5,serve:'bottle',vo:{500:{on:true,price:120}},cat:'Безалкогольне',avail:true,desc:'Ізотонічне пшеничне — відновлення смачно',img:'https://images.unsplash.com/photo-1555658636-6e4a36218be7?w=400&q=80'},
+];}
+
+// ── VOLUMES ──
+function rvols(b){
+  const sz=b.serve==='bottle'?BOT_SZ:TAP_SZ, gg=gv[b.serve]||{}, ov=b.vo||{};
+  return sz.filter(ml=>{const o=ov[ml];if(o!==undefined)return o.on!==false;return(gg[ml]||{on:false}).on})
+    .map(ml=>{const g=gg[ml]||{price:0},o=ov[ml];return{ml,price:(o&&o.price!=null&&o.price!=='')?o.price:g.price}});
+}
+function fml(ml){return ml>=1000?(ml/1000)+' л':ml+' мл'}
+
+// ── THEME ──
+function applyTheme(){
+  document.body.className='theme-'+(settings.theme||'a');
+  ['th-a','th-b','tw-th-a','tw-th-b'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('on')});
+  const t=settings.theme||'a';
+  document.getElementById('th-'+t)?.classList.add('on');
+  document.getElementById('tw-th-'+t)?.classList.add('on');
+}
+function setTheme(t){
+  settings.theme=t;applyTheme();persS();renderTV();renderList();
+  postEdit({theme:t});
+}
+function setCols(c){
+  settings.cols=c;document.querySelectorAll('#tweaks .tw-opt[data-cols]').forEach(b=>b.classList.toggle('on',+b.dataset.cols===c));
+  const s=document.getElementById('s-cols');if(s)s.value=String(c);
+  persS();renderTV();renderList();postEdit({cols:c});
+}
+
+// ── VIEW SWITCHING ──
+function sw(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.tab:not(#t-led)').forEach(x=>x.classList.remove('on'));
+  document.getElementById(v+'-view').classList.add('on');
+  document.getElementById('t-'+v).classList.add('on');
+  if(v==='tv'){ltStopAll();renderTV();startAuto()}
+  if(v==='list'){stopAuto();renderList()}
+  if(v==='adm'){stopAuto();ltStopAll();renderAdm();renderLedAdm();renderFeatSel();applySettings()}
+}
+function swLed(){
+  const el=document.getElementById('led'), btn=document.getElementById('t-led');
+  const on=el.classList.toggle('on');
+  btn.classList.toggle('led-on',on);
+  if(on)renderLed();else ledStopAll();
+}
+
+// ── SETTINGS APPLY ──
+function applySettings(){
+  ['tv-nm','lv-nm','led-nm'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=settings.name});
+  ['tv-tg','lv-tg'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=settings.tag});
+  const f=id=>document.getElementById(id);
+  if(f('s-nm'))f('s-nm').value=settings.name;
+  if(f('s-tg'))f('s-tg').value=settings.tag;
+  if(f('s-tick'))f('s-tick').value=settings.ticker;
+  if(f('s-cols'))f('s-cols').value=String(settings.cols||4);
+  if(f('s-city'))f('s-city').value=settings.city||'';
+  if(f('s-qr'))f('s-qr').value=settings.qrUrl||'';
+  if(f('s-qr-on'))f('s-qr-on').checked=!!settings.qrOn;
+  if(f('s-night'))f('s-night').checked=settings.night!==false;
+  if(f('s-show-oos'))f('s-show-oos').checked=settings.showOos!==false;
+  const lg=settings.lang||'uk';if(f('lang-uk'))f('lang-uk').classList.toggle('on',lg==='uk');if(f('lang-en'))f('lang-en').classList.toggle('on',lg==='en');
+  if(f('s-tick'))f('s-tick').value=settings.ticker||'';
+  if(f('s-disc'))f('s-disc').value=settings.discPct||0;
+  if(f('s-disc-mode'))f('s-disc-mode').value=settings.discMode||'off';
+  if(f('s-disc-cat'))f('s-disc-cat').value=settings.discCat||'';
+  if(f('s-disc-hrs'))f('s-disc-hrs').value=settings.discHrs||'';
+  document.querySelectorAll('#tweaks .tw-opt[data-cols]').forEach(b=>b.classList.toggle('on',+b.dataset.cols===(settings.cols||4)));
+  renderWeather();renderTwCats();
+}
+function saveSettings(){
+  settings.name=document.getElementById('s-nm').value.trim()||settings.name;
+  settings.tag=document.getElementById('s-tg').value.trim()||settings.tag;
+  settings.ticker=document.getElementById('s-tick').value.trim()||settings.ticker;
+  settings.discPct=parseFloat(document.getElementById('s-disc').value)||0;
+  settings.discMode=document.getElementById('s-disc-mode').value||'off';
+  settings.discCat=document.getElementById('s-disc-cat').value||'';
+  settings.discHrs=document.getElementById('s-disc-hrs').value.trim()||'';
+  settings.cols=parseInt(document.getElementById('s-cols').value)||4;
+  settings.city=document.getElementById('s-city').value.trim();
+  _wxLoc=null; // force re-resolve on next fetch
+  fetchWxNow();
+  settings.qrUrl=document.getElementById('s-qr').value.trim();
+  settings.qrOn=document.getElementById('s-qr-on').checked;
+  settings.night=document.getElementById('s-night').checked;
+  settings.showOos=document.getElementById('s-show-oos').checked;
+  settings.featId=document.getElementById('s-feat').value||'';
+  persS();applySettings();renderTV();renderList();audit('upd','Налаштування збережено');toast('Збережено ✓','ok');
+}
+
+function renderFeatSel(){
+  const s=document.getElementById('s-feat');if(!s)return;
+  s.innerHTML='<option value="">— Немає —</option>'+beers.map(b=>`<option value="${b.id}" ${settings.featId===b.id?'selected':''}>${esc(b.name)} (${esc(b.cat)})</option>`).join('');
+}
+
+// ── WEATHER (real via Open-Meteo, no key) ──
+// WMO weather codes → {day-icon, night-icon, label UA, label EN}
+const WX_CODES={
+  0:['☀️','🌙','Ясно','Clear'],
+  1:['🌤','🌙','Переважно ясно','Mostly clear'],
+  2:['⛅','☁️','Мінлива хмарність','Partly cloudy'],
+  3:['☁️','☁️','Хмарно','Overcast'],
+  45:['🌫','🌫','Туман','Fog'],
+  48:['🌫','🌫','Паморозь','Rime fog'],
+  51:['🌦','🌦','Легка мряка','Light drizzle'],
+  53:['🌦','🌦','Мряка','Drizzle'],
+  55:['🌧','🌧','Сильна мряка','Heavy drizzle'],
+  61:['🌦','🌦','Легкий дощ','Light rain'],
+  63:['🌧','🌧','Дощ','Rain'],
+  65:['🌧','🌧','Сильний дощ','Heavy rain'],
+  71:['🌨','🌨','Легкий сніг','Light snow'],
+  73:['🌨','🌨','Сніг','Snow'],
+  75:['❄️','❄️','Сильний сніг','Heavy snow'],
+  77:['🌨','🌨','Снігова крупа','Snow grains'],
+  80:['🌦','🌦','Дощові зливи','Rain showers'],
+  81:['🌧','🌧','Зливи','Showers'],
+  82:['⛈','⛈','Сильні зливи','Violent showers'],
+  85:['🌨','🌨','Снігопад','Snow showers'],
+  86:['❄️','❄️','Сильний снігопад','Heavy snow showers'],
+  95:['⛈','⛈','Гроза','Thunderstorm'],
+  96:['⛈','⛈','Гроза з градом','Thunder w/ hail'],
+  99:['⛈','⛈','Сильна гроза','Severe thunder']
+};
+let _wxLoc=null;  // {lat,lon,name}
+let _wxFetching=false;
+
+async function resolveWxLocation(){
+  const city=(settings.city||'').trim();
+  if(city){
+    try{
+      const r=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=uk`);
+      const j=await r.json();
+      if(j.results&&j.results[0]){const h=j.results[0];return{lat:h.latitude,lon:h.longitude,name:h.name}}
+    }catch{}
+  }
+  // Browser geolocation fallback
+  return new Promise(res=>{
+    if(!navigator.geolocation){res(null);return}
+    navigator.geolocation.getCurrentPosition(
+      p=>res({lat:p.coords.latitude,lon:p.coords.longitude,name:''}),
+      ()=>res(null),
+      {timeout:6000,maximumAge:3600000}
+    );
+  });
+}
+
+async function fetchWxNow(){
+  if(_wxFetching)return;_wxFetching=true;
+  try{
+    if(!_wxLoc||_wxLoc._cityKey!==(settings.city||'')){
+      _wxLoc=await resolveWxLocation();
+      if(_wxLoc)_wxLoc._cityKey=settings.city||'';
+    }
+    if(!_wxLoc){wxState.ok=false;wxState.cond='Локація невідома';renderWeather();return}
+    const u=`https://api.open-meteo.com/v1/forecast?latitude=${_wxLoc.lat}&longitude=${_wxLoc.lon}&current=temperature_2m,weather_code,is_day&timezone=auto`;
+    const r=await fetch(u);const j=await r.json();
+    if(!j.current){throw new Error('bad response')}
+    const c=j.current,code=c.weather_code,isDay=!!c.is_day;
+    const def=WX_CODES[code]||['🌡','🌡','—','—'];
+    wxState.ico=isDay?def[0]:def[1];
+    wxState.temp=(c.temperature_2m>=0?'+':'')+Math.round(c.temperature_2m)+'°C';
+    wxState.cond=(settings.lang==='en')?def[3]:def[2];
+    wxState.city=_wxLoc.name||(settings.city||'');
+    wxState.lastUpdate=Date.now();
+    wxState.ok=true;
+  }catch(e){wxState.ok=false;if(!wxState.lastUpdate)wxState.cond='Недоступно'}
+  _wxFetching=false;renderWeather();
+}
+
+function renderWeather(){
+  const stale=wxState.lastUpdate&&(Date.now()-wxState.lastUpdate>30*60*1000);
+  const city=wxState.city||settings.city||'';
+  const cond=wxState.cond+(city?' · '+city:'');
+  const set=(idi)=>{const i=document.getElementById(idi);if(!i)return;
+    i.classList.toggle('wx-stale',!!stale);
+    i.title=stale?'Дані застаріли (>30хв)':(wxState.lastUpdate?'Оновлено '+new Date(wxState.lastUpdate).toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'}):'Завантаження…');
+    i.querySelector('.wx-ico').textContent=wxState.ico;
+    i.querySelector('.wx-temp').textContent=wxState.temp;
+    i.querySelector('.wx-cond').textContent=cond};
+  set('tv-wx');set('lv-wx');
+  const lw=document.getElementById('led-wx');if(lw){lw.querySelector('.led-wx-ico').textContent=wxState.ico;lw.querySelector('.led-wx-temp').textContent=wxState.temp}
+}
+
+// ── CLOCK ──
+function clock(){
+  const n=new Date(),hm=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');
+  const D=['Неділя','Понеділок','Вівторок','Середа','Четвер','П\'ятниця','Субота'];
+  const M=['січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'];
+  const dt=D[n.getDay()]+', '+n.getDate()+' '+M[n.getMonth()];
+  ['tv-clk','lv-clk','led-clk'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=hm});
+  ['tv-dt','lv-dt'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=dt});
+}
+
+// ── TV RENDER ──
+function orderedCats(cats){
+  const order=settings.catOrder||[];
+  const known=order.filter(c=>cats.includes(c));
+  const extras=cats.filter(c=>!order.includes(c));
+  return [...known,...extras];
+}
+function buildPages(avail){
+  const per=parseInt(settings.cols)||4, groups={};
+  avail.forEach(b=>{if(!groups[b.cat])groups[b.cat]=[];groups[b.cat].push(b)});
+  const order=orderedCats(Object.keys(groups));
+  const pages=[];
+  order.forEach(cat=>{
+    const items=groups[cat];
+    for(let i=0;i<items.length;i+=per){
+      pages.push({cat,items:items.slice(i,i+per),total:Math.ceil(items.length/per),page:Math.floor(i/per)+1});
+    }
+  });
+  return pages;
+}
+
+function featuredHTML(){
+  const f=beers.find(b=>b.id===settings.featId&&b.avail);
+  if(!f)return '';
+  const v=rvols(f);const price=v[0]?.price||0;
+  const discount=Math.round(price*0.8);
+  return `<span class="feat-label">Пиво дня</span>
+    <span class="feat-name">${esc(f.name)}</span>
+    <span class="feat-meta">${esc(f.style)} · ${f.abv}% · ${esc(f.brewery||'')}</span>
+    <span class="feat-price">
+      ${price?`<span class="was">₴${price}</span><span class="now"><span class="cur">₴</span>${discount}</span>`:''}
+    </span>`;
+}
+
+function renderTV(){
+  stopAuto();applyNightMode();applyQr();
+  const ss=document.getElementById('tv-ss'), dots=document.getElementById('tv-dots'), feat=document.getElementById('tv-feat');
+  const avail=settings.showOos?beers.slice().sort((a,b)=>(a.avail===b.avail?0:a.avail?-1:1)):beers.filter(b=>b.avail);
+  if(feat)feat.innerHTML=featuredHTML();
+  if(feat)feat.style.display=feat.innerHTML.trim()?'':'none';
+  if(!avail.length){ss.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-style:italic;font-size:1.2rem">${T('unavail')}</div>`;dots.innerHTML='';slides=[];return}
+  const pages=buildPages(avail);
+  ss.innerHTML='';dots.innerHTML='';slides=[];
+  const per=parseInt(settings.cols)||4;
+  pages.forEach((pg,idx)=>{
+    const slide=document.createElement('div');slide.className='tv-slide'+(idx===0?' on':'');
+    const pgTxt=pg.total>1?`<b>${pg.page}</b> / ${pg.total}`:'';
+    const cards=pg.items.map((b,ci)=>cardHTML(b,ci)).join('');
+    slide.innerHTML=`
+      <div class="tv-cat">
+        <div class="tv-cat-ico">${CAT_ICON[pg.cat]||'🍻'}</div>
+        <div class="tv-cat-name">${esc(pg.cat)}</div>
+        <div class="tv-cat-count">${pg.items.length} ${pg.items.length===1?'позиція':'позицій'}</div>
+        <div class="tv-cat-pg">${pgTxt}</div>
+      </div>
+      <div class="tv-grid cols-${per}">${cards}</div>`;
+    ss.appendChild(slide);slides.push(slide);
+    const dot=document.createElement('div');dot.className='tv-dot'+(idx===0?' on':'');dot.onclick=()=>goTo(idx);dots.appendChild(dot);
+  });
+  curSlide=0;renderTicker(avail,'tv-tick');
+  if(autoPlay&&slides.length>1)startAuto();
+}
+
+function cardHTML(b,ci){
+  const vols=rvols(b);
+  const imgB=b.img?`<img src="${esc(b.img)}" alt="${esc(b.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy">`:'' ;
+  const phS=b.img?'display:none':'display:flex';
+  const srvBadge=b.serve==='bottle'?`<span class="tvc-srv bot">${T('bottle')}</span>`:`<span class="tvc-srv tap">${T('tap')}</span>`;
+  const prevPrice=priorPrices.get(b.id);
+  const curPrice=vols[0]?.price;
+  const flash=(b.avail&&prevPrice!=null&&curPrice!=null&&prevPrice!==curPrice)?' flash':'';
+  if(b.avail&&curPrice!=null)priorPrices.set(b.id,curPrice);
+  const volsH=vols.length?vols.map((v,i)=>`<div class="tvc-prow"><span class="tvc-pml">${fml(v.ml)}</span><span class="tvc-ppx${i===0?flash:''}"><span class="tvc-pcur">₴</span>${v.price}</span></div>`).join(''):'<div class="tvc-prow"><span class="tvc-pml">—</span></div>';
+  const oosCls=!b.avail?' oos':'';
+  const lowBadge=(b.avail&&b.low)?`<div class="tvc-low">${T('last')}</div>`:'';
+  return `<div class="tvc ${b.avail?'avail':''}${oosCls}" style="animation-delay:${ci*.05}s">
+    ${lowBadge}
+    <div class="tvc-img">${imgB}<div class="tvc-img-ph" style="${phS}">🍺</div></div>
+    <div class="tvc-body">
+      <div class="tvc-top-row">
+        <div class="tvc-name">${esc(b.name)}</div>
+        <span class="tvc-abv">${b.abv}%</span>
+      </div>
+      <div class="tvc-meta">
+        <span class="tvc-style">${esc(b.style)}</span>
+        <span class="tvc-dot"></span>
+        ${srvBadge}
+        ${b.country?`<span class="tvc-dot"></span><span class="tvc-flag">${esc(b.country)}</span>`:''}
+      </div>
+      ${b.brewery?`<div class="tvc-brew">${esc(b.brewery)}</div>`:''}
+      ${b.desc?`<div class="tvc-desc">${esc(b.desc)}</div>`:''}
+    </div>
+    <div class="tvc-prices">${volsH}</div>
+  </div>`;
+}
+
+function goTo(idx){
+  if(!slides.length)return;
+  slides[curSlide].classList.remove('on');document.querySelectorAll('#tv-dots .tv-dot')[curSlide]?.classList.remove('on');
+  curSlide=(idx+slides.length)%slides.length;
+  slides[curSlide].classList.add('on');document.querySelectorAll('#tv-dots .tv-dot')[curSlide]?.classList.add('on');
+  slides[curSlide].querySelectorAll('.tvc').forEach(c=>{c.style.animation='none';c.offsetHeight;c.style.animation=''});
+  if(autoPlay)resetProg();
+}
+function nextSlide(){goTo(curSlide+1)} function prevSlide(){goTo(curSlide-1)}
+function resetProg(){const f=document.getElementById('tv-prog');f.style.transition='none';f.style.width='0%';f.offsetHeight;f.style.transition=`width ${slideDur}s linear`;f.style.width='100%'}
+function startAuto(){if(!autoPlay||slides.length<=1)return;stopAuto();resetProg();slideTimer=setInterval(nextSlide,slideDur*1000)}
+function stopAuto(){clearInterval(slideTimer);slideTimer=null;const f=document.getElementById('tv-prog');if(f){f.style.transition='none';f.style.width='0%'}}
+
+function discApplies(b){
+  const m=settings.discMode||'off';if(m==='off'||!settings.discPct)return false;
+  if(m==='all')return true;
+  if(m==='cat')return settings.discCat&&b.cat===settings.discCat;
+  if(m==='feat')return b.id===settings.featId;
+  return false;
+}
+function renderTicker(avail,id){
+  const parts=[settings.ticker];
+  const pct=settings.discPct||0, mode=settings.discMode||'off';
+  if(mode!=='off'&&pct){
+    let lbl='';
+    if(mode==='all')lbl=`🔥 −${pct}% НА ВСЕ МЕНЮ`;
+    else if(mode==='cat'&&settings.discCat)lbl=`🔥 −${pct}% НА КАТЕГОРІЮ «${settings.discCat.toUpperCase()}»`;
+    else if(mode==='feat'){const f=beers.find(x=>x.id===settings.featId);if(f)lbl=`🔥 −${pct}% НА ПИВО ДНЯ — ${f.name.toUpperCase()}`;}
+    if(lbl){if(settings.discHrs)lbl+=' · '+settings.discHrs;parts.unshift(lbl)}
+  }
+  avail.slice(0,6).forEach(b=>{
+    const v=rvols(b);const px=v[0]?.price;
+    let seg=b.name+' '+b.abv+'%';
+    if(px){
+      if(discApplies(b)){const d=Math.round(px*(1-pct/100));seg+=` ₴${px} → ₴${d}`}
+      else seg+=' ₴'+px;
+    }
+    parts.push(seg);
+  });
+  const txt=parts.map(p=>`<span class="tv-bot-item">${esc(p)}<span class="sep">✦</span></span>`).join('');
+  const el=document.getElementById(id);if(el)el.innerHTML=(txt+txt);
+}
+
+// ── LIST VIEW (card-rows, aligned with TV vocabulary) ──
+function renderList(){
+  const ss=document.getElementById('lv-ss'), dots=document.getElementById('lv-dots');
+  const avail=settings.showOos?beers.slice().sort((a,b)=>(a.avail===b.avail?0:a.avail?-1:1)):beers.filter(b=>b.avail);
+  renderTicker(beers.filter(b=>b.avail),'lv-tick');
+  if(!avail.length){ss.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-style:italic;font-size:1.2rem">${T('unavail')}</div>`;dots.innerHTML='';ltSlides=[];return}
+  const groups={};avail.forEach(b=>{if(!groups[b.cat])groups[b.cat]=[];groups[b.cat].push(b)});
+  const order=orderedCats(Object.keys(groups));
+  const PER=Math.max(3,parseInt(settings.cols)||4);
+  const pages=[];
+  order.forEach(cat=>{
+    const items=groups[cat];
+    for(let i=0;i<items.length;i+=PER){
+      pages.push({cat,items:items.slice(i,i+PER),page:Math.floor(i/PER)+1,total:Math.ceil(items.length/PER)});
+    }
+  });
+  ss.innerHTML='';dots.innerHTML='';ltSlides=[];
+  pages.forEach((pg,idx)=>{
+    const slide=document.createElement('div');slide.className='lt-slide'+(idx===0?' on':'');
+    const pgTxt=pg.total>1?`<b>${pg.page}</b> / ${pg.total}`:'';
+    const rows=pg.items.map((b,i)=>ltRowHTML(b,i)).join('');
+    slide.innerHTML=`
+      <div class="tv-cat">
+        <div class="tv-cat-ico">${CAT_ICON[pg.cat]||'🍻'}</div>
+        <div class="tv-cat-name">${esc(pg.cat)}</div>
+        <div class="tv-cat-count">${pg.items.length} ${pg.items.length===1?T('pos1'):T('pos')}</div>
+        <div class="tv-cat-pg">${pgTxt}</div>
+      </div>
+      <div class="lt-wrap" data-per="${PER}">${rows}</div>`;
+    ss.appendChild(slide);ltSlides.push(slide);
+    const dot=document.createElement('div');dot.className='tv-dot'+(idx===0?' on':'');dot.onclick=()=>ltGoTo(idx);dots.appendChild(dot);
+  });
+  ltCur=0;if(autoPlay&&ltSlides.length>1)ltStartAuto();
+}
+
+function ltRowHTML(b,i){
+  const vols=rvols(b);
+  const imgB=b.img?`<img src="${esc(b.img)}" alt="${esc(b.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy">`:'' ;
+  const phS=b.img?'display:none':'display:flex';
+  const srv=b.serve==='bottle'?`<span class="ltr-srv bot">${T('bottle')}</span>`:`<span class="ltr-srv tap">${T('tap')}</span>`;
+  const prevPrice=priorPrices.get(b.id);
+  const curPrice=vols[0]?.price;
+  const flash=(b.avail&&prevPrice!=null&&curPrice!=null&&prevPrice!==curPrice)?' flash':'';
+  if(b.avail&&curPrice!=null)priorPrices.set(b.id,curPrice);
+  const vp=vols.length?vols.map((v,vi)=>`<div class="ltr-prow"><span class="ltr-pml">${fml(v.ml)}</span><span class="ltr-ppx${vi===0?flash:''}"><span class="ltr-pcur">₴</span>${v.price}</span></div>`).join(''):'<div class="ltr-prow"><span class="ltr-pml">—</span></div>';
+  const oosCls=!b.avail?' oos':'';
+  const lowCls=(b.avail&&b.low)?' low':'';
+  const lowBadge=(b.avail&&b.low)?`<div class="ltr-low">${T('last')}</div>`:'';
+  return `<div class="ltr${oosCls}${lowCls}" style="animation-delay:${i*.03}s">
+    ${lowBadge}
+    <div class="ltr-img">${imgB}<div class="ltr-img-ph" style="${phS}">🍺</div></div>
+    <div class="ltr-body">
+      <div class="ltr-top">
+        <div class="ltr-nm">${esc(b.name)}</div>
+        <span class="ltr-st">${esc(b.style)}</span>
+      </div>
+      <div class="ltr-meta">
+        ${b.brewery?`<span class="ltr-br">${esc(b.brewery)}</span>`:''}
+        ${b.country?`<span class="dot"></span><span class="ltr-cn">${esc(b.country)}</span>`:''}
+        ${b.desc?`<span class="dot"></span><span class="ltr-desc">${esc(b.desc)}</span>`:''}
+      </div>
+    </div>
+    ${srv}
+    <span class="ltr-abv">${b.abv}%</span>
+    <div class="ltr-prices">${vp}</div>
+  </div>`;
+}
+function ltGoTo(idx){
+  if(!ltSlides.length)return;
+  ltSlides[ltCur].classList.remove('on');document.querySelectorAll('#lv-dots .tv-dot')[ltCur]?.classList.remove('on');
+  ltCur=(idx+ltSlides.length)%ltSlides.length;
+  ltSlides[ltCur].classList.add('on');document.querySelectorAll('#lv-dots .tv-dot')[ltCur]?.classList.add('on');
+  if(autoPlay)ltResetProg();
+}
+function ltNext(){ltGoTo(ltCur+1)} function ltPrev(){ltGoTo(ltCur-1)}
+function ltResetProg(){const f=document.getElementById('lv-prog');f.style.transition='none';f.style.width='0%';f.offsetHeight;f.style.transition=`width ${slideDur}s linear`;f.style.width='100%'}
+function ltStartAuto(){ltStopAll();ltResetProg();ltTimer=setInterval(ltNext,slideDur*1000)}
+function ltStopAll(){clearInterval(ltTimer);ltTimer=null;const f=document.getElementById('lv-prog');if(f){f.style.transition='none';f.style.width='0%'}}
+
+// ── LED ──
+function renderLed(){
+  const active=ledMsgs.filter(m=>m.active&&ledSchedActive(m));
+  ledRefreshTicker(active);
+  const qdots=document.getElementById('led-qdots');
+  if(qdots)qdots.innerHTML=active.map((_,i)=>`<div class="led-qdot${i===0?' on':''}" onclick="ledGoTo(${i})"></div>`).join('');
+  ledCur=0;ledShow(0);
+  clearInterval(ledTimer);ledTimer=null;
+  if(active.length>1)ledTimer=setInterval(()=>{ledCur=(ledCur+1)%active.length;ledShow(ledCur)},8000);
+}
+function ledRefreshTicker(active){
+  const msgs=(active||ledMsgs.filter(m=>m.active));
+  const txt=msgs.length?msgs.map(m=>m.text).join('  ·  ')+'  ·  ':(settings.ticker+'  ·  ');
+  const ti=document.getElementById('led-tick');
+  if(ti)ti.innerHTML=`<span class="led-tick-item">${esc(txt)}</span><span class="led-tick-item">${esc(txt)}</span>`;
+}
+function ledShow(idx){
+  const active=ledMsgs.filter(m=>m.active);if(!active.length)return;
+  const m=active[idx],col=LED_COL[m.priority]||LED_COL.info;ledCur=idx;
+  const badge=document.getElementById('led-badge');if(badge)badge.className=`led-badge ${col.b}`;
+  const pl=document.getElementById('led-plbl');if(pl)pl.textContent=col.l;
+  const sub=document.getElementById('led-sub');if(sub)sub.textContent=m.sub||'';
+  ledStopScroll();
+  const msgEl=document.getElementById('led-msg'),wrapEl=document.getElementById('led-mw');
+  if(!msgEl||!wrapEl)return;
+  msgEl.className=`led-msg ${col.m}`;msgEl.textContent=m.text;msgEl.style.transform='';msgEl.style.display='';
+  document.querySelectorAll('.led-qdot').forEach((d,i)=>d.classList.toggle('on',i===idx));
+  requestAnimationFrame(()=>{const tw=msgEl.scrollWidth,ww=wrapEl.clientWidth;if(tw>ww*1.02)ledScroll(msgEl,tw,ww);});
+}
+function ledGoTo(idx){clearInterval(ledTimer);ledTimer=null;ledShow(idx);const a=ledMsgs.filter(m=>m.active);if(a.length>1)ledTimer=setInterval(()=>{ledCur=(ledCur+1)%a.length;ledShow(ledCur)},8000)}
+function ledStopScroll(){if(ledRaf){cancelAnimationFrame(ledRaf);ledRaf=null}}
+function ledScroll(el,tw,ww){
+  const gap=ww*.5,total=tw+gap,pxs=Math.max(30,ledSpeed);
+  let pos=0,last=null;el.style.display='inline-block';
+  function step(ts){if(!last)last=ts;pos+=pxs*(ts-last)/1000;last=ts;if(pos>=total)pos-=total;el.style.transform=`translateX(${-pos}px)`;ledRaf=requestAnimationFrame(step)}
+  ledRaf=requestAnimationFrame(step);
+}
+function ledStopAll(){clearInterval(ledTimer);ledTimer=null;ledStopScroll()}
+
+function renderLedAdm(){
+  const list=document.getElementById('led-adm-list');if(!list)return;
+  const sp=document.getElementById('led-spd'),sv=document.getElementById('led-sv');
+  if(sp)sp.value=ledSpeed;if(sv)sv.textContent=ledSpeed;
+  list.innerHTML=ledMsgs.map(m=>`
+    <div class="led-adm-item${m.active?' active':''}${ledSchedActive(m)?'':(m.sched?' inactive-by-sched':'')}" title="${m.sched?('Розклад: '+esc(m.sched)):''}">
+      <input class="led-cb" type="checkbox" ${m.active?'checked':''} onchange="ledTog('${m.id}',this.checked)">
+      <input class="led-ti" type="text" value="${esc(m.text)}" placeholder="Текст…" oninput="ledUpd('${m.id}','text',this.value)">
+      <input class="led-si" type="text" value="${esc(m.sub||'')}" placeholder="Підзаголовок…" oninput="ledUpd('${m.id}','sub',this.value)">
+      <select class="led-pi" onchange="ledUpd('${m.id}','priority',this.value)">
+        <option value="info" ${m.priority==='info'?'selected':''}>ℹ Info</option>
+        <option value="warning" ${m.priority==='warning'?'selected':''}>⚠ Увага</option>
+        <option value="alert" ${m.priority==='alert'?'selected':''}>🔴 Термін.</option>
+      </select>
+      <input class="led-sched" type="text" value="${esc(m.sched||'')}" placeholder="17:00-19:00" title="Розклад (HH:MM-HH:MM) — порожньо = завжди" oninput="ledUpd('${m.id}','sched',this.value)">
+      <button class="btn btn-d sm" onclick="ledDel('${m.id}')">✕</button>
+    </div>`).join('');
+}
+function ledSchedActive(m){if(!m.sched)return true;const mt=m.sched.match(/^\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})\s*$/);if(!mt)return true;const n=new Date();const cur=n.getHours()*60+n.getMinutes();const s=+mt[1]*60+ +mt[2];const e=+mt[3]*60+ +mt[4];return s<=e?(cur>=s&&cur<=e):(cur>=s||cur<=e)}
+function ledAdd(){ledMsgs.push({id:'l'+uid(),text:'',sub:'',priority:'info',active:true,sched:''});renderLedAdm()}
+function ledTog(id,on){const m=ledMsgs.find(x=>x.id===id);if(m){m.active=on;renderLedAdm()}}
+function ledUpd(id,k,v){const m=ledMsgs.find(x=>x.id===id);if(m)m[k]=v}
+function ledDel(id){ledMsgs=ledMsgs.filter(x=>x.id!==id);renderLedAdm()}
+async function ledSave(){
+  ledSpeed=parseInt(document.getElementById('led-spd').value)||80;
+  await persL();
+  if(document.getElementById('led').classList.contains('on'))ledRefreshTicker();
+  toast('Сповіщення збережено ✓','ok');
+}
+
+// ── ADMIN ──
+function renderAll(){
+  renderTV();
+  if(document.getElementById('adm-view').classList.contains('on')){renderAdm();renderLedAdm();renderFeatSel()}
+  if(document.getElementById('list-view').classList.contains('on'))renderList();
+  if(document.getElementById('led').classList.contains('on'))renderLed();
+}
+function renderAdm(){renderStats();renderChips();renderTbl();renderGv()}
+function renderStats(){
+  const t=beers.length,on=beers.filter(b=>b.avail).length,cats=new Set(beers.map(b=>b.cat)).size,tap=beers.filter(b=>b.serve==='tap').length;
+  document.getElementById('adm-stats').innerHTML=[[t,'Позицій'],[on,'Доступно'],[cats,'Категорій'],[tap,'На крані']].map(([n,l])=>`<div class="stat"><div class="stat-n">${n}</div><div class="stat-l">${l}</div></div>`).join('');
+}
+function renderChips(){
+  const cats=['all',...new Set(beers.map(b=>b.cat))];
+  document.getElementById('adm-chips').innerHTML=cats.map(c=>`<button class="chip${c===activeF?' on':''}" onclick="setF('${c}')">${c==='all'?'Всі':c}</button>`).join('');
+}
+function setF(f){activeF=f;renderChips();renderTbl()}
+function renderTbl(){
+  const q=(document.getElementById('s-search')?.value||'').toLowerCase();
+  const list=beers.filter(b=>(activeF==='all'||b.cat===activeF)&&(!q||[b.name,b.style,b.brewery||''].some(s=>s.toLowerCase().includes(q))));
+  const tbody=document.getElementById('adm-tbody');
+  if(!list.length){tbody.innerHTML=`<tr><td colspan="10"><div class="empty">Нічого не знайдено</div></td></tr>`;bulkUi();return}
+  tbody.innerHTML=list.map(b=>{
+    const vols=rvols(b), vt=vols.map(v=>`${fml(v.ml)} — ₴${v.price}`).join('<br>');
+    const srv=b.serve==='bottle'?`<span class="badge b-bot">Пляшка</span>`:`<span class="badge b-tap">Кран</span>`;
+    const sel=selected.has(b.id)?'checked':'';
+    const lowBtn=b.low?'⚠':'⚐';const lowTitle=b.low?'Зняти мітку "останній кег"':'Позначити "останній кег"';
+    return`<tr${b.low?' style="background:rgba(216,66,30,.06)"':''}>
+      <td class="td-sel"><input class="bulk-cb" type="checkbox" ${sel} onchange="bulkToggleRow('${b.id}',this.checked)"></td>
+      <td class="td-im">${b.img?`<img class="thumb" src="${esc(b.img)}" onerror="this.style.display='none'">`:`<div class="thumb-ph">🍺</div>`}</td>
+      <td class="td-nm">${esc(b.name)}${b.low?' <span style="color:#d9635a;font-size:.65rem;font-weight:700" title="Останній кег">⚠</span>':''}</td>
+      <td><span class="badge b-style">${esc(b.style)}</span></td>
+      <td style="font-size:.85rem">${esc(b.brewery||'')}${b.country?` <span style="color:var(--muted)">/ ${esc(b.country)}</span>`:''}</td>
+      <td class="td-ab">${b.abv}%</td>
+      <td>${srv}</td>
+      <td class="td-pr">${vt||'—'}</td>
+      <td><span class="sbadge ${b.avail?'s-on':'s-off'}"><span class="s-dot"></span>${b.avail?'Є':'Немає'}</span></td>
+      <td><div class="acts" id="acts-${b.id}">
+        <button class="btn btn-g sm" title="Редагувати" onclick="editBeer('${b.id}')">✏️</button>
+        <button class="btn btn-g sm" title="${b.avail?'Зняти з продажу':'Повернути'}" onclick="togAvail('${b.id}')">${b.avail?'⏸':'▶'}</button>
+        <button class="btn btn-g sm" title="${lowTitle}" onclick="togLow('${b.id}')">${lowBtn}</button>
+        <button class="btn btn-g sm" title="Дублювати" onclick="dupBeer('${b.id}')">⧉</button>
+        <button class="btn btn-d sm" title="Видалити" onclick="confDel('${b.id}')">🗑</button>
+      </div></td></tr>`;
+  }).join('');
+  bulkUi();
+  const a=document.getElementById('bulk-all');if(a)a.checked=list.length>0&&list.every(b=>selected.has(b.id));
+}
+function confDel(id){
+  const el=document.getElementById('acts-'+id);if(!el)return;
+  el.innerHTML=`<div class="del-row">Видалити?<button class="del-y" onclick="delBeer('${id}')">Так</button><button class="del-n" onclick="renderTbl()">Ні</button></div>`;
+}
+function delBeer(id){
+  const b=beers.find(x=>x.id===id);if(!b)return;
+  undoStack.push({kind:'del',beer:JSON.parse(JSON.stringify(b)),idx:beers.indexOf(b)});
+  beers=beers.filter(x=>x.id!==id);persist();renderAdm();renderTV();
+  audit('del',`Видалено: ${b.name}`);
+  toastUndo(`Видалено: ${b.name}`);
+}
+function togAvail(id){const b=beers.find(x=>x.id===id);if(!b)return;b.avail=!b.avail;persist();renderAdm();renderTV();audit('upd',`${b.name}: ${b.avail?'в наявності':'немає'}`);toast(b.avail?'Є в наявності':'Відсутнє','ok')}
+function togLow(id){const b=beers.find(x=>x.id===id);if(!b)return;b.low=!b.low;persist();renderAdm();renderTV();audit('upd',`${b.name}: ${b.low?'останній кег':'знято мітку'}`);toast(b.low?'Позначено "останній кег"':'Мітку знято','ok')}
+function dupBeer(id){const b=beers.find(x=>x.id===id);if(!b)return;const c=JSON.parse(JSON.stringify(b));c.id=uid();c.name=b.name+' (копія)';beers.push(c);persist();renderAdm();renderTV();audit('add',`Дубль: ${c.name}`);toast('Створено дублікат ✓','ok')}
+function editBeer(id){openMod(id)}
+
+// ── BULK ACTIONS ──
+function bulkToggleRow(id,on){on?selected.add(id):selected.delete(id);bulkUi()}
+function bulkToggleAll(on){const q=(document.getElementById('s-search')?.value||'').toLowerCase();
+  const list=beers.filter(b=>(activeF==='all'||b.cat===activeF)&&(!q||[b.name,b.style,b.brewery||''].some(s=>s.toLowerCase().includes(q))));
+  if(on)list.forEach(b=>selected.add(b.id));else list.forEach(b=>selected.delete(b.id));
+  renderTbl();bulkUi();
+}
+function bulkClear(){selected.clear();document.querySelectorAll('.bulk-cb').forEach(c=>c.checked=false);const a=document.getElementById('bulk-all');if(a)a.checked=false;bulkUi()}
+function bulkUi(){const b=document.getElementById('bulk-bar');const c=document.getElementById('bulk-cnt');if(!b)return;b.classList.toggle('on',selected.size>0);if(c)c.textContent=`${selected.size} вибрано`}
+function bulkAvail(on){if(!selected.size)return;let n=0;beers.forEach(b=>{if(selected.has(b.id)&&b.avail!==on){b.avail=on;n++}});if(n){persist();audit('upd',`Масово ${on?'в наявності':'немає'}: ${n} поз.`);renderAdm();renderTV();toast(`${n} позицій оновлено ✓`,'ok')}bulkClear()}
+function bulkLow(on){if(!selected.size)return;let n=0;beers.forEach(b=>{if(selected.has(b.id)&&b.low!==on){b.low=on;n++}});if(n){persist();audit('upd',`Масово ${on?'останній кег':'зняти мітку'}: ${n}`);renderAdm();renderTV();toast(`${n} оновлено ✓`,'ok')}bulkClear()}
+function bulkDelete(){if(!selected.size)return;if(!confirm(`Видалити ${selected.size} позицій?`))return;const rem=beers.filter(b=>selected.has(b.id));undoStack.push({kind:'bulk',beers:JSON.parse(JSON.stringify(rem))});beers=beers.filter(b=>!selected.has(b.id));persist();audit('del',`Масове видалення: ${rem.length}`);toastUndo(`Видалено ${rem.length} позицій`);renderAdm();renderTV();selected.clear();bulkUi()}
+
+// ── UNDO ──
+function undo(){const u=undoStack.pop();if(!u)return;if(u.kind==='del'){beers.splice(u.idx,0,u.beer);persist();audit('add',`Відновлено: ${u.beer.name}`);toast('Відновлено ✓','ok')}if(u.kind==='bulk'){beers.push(...u.beers);persist();audit('add',`Відновлено: ${u.beers.length}`);toast(`Відновлено ${u.beers.length} ✓`,'ok')}renderAdm();renderTV()}
+
+// ── AUDIT LOG ──
+function audit(kind,msg){auditLog.unshift({ts:Date.now(),kind,msg});if(auditLog.length>200)auditLog.length=200;stSet('pb:audit',JSON.stringify(auditLog));renderAudit()}
+function renderAudit(){const el=document.getElementById('audit-list');if(!el)return;if(!auditLog.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);font-family:var(--fmono);font-size:.72rem">Журнал порожній</div>';return}el.innerHTML=auditLog.slice(0,80).map(e=>{const d=new Date(e.ts);const ts=`${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')} · ${d.getDate()}.${(d.getMonth()+1).toString().padStart(2,'0')}`;return`<div class="audit-row ${e.kind}"><span class="ts">${ts}</span><span class="act">${esc(e.msg)}</span></div>`}).join('')}
+function clearAudit(){if(!confirm('Очистити журнал?'))return;auditLog=[];stSet('pb:audit','[]');renderAudit();toast('Журнал очищено','ok')}
+function exportAudit(){const rows=[['time','type','msg'],...auditLog.map(e=>[new Date(e.ts).toISOString(),e.kind,e.msg])];dl('audit-log.csv',rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n'),'text/csv')}
+
+// ── IMPORT / EXPORT ──
+function dl(name,data,mime){const blob=new Blob([data],{type:mime});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+function csvTpl(){return'name,style,brewery,country,abv,serve,cat,avail,desc,img,vols\nVarvar IPA,IPA,Varvar Brew,Україна,6.5,tap,Крафт,1,Тропічні ноти,,400:145;1000:320'}
+function exportCsv(){const hdr=['name','style','brewery','country','abv','serve','cat','avail','desc','img','vols'];const rows=[hdr,...beers.map(b=>[b.name,b.style,b.brewery||'',b.country||'',b.abv,b.serve,b.cat,b.avail?1:0,b.desc||'',b.img||'',Object.entries(b.vo||{}).filter(([,v])=>v.on!==false&&v.price!=null).map(([k,v])=>`${k}:${v.price??''}`).join(';')])];dl('pubboard-beers.csv',rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n'),'text/csv');toast('CSV експортовано ✓','ok')}
+function exportJson(){const data={beers,settings,gv,ledMsgs,ledSpeed,slideDur,exportedAt:new Date().toISOString()};dl('pubboard-backup.json',JSON.stringify(data,null,2),'application/json');toast('Бекап створено ✓','ok')}
+function importJson(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(!confirm('Замінити всі дані з файлу? Поточні будуть втрачені.'))return;if(d.beers)beers=d.beers;if(d.settings)Object.assign(settings,d.settings);if(d.gv)gv=d.gv;if(d.ledMsgs)ledMsgs=d.ledMsgs;if(d.ledSpeed)ledSpeed=d.ledSpeed;if(d.slideDur)slideDur=d.slideDur;persist();persS();persG();persL();persD();applySettings();renderAll();audit('add','Імпорт JSON');toast('Імпортовано ✓','ok')}catch(err){toast('Помилка: '+err.message,'err')}};r.readAsText(f);inp.value=''}
+function parseCsvLine(l){const out=[];let cur='',q=false;for(let i=0;i<l.length;i++){const c=l[i];if(q){if(c==='"'&&l[i+1]==='"'){cur+='"';i++}else if(c==='"')q=false;else cur+=c}else{if(c===',')  {out.push(cur);cur=''}else if(c==='"')q=true;else cur+=c}}out.push(cur);return out}
+function importCsv(){const txt=document.getElementById('csv-in').value.trim();if(!txt){toast('Порожньо','err');return}const lines=txt.split(/\r?\n/).filter(l=>l.trim());const hdr=parseCsvLine(lines[0]).map(s=>s.trim().toLowerCase());const idx=n=>hdr.indexOf(n);let added=0;for(let i=1;i<lines.length;i++){const p=parseCsvLine(lines[i]);if(!p[idx('name')])continue;const vo={};const vs=(p[idx('vols')]||'').split(';').filter(Boolean);vs.forEach(v=>{const[ml,px]=v.split(':');if(ml)vo[parseInt(ml)]={on:true,price:parseFloat(px)||0}});beers.push({id:uid(),name:p[idx('name')]||'',style:p[idx('style')]||'',brewery:p[idx('brewery')]||'',country:p[idx('country')]||'',abv:parseFloat(p[idx('abv')])||0,serve:(p[idx('serve')]||'tap').toLowerCase()==='bottle'?'bottle':'tap',cat:p[idx('cat')]||'Крафт',avail:(p[idx('avail')]||'1')!=='0',desc:p[idx('desc')]||'',img:p[idx('img')]||'',vo});added++}persist();renderAdm();renderTV();audit('add',`CSV імпорт: ${added}`);toast(`Імпортовано ${added} позицій ✓`,'ok');document.getElementById('csv-in').value=''}
+
+// ── PRINT MENU ──
+function printMenu(){const pv=document.getElementById('print-view');const avail=beers.filter(b=>b.avail);const cats={};avail.forEach(b=>{(cats[b.cat]=cats[b.cat]||[]).push(b)});const order=orderedCats(Object.keys(cats));pv.innerHTML=`<div style="text-align:center;border-bottom:2px solid #111;padding-bottom:12px;margin-bottom:18px"><div style="font-family:serif;font-size:28px;font-weight:700;letter-spacing:3px">${esc(settings.name)}</div><div style="font-style:italic;color:#555;margin-top:4px">${esc(settings.tag)}</div></div>`+order.map(cat=>{const items=cats[cat].map(b=>{const v=rvols(b);const px=v.map(x=>`${fml(x.ml)} ₴${x.price}`).join(' · ');return`<tr><td style="padding:6px 0;border-bottom:1px dotted #bbb;vertical-align:top"><b>${esc(b.name)}</b>${b.low?' ⚠':''}<br><span style="font-size:11px;color:#666">${esc(b.style)} · ${b.abv}% · ${esc(b.brewery||'')}</span>${b.desc?`<br><span style="font-size:11px;font-style:italic;color:#555">${esc(b.desc)}</span>`:''}</td><td style="padding:6px 0;border-bottom:1px dotted #bbb;text-align:right;white-space:nowrap;vertical-align:top;font-family:monospace">${px}</td></tr>`}).join('');return`<div style="margin-bottom:22px;break-inside:avoid"><h2 style="font-family:serif;font-size:18px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid #333;padding-bottom:4px;margin-bottom:8px">${esc(cat)}</h2><table style="width:100%;border-collapse:collapse">${items}</table></div>`}).join('')+`<div style="text-align:center;font-size:10px;color:#888;margin-top:20px;border-top:1px solid #ccc;padding-top:10px">Надруковано ${new Date().toLocaleString('uk-UA')}</div>`;window.print()}
+
+// ── WEATHER CHECK (validate city via Open-Meteo geocoding, no key) ──
+async function wxCheck(){const city=document.getElementById('s-city').value.trim();const el=document.getElementById('wx-check');el.style.display='inline-flex';el.className='wx-check pending';el.textContent='⏳ Перевірка…';if(!city){el.className='wx-check ok';el.textContent='✓ Геолокація (без міста)';return}try{const r=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=uk`);const j=await r.json();if(j.results&&j.results[0]){const h=j.results[0];el.className='wx-check ok';el.textContent=`✓ ${h.name}, ${h.country||''} (${h.latitude.toFixed(2)}, ${h.longitude.toFixed(2)})`}else{el.className='wx-check err';el.textContent='✗ Місто не знайдено'}}catch(e){el.className='wx-check err';el.textContent='✗ Помилка мережі'}}
+
+// ── LANG ──
+function setLang(l){settings.lang=l;persS();document.getElementById('lang-uk').classList.toggle('on',l==='uk');document.getElementById('lang-en').classList.toggle('on',l==='en');renderTV();renderList()}
+
+// GV
+function renderGv(){
+  const rg=(sz,gid,srv)=>{
+    document.getElementById(gid).innerHTML=sz.map(ml=>{
+      const v=(gv[srv]||{})[ml]||{on:false,price:0};
+      return`<div class="gvrow">
+        <input class="gvcb" type="checkbox" id="gc-${srv}-${ml}" ${v.on?'checked':''} onchange="gvTog('${srv}',${ml},this.checked)">
+        <label class="gvlbl" for="gc-${srv}-${ml}">${fml(ml)}</label>
+        <span style="font-family:var(--fmono);font-size:.72rem;color:var(--muted)">₴</span>
+        <input class="gvpi" type="number" min="0" id="gp-${srv}-${ml}" value="${v.price||''}" placeholder="ціна" ${v.on?'':'disabled'} onchange="gvPrice('${srv}',${ml},this.value)">
+      </div>`;
+    }).join('');
+  };
+  rg(TAP_SZ,'gv-tap','tap');rg(BOT_SZ,'gv-bot','bottle');
+}
+function gvTog(srv,ml,on){if(!gv[srv])gv[srv]={};if(!gv[srv][ml])gv[srv][ml]={on:false,price:0};gv[srv][ml].on=on;const ip=document.getElementById(`gp-${srv}-${ml}`);if(ip)ip.disabled=!on}
+function gvPrice(srv,ml,v){if(!gv[srv])gv[srv]={};if(!gv[srv][ml])gv[srv][ml]={on:true,price:0};gv[srv][ml].price=parseFloat(v)||0}
+function saveGv(){persG();renderTbl();renderTV();toast('Об\'єми збережено ✓','ok')}
+
+// ── MODAL ──
+function openMod(id){
+  editId=id||null;const b=id?beers.find(x=>x.id===id):null;
+  document.getElementById('mod-ttl').textContent=b?'Редагувати':'Нова позиція';
+  document.getElementById('f-nm').value=b?.name||'';
+  document.getElementById('f-st').value=b?.style||'';
+  document.getElementById('f-br').value=b?.brewery||'';
+  document.getElementById('f-cn').value=b?.country||'';
+  document.getElementById('f-ds').value=b?.desc||'';
+  document.getElementById('f-ab').value=b?.abv||'';
+  document.getElementById('f-cat').value=b?.cat||'Крафт';
+  document.getElementById('f-av').value=b?(b.avail?'1':'0'):'1';
+  const srv=b?.serve||'tap';
+  document.getElementById('f-tap').checked=srv==='tap';document.getElementById('f-bot').checked=srv==='bottle';
+  document.getElementById('f-img').value=(b?.img&&!b.img.startsWith('data:'))?b.img:'';
+  photoDraft=b?.img||null;updPhoto(photoDraft);
+  buildPvol(srv,b?.vo||{});
+  document.getElementById('modal').classList.add('on');
+}
+function closeMod(){document.getElementById('modal').classList.remove('on');editId=null;photoDraft=null}
+function ovClick(e){if(e.target.id==='modal')closeMod()}
+function onSrv(){buildPvol(document.querySelector('input[name="f-srv"]:checked')?.value||'tap',{})}
+function buildPvol(srv,ov){
+  const sz=srv==='bottle'?BOT_SZ:TAP_SZ, gg=gv[srv]||{};
+  document.getElementById('pvol-body').innerHTML=sz.map(ml=>{
+    const gvv=gg[ml]||{on:false,price:0},ovv=ov[ml];
+    const isOn=ovv!==undefined?(ovv.on!==false):gvv.on;
+    const price=(ovv&&ovv.price!=null&&ovv.price!=='')?ovv.price:'';
+    return`<tr><td><input class="pvol-cb" type="checkbox" id="pvc-${ml}" ${isOn?'checked':''} onchange="pvTog(${ml},this.checked)"></td>
+      <td style="font-family:var(--fmono);font-size:.75rem;color:var(--cream2)">${fml(ml)}</td>
+      <td><input class="pvol-pi" type="number" min="0" id="pvp-${ml}" value="${price}" placeholder="глоб." ${isOn?'':'disabled'}></td>
+      <td class="pvol-df">${gvv.on?`за замовч. ₴${gvv.price}`:'вимкнено'}</td></tr>`;
+  }).join('');
+}
+function pvTog(ml,on){const ip=document.getElementById(`pvp-${ml}`);if(ip)ip.disabled=!on}
+function getOv(srv){
+  const sz=srv==='bottle'?BOT_SZ:TAP_SZ, ov={}, gg=gv[srv]||{};
+  sz.forEach(ml=>{
+    const cb=document.getElementById(`pvc-${ml}`),ip=document.getElementById(`pvp-${ml}`);if(!cb)return;
+    const on=cb.checked, price=ip&&ip.value!==''?parseFloat(ip.value):null, g=gg[ml]||{on:false,price:0};
+    if(on!==g.on||(price!==null&&price!==g.price))ov[ml]={on,...(price!==null?{price}:{})};
+  });
+  return ov;
+}
+function saveBeer(){
+  const name=document.getElementById('f-nm').value.trim(),style=document.getElementById('f-st').value.trim();
+  if(!name||!style){toast('Заповніть: Назва, Стиль','err');return}
+  const srv=document.querySelector('input[name="f-srv"]:checked')?.value||'tap';
+  const vo=getOv(srv);
+  const imgUrl=document.getElementById('f-img').value.trim();
+  const img=(photoDraft&&photoDraft.startsWith('data:'))?photoDraft:(imgUrl||photoDraft||null);
+  const entry={id:editId||uid(),name,style,serve:srv,vo,brewery:document.getElementById('f-br').value.trim(),country:document.getElementById('f-cn').value.trim(),abv:parseFloat(document.getElementById('f-ab').value)||0,cat:document.getElementById('f-cat').value,avail:document.getElementById('f-av').value==='1',desc:document.getElementById('f-ds').value.trim(),img};
+  if(editId){const i=beers.findIndex(b=>b.id===editId);beers[i]=entry;toast('Оновлено ✓','ok')}
+  else{beers.push(entry);toast('Додано ✓','ok')}
+  persist();closeMod();renderAdm();
+}
+
+function onPhoto(inp){if(!inp.files[0])return;const r=new FileReader();r.onload=e=>{photoDraft=e.target.result;document.getElementById('f-img').value='';updPhoto(photoDraft)};r.readAsDataURL(inp.files[0])}
+function prevUrl(u){if(u){photoDraft=u;updPhoto(u)}}
+function clrPhoto(){photoDraft=null;document.getElementById('f-img').value='';updPhoto(null)}
+function updPhoto(src){const p=document.getElementById('photo-prev'),d=document.getElementById('photo-up');if(src){p.src=src;p.style.display='block';d.querySelectorAll('.photo-up-ico,.photo-up-lbl').forEach(e=>e.style.display='none')}else{p.style.display='none';d.querySelectorAll('.photo-up-ico,.photo-up-lbl').forEach(e=>e.style.display='')}}
+
+// slide ctrl
+function durInp(el){slideDur=+el.value;document.getElementById('s-dv').textContent=slideDur+' с';const tw=document.getElementById('tw-dur'),tv=document.getElementById('tw-dv');if(tw)tw.value=slideDur;if(tv)tv.textContent=slideDur+' с';persD();if(autoPlay){stopAuto();startAuto()}}
+function twDurInp(el){slideDur=+el.value;document.getElementById('tw-dv').textContent=slideDur+' с';const se=document.getElementById('s-dur'),sv=document.getElementById('s-dv');if(se)se.value=slideDur;if(sv)sv.textContent=slideDur+' с';persD();if(autoPlay){stopAuto();startAuto()}postEdit({slideDur})}
+function togAuto(el){autoPlay=el.checked;pausedByUser=!el.checked;applyPausedUi();autoPlay?startAuto():stopAuto()}
+function togPauseTV(){pausedByUser=!pausedByUser;autoPlay=!pausedByUser;applyPausedUi();autoPlay?startAuto():stopAuto();const el=document.getElementById('s-auto');if(el)el.checked=autoPlay}
+function applyPausedUi(){const p=document.getElementById('tv-paused');if(!p)return;p.classList.toggle('on',pausedByUser);p.textContent=T('paused')}
+function applyNightMode(){const h=new Date().getHours();document.body.classList.toggle('nightboost',!!settings.night&&(h>=19||h<7))}
+function applyQr(){const q=document.getElementById('tv-qr');if(!q)return;if(!settings.qrOn||!settings.qrUrl){q.style.display='none';return}q.style.display='flex';document.getElementById('tv-qr-lbl').textContent=T('menu');const img=document.getElementById('tv-qr-img');img.innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(settings.qrUrl)}&margin=2" alt="QR" onerror="this.parentElement.parentElement.style.display='none'">`}
+
+// Tweaks: category order
+function renderTwCats(){
+  const box=document.getElementById('tw-cats');if(!box)return;
+  const cats=[...new Set(beers.map(b=>b.cat))];
+  const ordered=orderedCats(cats);
+  box.innerHTML=ordered.map((c,i)=>`<div class="tw-cat-row" data-cat="${esc(c)}">
+    <span class="handle">☰</span><span>${esc(c)}</span>
+    <div class="arrows"><button onclick="moveCat('${esc(c)}',-1)" ${i===0?'disabled':''}>↑</button><button onclick="moveCat('${esc(c)}',1)" ${i===ordered.length-1?'disabled':''}>↓</button></div>
+  </div>`).join('');
+}
+function moveCat(c,dir){
+  const cats=[...new Set(beers.map(b=>b.cat))];
+  const cur=orderedCats(cats);
+  const i=cur.indexOf(c);if(i<0)return;
+  const j=i+dir;if(j<0||j>=cur.length)return;
+  [cur[i],cur[j]]=[cur[j],cur[i]];
+  settings.catOrder=cur;persS();renderTwCats();renderTV();renderList();
+  postEdit({catOrder:cur});
+}
+
+// helpers
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+let toastT;
+function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className=`on ${type}`;clearTimeout(toastT);toastT=setTimeout(()=>t.className='',2800)}
+function toastUndo(msg){const t=document.getElementById('toast');t.innerHTML=`${esc(msg)} <button class="btn btn-g sm" onclick="event.stopPropagation();undo();this.closest('#toast').className=''">↶ Скасувати</button>`;t.className='on ok undo';clearTimeout(toastT);toastT=setTimeout(()=>t.className='',7000)}
+
+// ── EDIT MODE (Tweaks panel) ──
+function postEdit(edits){try{window.parent.postMessage({type:'__edit_mode_set_keys',edits},'*')}catch{}}
+window.addEventListener('message',e=>{
+  const d=e.data;if(!d||typeof d!=='object')return;
+  if(d.type==='__activate_edit_mode'){editMode=true;document.getElementById('tweaks').classList.add('on');renderTwCats()}
+  else if(d.type==='__deactivate_edit_mode'){editMode=false;document.getElementById('tweaks').classList.remove('on')}
+});
+try{window.parent.postMessage({type:'__edit_mode_available'},'*')}catch{}
+
+// ── BOOT ──
+clock();setInterval(clock,1000);
+wxState.cond='Завантаження…';renderWeather();
+fetchWxNow();
+setInterval(fetchWxNow,10*60*1000);
+setInterval(renderWeather,60000);
+setInterval(()=>{applyNightMode();if(document.getElementById('led').classList.contains('on'))renderLed();if(document.getElementById('adm-view').classList.contains('on'))renderLedAdm();},60000);
+stGet('pb:audit').then(r=>{if(r){try{auditLog=JSON.parse(r.value)||[]}catch{auditLog=[]}renderAudit()}});
+load();
+document.addEventListener('keydown',e=>{
+  const tag=(e.target.tagName||'').toLowerCase();const typing=tag==='input'||tag==='textarea'||tag==='select';
+  if(e.key==='Escape'){const l=document.getElementById('led');if(l.classList.contains('on')){swLed();return}if(document.getElementById('modal').classList.contains('on')){closeMod();return}}
+  if(!typing&&document.getElementById('adm-view').classList.contains('on')){
+    if(e.key==='n'||e.key==='N'){e.preventDefault();openMod();return}
+    if(e.key==='/'){e.preventDefault();const s=document.getElementById('s-search');if(s){s.focus();s.select()}return}
+    if(e.ctrlKey&&(e.key==='z'||e.key==='Z')){e.preventDefault();undo();return}
+  }
+  if(!typing&&(e.key==='1'||e.key==='2'||e.key==='3'||e.key==='4')){const map={'1':'tv','2':'list','3':'led','4':'adm'};const id=map[e.key];if(id==='led'){if(!document.getElementById('led').classList.contains('on'))swLed()}else{sw(id);if(document.getElementById('led').classList.contains('on'))swLed()}return}
+  if(document.getElementById('tv-view').classList.contains('on')){if(e.key==='ArrowRight'){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}if(e.key===' '&&!typing){e.preventDefault();togPauseTV()}}
+  if(document.getElementById('list-view').classList.contains('on')){if(e.key==='ArrowRight')ltNext();if(e.key==='ArrowLeft')ltPrev()}
+});
+</script>
+</body>
+</html>
