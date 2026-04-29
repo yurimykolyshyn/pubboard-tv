@@ -1108,11 +1108,19 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
         <div class="iptv-src-card">
           <div class="iptv-src-title">📁 Файл M3U</div>
           <div class="fg">
-            <label class="lbl">Виберіть файл з диску</label>
+            <label class="lbl">Виберіть файл з диску (.m3u, .m3u8, .txt)</label>
             <label class="btn btn-g sm" style="cursor:pointer;display:inline-flex">
-              <input type="file" accept=".m3u,.m3u8" onchange="iptvLoadFile(this)" style="display:none">
+              <input type="file" accept=".m3u,.m3u8,.txt" onchange="iptvLoadFile(this)" style="display:none">
               📂 Обрати файл
             </label>
+          </div>
+        </div>
+        <div class="iptv-src-card">
+          <div class="iptv-src-title">📋 Вставити текст</div>
+          <div class="fg">
+            <label class="lbl">Вставте вміст M3U напряму</label>
+            <textarea id="iptv-paste-inp" class="inp" rows="4" placeholder="#EXTM3U&#10;#EXTINF:-1 group-title=&quot;Sport&quot;,BBC Sport&#10;http://stream.example.com/bbc-sport" style="width:100%;resize:vertical;font-family:var(--fmono);font-size:.7rem"></textarea>
+            <button class="btn btn-p sm" style="margin-top:6px" onclick="iptvLoadPaste()">📥 Застосувати</button>
           </div>
         </div>
       </div>
@@ -2079,13 +2087,14 @@ function iptvToggleAll(on){
 function parseM3U(text){
   const lines=text.split(/\r?\n/);
   const channels=[];let cur=null;
+  const attr=(line,key)=>{const m=line.match(new RegExp(key+'=["\']([^"\']*)["\']'));return m?m[1]:'';};
   for(const raw of lines){
     const line=raw.trim();
     if(line.startsWith('#EXTINF')){
       cur={name:'',group:'',logo:'',url:''};
       const nameM=line.match(/,(.+)$/);if(nameM)cur.name=nameM[1].trim();
-      const grpM=line.match(/group-title="([^"]*)"/);if(grpM)cur.group=grpM[1];
-      const logoM=line.match(/tvg-logo="([^"]*)"/);if(logoM)cur.logo=logoM[1];
+      cur.group=attr(line,'group-title');
+      cur.logo=attr(line,'tvg-logo');
     } else if(line&&!line.startsWith('#')&&cur){
       cur.url=line;channels.push(cur);cur=null;
     }
@@ -2100,9 +2109,15 @@ function iptvLoadUrl(){
   const st=document.getElementById('iptv-adm-status');
   if(st)st.textContent='Завантаження…';
   fetch(url)
-    .then(r=>r.text())
+    .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
     .then(txt=>{iptvApplyParsed(parseM3U(txt));if(st)st.textContent='';})
-    .catch(()=>{if(st)st.textContent='Помилка завантаження URL';toast('Не вдалося завантажити','err')});
+    .catch(err=>{
+      const msg=String(err).includes('Failed to fetch')||String(err).includes('NetworkError')
+        ?'CORS блокує URL — завантажте файл напряму або вставте текст'
+        :'Помилка: '+err.message;
+      if(st)st.textContent=msg;
+      toast('Не вдалося завантажити URL','err');
+    });
 }
 
 function iptvLoadFile(input){
@@ -2112,16 +2127,27 @@ function iptvLoadFile(input){
   const fr=new FileReader();
   fr.onload=e=>{iptvApplyParsed(parseM3U(e.target.result));if(st)st.textContent='';};
   fr.onerror=()=>{if(st)st.textContent='Помилка читання файлу';};
-  fr.readAsText(file);
+  fr.readAsText(file,'utf-8');
+}
+
+function iptvLoadPaste(){
+  const inp=document.getElementById('iptv-paste-inp');
+  const text=(inp?.value||'').trim();
+  if(!text){toast('Вставте текст M3U','err');return;}
+  const channels=parseM3U(text);
+  iptvApplyParsed(channels);
+  if(inp&&channels.length)inp.value='';
 }
 
 function iptvApplyParsed(channels){
+  if(!channels.length){toast('Плейлист порожній або невірний формат','err');return;}
   iptvChannels=channels;
   iptvEnabled=new Set(channels.map((_,i)=>i));
-  toast(`Завантажено ${channels.length} каналів`,'ok');
+  iptvSave();
+  toast(`Завантажено ${channels.length} каналів ✓`,'ok');
   iptvRenderAdm();
   const w=document.getElementById('iptv-adm-list-wrap');
-  if(w)w.style.display=channels.length?'':'none';
+  if(w)w.style.display='';
 }
 
 // ── Admin render ──
