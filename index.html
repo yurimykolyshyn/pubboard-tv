@@ -656,6 +656,51 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
 .adm-tab-ico{font-size:.95rem;line-height:1}
 .adm-pane{display:none}
 .adm-pane.on{display:block}
+
+/* ── DISPLAY / KIOSK MODE ── */
+body.display #nav{display:none}
+body.display .view{top:0}
+#adm-hint{position:fixed;bottom:14px;left:14px;width:34px;height:34px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;color:rgba(255,255,255,.12);z-index:9999;opacity:0;pointer-events:none;transition:opacity .5s,background .2s,color .2s,border-color .2s}
+body.display #adm-hint{opacity:1;pointer-events:all}
+#adm-hint:hover{background:rgba(201,146,42,.2)!important;color:var(--gold)!important;border-color:var(--gold-d)!important;opacity:1!important}
+
+/* ── ADMIN SIDEBAR LAYOUT ── */
+#adm-view{overflow:hidden !important}
+.adm-shell{display:flex;height:100%;overflow:hidden}
+.adm-sidebar{width:210px;flex-shrink:0;display:flex;flex-direction:column;background:var(--bg2);border-right:1px solid var(--border2);overflow-y:auto}
+.adm-brand{padding:18px 16px 14px;border-bottom:1px solid var(--border2)}
+.adm-brand-logo{font-family:var(--fs);font-size:1.05rem;font-weight:800;color:var(--gold);letter-spacing:1px}
+.adm-brand-logo span{color:var(--cream2);font-weight:400}
+.adm-brand-sub{font-family:var(--fmono);font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.adm-sb-stats{padding:12px 12px 8px;border-bottom:1px solid var(--border2)}
+.adm-sb-stats .stats{grid-template-columns:1fr 1fr;gap:6px;margin-bottom:0}
+.adm-sb-stats .stat{padding:9px 10px}
+.adm-sb-stats .stat-n{font-size:1.3rem}
+.adm-sb-stats .stat-l{font-size:.5rem}
+.adm-nav{flex:1;padding:8px 6px}
+.adm-nav-item{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;background:none;border:none;border-left:2px solid transparent;border-radius:0 4px 4px 0;cursor:pointer;color:var(--muted);font-family:var(--fmono);font-size:.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:all .15s;text-align:left}
+.adm-nav-item:hover{background:rgba(255,255,255,.035);color:var(--cream2)}
+.adm-nav-item.on{background:rgba(201,146,42,.09);color:var(--gold-l);border-left-color:var(--gold)}
+.adm-nav-ico{font-size:.95rem;line-height:1;flex-shrink:0;width:18px;text-align:center}
+.adm-nav-lock{margin-left:auto;font-size:.6rem;opacity:.4}
+.adm-nav-div{height:1px;background:var(--border2);margin:6px 10px}
+.adm-sb-foot{padding:12px;border-top:1px solid var(--border2);display:flex;flex-direction:column;gap:8px}
+.adm-preview-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:9px 10px;background:var(--gold);border:none;border-radius:4px;cursor:pointer;color:var(--bg);font-family:var(--fmono);font-size:.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;transition:background .15s}
+.adm-preview-btn:hover{background:var(--gold-l)}
+.adm-demo-box{background:var(--bg3);border:1px solid var(--border2);border-radius:4px;padding:9px 10px}
+.adm-demo-lbl{font-family:var(--fmono);font-size:.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.adm-demo-btns{display:flex;gap:3px}
+.demo-tier-btn{flex:1;padding:5px 3px;border:1px solid var(--border2);background:none;border-radius:3px;cursor:pointer;color:var(--muted);font-family:var(--fmono);font-size:.55rem;font-weight:700;letter-spacing:.3px;transition:all .15s;white-space:nowrap}
+.demo-tier-btn:hover{border-color:var(--muted);color:var(--cream2)}
+.demo-tier-btn.on{background:rgba(201,146,42,.15);border-color:var(--gold-d);color:var(--gold-l)}
+.adm-content{flex:1;overflow-y:auto;padding:28px 28px 80px;min-width:0}
+
+/* Demo mode banner */
+#demo-banner{position:sticky;top:-28px;margin:-28px -28px 24px;z-index:50;display:flex;align-items:center;gap:10px;padding:8px 20px;background:rgba(201,146,42,.13);border-bottom:1px solid var(--gold-d);font-family:var(--fmono);font-size:.63rem;color:var(--gold-l);letter-spacing:.5px}
+#demo-banner strong{font-weight:800;color:var(--gold)}
+#demo-banner-close{margin-left:auto;background:none;border:1px solid var(--gold-d);cursor:pointer;color:var(--gold-d);font-size:.6rem;padding:2px 8px;border-radius:2px;font-family:var(--fmono);font-weight:700;letter-spacing:1px}
+#demo-banner-close:hover{color:var(--gold-l);border-color:var(--gold)}
+
 .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:0}
 .settings-card{background:var(--bg);border:1px solid var(--border2);border-radius:4px;padding:16px 18px}
 .settings-card-title{font-family:var(--fmono);font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
@@ -921,19 +966,55 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
 
 <!-- ADMIN VIEW -->
 <div class="view" id="adm-view">
-<div class="adm">
+<div class="adm-shell">
 
-  <!-- Stats strip — always visible -->
-  <div class="stats" id="adm-stats"></div>
+  <!-- ── Sidebar ── -->
+  <aside class="adm-sidebar">
+    <div class="adm-brand">
+      <div class="adm-brand-logo">Pub<span>Board</span></div>
+      <div class="adm-brand-sub">Панель керування</div>
+    </div>
+    <div class="adm-sb-stats"><div class="stats" id="adm-stats"></div></div>
+    <nav class="adm-nav">
+      <button class="adm-nav-item on" data-tab="beer" onclick="admTab('beer')">
+        <span class="adm-nav-ico">🍺</span>Меню
+      </button>
+      <button class="adm-nav-item" data-tab="settings" onclick="admTab('settings')">
+        <span class="adm-nav-ico">⚙️</span>Налаштування
+      </button>
+      <div class="adm-nav-div"></div>
+      <button class="adm-nav-item" data-tab="notify" onclick="admTab('notify')">
+        <span class="adm-nav-ico">🔴</span>Сповіщення<span class="adm-nav-lock" id="nav-lock-notify"></span>
+      </button>
+      <button class="adm-nav-item" data-tab="iptv" onclick="admTab('iptv')">
+        <span class="adm-nav-ico">📡</span>IPTV<span class="adm-nav-lock" id="nav-lock-iptv"></span>
+      </button>
+      <div class="adm-nav-div"></div>
+      <button class="adm-nav-item" data-tab="data" onclick="admTab('data')">
+        <span class="adm-nav-ico">📊</span>Дані
+      </button>
+    </nav>
+    <div class="adm-sb-foot">
+      <div class="adm-demo-box">
+        <div class="adm-demo-lbl">🔍 Перегляд як:</div>
+        <div class="adm-demo-btns">
+          <button class="demo-tier-btn" data-tier="free" onclick="setDemoTier('free')">🔒 Free</button>
+          <button class="demo-tier-btn" data-tier="pro" onclick="setDemoTier('pro')">✅ Pro</button>
+          <button class="demo-tier-btn" data-tier="auto" onclick="setDemoTier('auto')">⚡ Real</button>
+        </div>
+      </div>
+      <button class="adm-preview-btn" onclick="sw('tv')">📺 Переглянути TV</button>
+    </div>
+  </aside>
 
-  <!-- Tab bar -->
-  <div class="adm-tabs">
-    <button class="adm-tab on" data-tab="beer" onclick="admTab('beer')"><span class="adm-tab-ico">🍺</span>Меню</button>
-    <button class="adm-tab" data-tab="settings" onclick="admTab('settings')"><span class="adm-tab-ico">⚙️</span>Налаштування</button>
-    <button class="adm-tab" data-tab="notify" onclick="admTab('notify')"><span class="adm-tab-ico">🔴</span>Сповіщення</button>
-    <button class="adm-tab" data-tab="data" onclick="admTab('data')"><span class="adm-tab-ico">📊</span>Дані</button>
-    <button class="adm-tab" data-tab="iptv" onclick="admTab('iptv')"><span class="adm-tab-ico">📡</span>IPTV</button>
-  </div>
+  <!-- ── Content ── -->
+  <div class="adm-content" id="adm-content">
+    <!-- Demo banner -->
+    <div id="demo-banner" style="display:none">
+      🔍 Демо-режим: <strong id="demo-banner-tier">Free</strong> — зміни не зберігаються
+      <button id="demo-banner-close" onclick="setDemoTier('auto')">✕ Вийти</button>
+    </div>
+
 
   <!-- ══ TAB: MENU ══ -->
   <div class="adm-pane on" id="adm-beer">
@@ -1196,8 +1277,10 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
     </div><!-- /iptv-content -->
   </div>
 
-</div>
-</div>
+    </div><!-- /adm-content -->
+  </div><!-- /adm-shell -->
+
+</div><!-- /adm-view -->
 
 <!-- PRINT VIEW -->
 <div id="print-view"></div>
@@ -1213,6 +1296,9 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
     <div class="tv-qr-lbl" id="tv-qr-lbl">МЕНЮ НА ТЕЛЕФОН</div>
   </div>
 </div>
+
+<!-- KIOSK EXIT HINT -->
+<div id="adm-hint" title="Панель керування (або натисніть A)" onclick="exitDisplay()">⚙</div>
 
 <!-- LICENCE WATERMARK -->
 <div id="lic-watermark">Powered by PubBoard</div>
@@ -1329,7 +1415,24 @@ const LICENCE_ENDPOINT='https://pubboard-licence.YOURSUBDOMAIN.workers.dev/valid
 const FREE_ITEM_CAP=10;
 const TIER_LVL={free:0,pro:1,business:2};
 let licenceState={valid:false,tier:'free',pub:'',validUntil:null,checkedAt:0};
-function tierGate(req){return(TIER_LVL[licenceState.tier]||0)>=(TIER_LVL[req]||0);}
+let demoTier=null; // null='auto' (real licence), 'free', 'pro'
+function tierGate(req){
+  const t=demoTier&&demoTier!=='auto'?demoTier:(licenceState.tier||'free');
+  return(TIER_LVL[t]||0)>=(TIER_LVL[req]||0);
+}
+function setDemoTier(tier){
+  demoTier=(tier==='auto')?null:tier;
+  document.querySelectorAll('.demo-tier-btn').forEach(b=>b.classList.toggle('on',b.dataset.tier===(demoTier||'auto')));
+  const banner=document.getElementById('demo-banner');
+  const bannerTier=document.getElementById('demo-banner-tier');
+  if(banner)banner.style.display=demoTier?'':'none';
+  if(bannerTier&&demoTier)bannerTier.textContent=demoTier==='pro'?'✅ Pro':'🔒 Free';
+  // Update lock icons in sidebar
+  const lockIcons={notify:!tierGate('pro'),iptv:!tierGate('pro')};
+  Object.entries(lockIcons).forEach(([k,locked])=>{const el=document.getElementById('nav-lock-'+k);if(el)el.textContent=locked?'🔒':'';});
+  applyTier(tierGate('pro')?'pro':'free');
+  renderAll();
+}
 
 async function licenceCheck(){
   const r=await stGet('pb:lic-key');
@@ -1373,6 +1476,9 @@ function applyTier(tier){
   const wm=document.getElementById('lic-watermark');
   if(wm)wm.style.display=isPro?'none':'';
 
+  // Sidebar lock icons
+  ['notify','iptv'].forEach(k=>{const el=document.getElementById('nav-lock-'+k);if(el)el.textContent=isPro?'':'🔒';});
+
   // Gate overlays inside tabs
   const iptvGate=document.getElementById('iptv-lic-gate');
   const iptvContent=document.getElementById('iptv-content');
@@ -1406,6 +1512,8 @@ function renderLicenceBadge(){
     }
   }
 }
+// Init demo tier buttons
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.demo-tier-btn').forEach(b=>b.classList.toggle('on',b.dataset.tier==='auto'));});
 
 async function saveLicenceKey(){
   const inp=document.getElementById('lic-key-inp');
@@ -1528,13 +1636,15 @@ function setCols(c){
 
 // ── ADMIN TAB SWITCHING ──
 function admTab(name){
-  document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.adm-nav-item').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('on'));
-  document.querySelector(`.adm-tab[data-tab="${name}"]`).classList.add('on');
+  const navItem=document.querySelector(`.adm-nav-item[data-tab="${name}"]`);
+  if(navItem)navItem.classList.add('on');
   document.getElementById('adm-'+name).classList.add('on');
-  document.getElementById('adm-view').scrollTop=0;
+  const c=document.getElementById('adm-content');if(c)c.scrollTop=0;
   if(name==='iptv')iptvRenderAdm();
 }
+function exitDisplay(){sw('adm');}
 
 // ── VIEW SWITCHING ──
 function sw(v){
@@ -1542,6 +1652,8 @@ function sw(v){
   document.querySelectorAll('.tab:not(#t-led)').forEach(x=>x.classList.remove('on'));
   document.getElementById(v+'-view').classList.add('on');
   document.getElementById('t-'+v).classList.add('on');
+  if(v==='adm'){document.body.classList.remove('display');}
+  else{document.body.classList.add('display');}
   if(v==='tv'){ltStopAll();renderTV();startAuto()}
   if(v==='list'){stopAuto();renderList()}
   if(v==='iptv'){if(!tierGate('pro')){toast('📡 IPTV доступний у версії Pro 🔒','err');return;}stopAuto();ltStopAll();iptvRender();}
@@ -2625,6 +2737,8 @@ setInterval(()=>{applyNightMode();if(document.getElementById('led').classList.co
 stGet('pb:audit').then(r=>{if(r){try{auditLog=JSON.parse(r.value)||[]}catch{auditLog=[]}renderAudit()}});
 load();
 document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&document.body.classList.contains('display')){exitDisplay();return;}
+  if((e.key==='a'||e.key==='A')&&document.body.classList.contains('display')&&!e.target.matches('input,textarea,select')){exitDisplay();return;}
   const tag=(e.target.tagName||'').toLowerCase();const typing=tag==='input'||tag==='textarea'||tag==='select';
   if(e.key==='Escape'){const l=document.getElementById('led');if(l.classList.contains('on')){swLed();return}if(document.getElementById('modal').classList.contains('on')){closeMod();return}}
   if(!typing&&document.getElementById('adm-view').classList.contains('on')){
