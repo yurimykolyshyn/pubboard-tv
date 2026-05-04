@@ -520,11 +520,17 @@ body.nightboost .ltr-ppx{color:#ffd970 !important}
 @keyframes priceflash{0%{background:rgba(232,184,75,.6);transform:scale(1)}60%{background:rgba(232,184,75,.15)}100%{background:transparent;transform:scale(1)}}
 .tvc-ppx.flash{animation:priceflash 1.2s ease-out;border-radius:3px;padding:0 3px;margin:0 -3px}
 
-/* QR code corner */
-.tv-qr{position:absolute;bottom:96px;right:16px;width:96px;background:#fff;padding:8px;border-radius:6px;
-  display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 4px 24px rgba(0,0,0,.6);
-  border:1px solid rgba(0,0,0,.1);z-index:10}
-.tv-qr canvas,.tv-qr svg,.tv-qr img{width:80px;height:80px;display:block}
+/* QR code — draggable floating overlay */
+.tv-qr{position:fixed;bottom:90px;right:18px;width:112px;background:#fff;border-radius:8px;
+  display:flex;flex-direction:column;align-items:stretch;box-shadow:0 6px 32px rgba(0,0,0,.7);
+  border:1px solid rgba(0,0,0,.12);z-index:8500;user-select:none;touch-action:none}
+.tv-qr-bar{padding:5px 8px 4px;background:#efefef;border-radius:8px 8px 0 0;cursor:grab;
+  display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ddd}
+.tv-qr-bar:active{cursor:grabbing}
+.tv-qr-bar-lbl{font-family:var(--fmono);font-size:.46rem;font-weight:700;letter-spacing:1px;color:#666;text-transform:uppercase}
+.tv-qr-bar-grip{color:#bbb;font-size:.75rem;letter-spacing:2px}
+.tv-qr-body{padding:8px;display:flex;flex-direction:column;align-items:center;gap:5px}
+.tv-qr canvas,.tv-qr svg,.tv-qr img{width:90px;height:90px;display:block}
 .tv-qr-lbl{font-family:var(--fmono);font-size:.52rem;font-weight:700;letter-spacing:1px;color:#222;text-transform:uppercase;text-align:center;line-height:1.2}
 
 /* Night-mode contrast boost */
@@ -794,10 +800,6 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
     <div class="tv-prog"><div class="tv-prog-fill" id="tv-prog"></div></div>
     <div class="tv-stage" id="tv-ss"></div>
     <div class="tv-paused" id="tv-paused">ПАУЗА</div>
-    <div class="tv-qr" id="tv-qr" style="display:none">
-      <div id="tv-qr-img"></div>
-      <div class="tv-qr-lbl" id="tv-qr-lbl">МЕНЮ НА ТЕЛЕФОН</div>
-    </div>
     <div class="tv-dots" id="tv-dots"></div>
     <div class="tv-bot"><div class="tv-bot-inner" id="tv-tick"></div></div>
   </div>
@@ -1196,6 +1198,18 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
 
 <!-- PRINT VIEW -->
 <div id="print-view"></div>
+
+<!-- QR FLOATING OVERLAY -->
+<div class="tv-qr" id="tv-qr" style="display:none">
+  <div class="tv-qr-bar" id="tv-qr-bar">
+    <span class="tv-qr-bar-lbl">QR меню</span>
+    <span class="tv-qr-bar-grip">⠿⠿</span>
+  </div>
+  <div class="tv-qr-body">
+    <div id="tv-qr-img"></div>
+    <div class="tv-qr-lbl" id="tv-qr-lbl">МЕНЮ НА ТЕЛЕФОН</div>
+  </div>
+</div>
 
 <!-- LICENCE WATERMARK -->
 <div id="lic-watermark">Powered by PubBoard</div>
@@ -2517,6 +2531,63 @@ function iptvStopPip(){
   if(iptvPipHls){iptvPipHls.destroy();iptvPipHls=null;}
   pv.pause();pv.src='';
 }
+
+// QR drag
+(function(){
+  let dx=0,dy=0,sx=0,sy=0,dragging=false;
+  document.addEventListener('DOMContentLoaded',()=>{
+    const bar=document.getElementById('tv-qr-bar');
+    const qr=document.getElementById('tv-qr');
+    if(!bar||!qr)return;
+    // Restore saved position
+    try{const p=JSON.parse(localStorage.getItem('pb:qr-pos')||'null');if(p&&p.left!=null){qr.style.left=p.left+'px';qr.style.top=p.top+'px';qr.style.right='auto';qr.style.bottom='auto';}}catch{}
+    bar.addEventListener('mousedown',e=>{
+      dragging=true;
+      const r=qr.getBoundingClientRect();
+      dx=r.left;dy=r.top;sx=e.clientX;sy=e.clientY;
+      qr.style.right='auto';qr.style.bottom='auto';
+      qr.style.left=dx+'px';qr.style.top=dy+'px';
+      e.preventDefault();
+    });
+    // Touch support
+    bar.addEventListener('touchstart',e=>{
+      const t=e.touches[0];
+      dragging=true;
+      const r=qr.getBoundingClientRect();
+      dx=r.left;dy=r.top;sx=t.clientX;sy=t.clientY;
+      qr.style.right='auto';qr.style.bottom='auto';
+      qr.style.left=dx+'px';qr.style.top=dy+'px';
+      e.preventDefault();
+    },{passive:false});
+    document.addEventListener('mousemove',e=>{
+      if(!dragging)return;
+      const nx=Math.max(0,Math.min(window.innerWidth-qr.offsetWidth,dx+e.clientX-sx));
+      const ny=Math.max(0,Math.min(window.innerHeight-qr.offsetHeight,dy+e.clientY-sy));
+      qr.style.left=nx+'px';qr.style.top=ny+'px';
+    });
+    document.addEventListener('touchmove',e=>{
+      if(!dragging)return;
+      const t=e.touches[0];
+      const nx=Math.max(0,Math.min(window.innerWidth-qr.offsetWidth,dx+t.clientX-sx));
+      const ny=Math.max(0,Math.min(window.innerHeight-qr.offsetHeight,dy+t.clientY-sy));
+      qr.style.left=nx+'px';qr.style.top=ny+'px';
+      e.preventDefault();
+    },{passive:false});
+    document.addEventListener('mouseup',()=>{
+      if(dragging){
+        dragging=false;
+        // Persist position
+        try{localStorage.setItem('pb:qr-pos',JSON.stringify({left:parseInt(qr.style.left),top:parseInt(qr.style.top)}));}catch{}
+      }
+    });
+    document.addEventListener('touchend',()=>{
+      if(dragging){
+        dragging=false;
+        try{localStorage.setItem('pb:qr-pos',JSON.stringify({left:parseInt(qr.style.left),top:parseInt(qr.style.top)}));}catch{}
+      }
+    });
+  });
+})();
 
 // PiP drag
 (function(){
