@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>PubBoard — TV</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -2539,8 +2542,8 @@ function iptvStopPip(){
     const bar=document.getElementById('tv-qr-bar');
     const qr=document.getElementById('tv-qr');
     if(!bar||!qr)return;
-    // Restore saved position (clear legacy bottom-right default)
-    try{const p=JSON.parse(localStorage.getItem('pb:qr-pos')||'null');if(p&&p.left!=null&&p.top!=null){qr.style.left=p.left+'px';qr.style.top=p.top+'px';qr.style.right='auto';}}catch{}
+    // Restore saved position — only if user explicitly dragged it (v2 key)
+    try{const p=JSON.parse(localStorage.getItem('pb:qr-pos-v2')||'null');if(p&&p.left!=null&&p.top!=null){qr.style.left=p.left+'px';qr.style.top=p.top+'px';qr.style.right='auto';}}catch{}
     bar.addEventListener('mousedown',e=>{
       dragging=true;
       const r=qr.getBoundingClientRect();
@@ -2577,13 +2580,13 @@ function iptvStopPip(){
       if(dragging){
         dragging=false;
         // Persist position
-        try{localStorage.setItem('pb:qr-pos',JSON.stringify({left:parseInt(qr.style.left),top:parseInt(qr.style.top)}));}catch{}
+        try{localStorage.setItem('pb:qr-pos-v2',JSON.stringify({left:parseInt(qr.style.left),top:parseInt(qr.style.top)}));}catch{}
       }
     });
     document.addEventListener('touchend',()=>{
       if(dragging){
         dragging=false;
-        try{localStorage.setItem('pb:qr-pos',JSON.stringify({left:parseInt(qr.style.left),top:parseInt(qr.style.top)}));}catch{}
+        try{localStorage.setItem('pb:qr-pos-v2',JSON.stringify({left:parseInt(qr.style.left),top:parseInt(qr.style.top)}));}catch{}
       }
     });
   });
