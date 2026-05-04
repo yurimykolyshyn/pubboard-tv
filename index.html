@@ -972,38 +972,42 @@ body.display #adm-hint{opacity:1;pointer-events:all}
   <aside class="adm-sidebar">
     <div class="adm-brand">
       <div class="adm-brand-logo">Pub<span>Board</span></div>
-      <div class="adm-brand-sub">Панель керування</div>
+      <div class="adm-brand-sub" data-i18n="a_panel">Панель керування</div>
     </div>
     <div class="adm-sb-stats"><div class="stats" id="adm-stats"></div></div>
     <nav class="adm-nav">
-      <button class="adm-nav-item on" data-tab="beer" onclick="admTab('beer')">
+      <button class="adm-nav-item on" data-tab="beer" data-i18n="a_menu" onclick="admTab('beer')">
         <span class="adm-nav-ico">🍺</span>Меню
       </button>
-      <button class="adm-nav-item" data-tab="settings" onclick="admTab('settings')">
+      <button class="adm-nav-item" data-tab="settings" data-i18n="a_settings" onclick="admTab('settings')">
         <span class="adm-nav-ico">⚙️</span>Налаштування
       </button>
       <div class="adm-nav-div"></div>
-      <button class="adm-nav-item" data-tab="notify" onclick="admTab('notify')">
+      <button class="adm-nav-item" data-tab="notify" data-i18n="a_notify" onclick="admTab('notify')">
         <span class="adm-nav-ico">🔴</span>Сповіщення<span class="adm-nav-lock" id="nav-lock-notify"></span>
       </button>
       <button class="adm-nav-item" data-tab="iptv" onclick="admTab('iptv')">
         <span class="adm-nav-ico">📡</span>IPTV<span class="adm-nav-lock" id="nav-lock-iptv"></span>
       </button>
       <div class="adm-nav-div"></div>
-      <button class="adm-nav-item" data-tab="data" onclick="admTab('data')">
+      <button class="adm-nav-item" data-tab="data" data-i18n="a_data" onclick="admTab('data')">
         <span class="adm-nav-ico">📊</span>Дані
       </button>
     </nav>
     <div class="adm-sb-foot">
       <div class="adm-demo-box">
-        <div class="adm-demo-lbl">🔍 Перегляд як:</div>
+        <div class="adm-demo-lbl"><span data-i18n="a_preview_as">Перегляд як:</span></div>
         <div class="adm-demo-btns">
           <button class="demo-tier-btn" data-tier="free" onclick="setDemoTier('free')">🔒 Free</button>
           <button class="demo-tier-btn" data-tier="pro" onclick="setDemoTier('pro')">✅ Pro</button>
           <button class="demo-tier-btn" data-tier="auto" onclick="setDemoTier('auto')">⚡ Real</button>
         </div>
       </div>
-      <button class="adm-preview-btn" onclick="sw('tv')">📺 Переглянути TV</button>
+      <button class="adm-preview-btn" data-i18n="a_preview_tv" onclick="sw('tv')">📺 Переглянути TV</button>
+      <div class="lang-tgl" style="display:flex;gap:4px;justify-content:center">
+        <button class="lang-uk-btn on" onclick="setLang('uk')" style="flex:1;padding:5px;font-family:var(--fmono);font-size:.58rem;font-weight:700;border:1px solid var(--border2);background:none;color:var(--muted);border-radius:3px;cursor:pointer;transition:all .15s">UA</button>
+        <button class="lang-en-btn" onclick="setLang('en')" style="flex:1;padding:5px;font-family:var(--fmono);font-size:.58rem;font-weight:700;border:1px solid var(--border2);background:none;color:var(--muted);border-radius:3px;cursor:pointer;transition:all .15s">EN</button>
+      </div>
     </div>
   </aside>
 
@@ -1019,30 +1023,30 @@ body.display #adm-hint{opacity:1;pointer-events:all}
   <!-- ══ TAB: MENU ══ -->
   <div class="adm-pane on" id="adm-beer">
     <div class="sctrl">
-      <span>Слайд кожні</span>
+      <span data-i18n="a_slide_every">Слайд кожні</span>
       <input type="range" id="s-dur" min="5" max="60" step="5" value="10" oninput="durInp(this)">
       <span id="s-dv">10 с</span>
-      <label style="margin-left:8px"><input type="checkbox" id="s-auto" checked onchange="togAuto(this)"> Авто</label>
+      <label style="margin-left:8px"><input type="checkbox" id="s-auto" checked onchange="togAuto(this)"> <span data-i18n="a_auto">Авто</span></label>
       <button class="btn btn-g sm" style="margin-left:auto" onclick="prevSlide()">←</button>
       <button class="btn btn-g sm" onclick="nextSlide()">→</button>
     </div>
     <div class="toolbar">
-      <div class="sec" style="margin-bottom:0;flex:1">Список пива</div>
+      <div class="sec" style="margin-bottom:0;flex:1" data-i18n="a_beer_list">Список пива</div>
       <div class="search-w"><span class="s-ico">🔍</span><input id="s-search" placeholder="Пошук… ( / )" oninput="renderTbl()"></div>
-      <button class="btn btn-p" onclick="openMod()">+ Додати <span class="kbd" style="margin-left:4px;background:rgba(0,0,0,.15);border-color:rgba(0,0,0,.2);color:var(--bg)">N</span></button>
+      <button class="btn btn-p" onclick="openMod()" data-i18n="a_add">+ Додати <span class="kbd" style="margin-left:4px;background:rgba(0,0,0,.15);border-color:rgba(0,0,0,.2);color:var(--bg)">N</span></button>
     </div>
     <div class="bulk-bar" id="bulk-bar">
       <span class="bulk-cnt" id="bulk-cnt">0 вибрано</span>
-      <button class="btn btn-g sm" onclick="bulkAvail(true)">✓ В наявності</button>
-      <button class="btn btn-g sm" onclick="bulkAvail(false)">✗ Немає</button>
-      <button class="btn btn-g sm" onclick="bulkLow(true)">⚠ Останній кег</button>
-      <button class="btn btn-g sm" onclick="bulkLow(false)">✕ Зняти мітку</button>
-      <button class="btn btn-d sm" onclick="bulkDelete()">🗑 Видалити</button>
-      <button class="btn btn-g sm" style="margin-left:auto" onclick="bulkClear()">Скасувати</button>
+      <button class="btn btn-g sm" onclick="bulkAvail(true)" data-i18n="a_in_stock">✓ В наявності</button>
+      <button class="btn btn-g sm" onclick="bulkAvail(false)" data-i18n="a_out_stock">✗ Немає</button>
+      <button class="btn btn-g sm" onclick="bulkLow(true)" data-i18n="a_last_keg">⚠ Останній кег</button>
+      <button class="btn btn-g sm" onclick="bulkLow(false)" data-i18n="a_rm_tag">✕ Зняти мітку</button>
+      <button class="btn btn-d sm" onclick="bulkDelete()" data-i18n="a_delete">🗑 Видалити</button>
+      <button class="btn btn-g sm" style="margin-left:auto" onclick="bulkClear()" data-i18n="a_cancel">Скасувати</button>
     </div>
     <div class="chips" id="adm-chips"></div>
     <table class="btbl">
-      <thead><tr><th class="td-sel"><input type="checkbox" id="bulk-all" onchange="bulkToggleAll(this.checked)"></th><th>Фото</th><th>Назва</th><th>Стиль</th><th>Пивоварня / Країна</th><th>ABV</th><th>Тип</th><th>Об'єми/Ціни</th><th>Статус</th><th>Дії</th></tr></thead>
+      <thead><tr><th class="td-sel"><input type="checkbox" id="bulk-all" onchange="bulkToggleAll(this.checked)"></th><th data-i18n="th_photo">Фото</th><th data-i18n="th_name">Назва</th><th data-i18n="th_style">Стиль</th><th data-i18n="th_brewery">Пивоварня / Країна</th><th data-i18n="th_abv">ABV</th><th data-i18n="th_type">Тип</th><th data-i18n="th_vols">Об'єми/Ціни</th><th data-i18n="th_status">Статус</th><th data-i18n="th_actions">Дії</th></tr></thead>
       <tbody id="adm-tbody"></tbody>
     </table>
   </div>
@@ -1053,20 +1057,20 @@ body.display #adm-hint{opacity:1;pointer-events:all}
 
       <!-- Venue -->
       <div class="settings-card">
-        <div class="settings-card-title">🏪 Заклад</div>
-        <div class="fg"><label class="lbl">Назва закладу</label><input class="inp" id="s-nm" placeholder="THE GOLDEN HOP"></div>
-        <div class="fg"><label class="lbl">Слоган</label><input class="inp" id="s-tg" placeholder="Craft beer & good vibes"></div>
-        <div class="fg"><label class="lbl">Мова TV</label>
+        <div class="settings-card-title">🏪 <span data-i18n="a_venue">Заклад</span></div>
+        <div class="fg"><label class="lbl" data-i18n="a_venue_name">Назва закладу</label><input class="inp" id="s-nm" placeholder="THE GOLDEN HOP"></div>
+        <div class="fg"><label class="lbl" data-i18n="a_tagline">Слоган</label><input class="inp" id="s-tg" placeholder="Craft beer & good vibes"></div>
+        <div class="fg"><label class="lbl" data-i18n="a_tv_lang">Мова TV</label>
           <div class="lang-tgl" style="margin-left:0">
-            <button id="lang-uk" onclick="setLang('uk')">UA</button>
-            <button id="lang-en" onclick="setLang('en')">EN</button>
+            <button id="lang-uk" class="lang-uk-btn" onclick="setLang('uk')">UA</button>
+            <button id="lang-en" class="lang-en-btn" onclick="setLang('en')">EN</button>
           </div>
         </div>
         <div class="fg">
-          <label class="lbl">🌤 Місто для погоди</label>
+          <label class="lbl">🌤 <span data-i18n="a_wx_city">Місто для погоди</span></label>
           <div style="display:flex;gap:6px">
             <input class="inp" id="s-city" placeholder="Київ" style="flex:1">
-            <button class="btn btn-g sm" onclick="wxCheck()" id="wx-check-btn">Перевірити</button>
+            <button class="btn btn-g sm" onclick="wxCheck()" id="wx-check-btn" data-i18n="a_check">Перевірити</button>
           </div>
           <div id="wx-check" class="wx-check pending" style="display:none">⏳ Очікування…</div>
         </div>
@@ -1074,17 +1078,17 @@ body.display #adm-hint{opacity:1;pointer-events:all}
 
       <!-- Display -->
       <div class="settings-card">
-        <div class="settings-card-title">🖥 Дисплей</div>
-        <div class="fg"><label class="lbl">Тема</label>
+        <div class="settings-card-title">🖥 <span data-i18n="a_display">Дисплей</span></div>
+        <div class="fg"><label class="lbl" data-i18n="a_theme">Тема</label>
           <div class="tw-opts">
             <button class="tw-opt" id="th-a" onclick="setTheme('a')">🏺 Tavern Bold</button>
             <button class="tw-opt" id="th-b" onclick="setTheme('b')">✒ Chalkboard</button>
           </div>
         </div>
-        <div class="fg"><label class="lbl">Карток на слайді</label>
+        <div class="fg"><label class="lbl" data-i18n="a_cards">Карток на слайді</label>
           <select class="sel" id="s-cols"><option value="3">3</option><option value="4" selected>4</option><option value="6">6</option><option value="8">8</option></select>
         </div>
-        <div class="fg"><label class="lbl">📱 QR-код (посилання)</label>
+        <div class="fg"><label class="lbl">📱 <span data-i18n="a_qr">QR-код (посилання)</span></label>
           <div style="display:flex;gap:6px;align-items:center">
             <input class="inp" id="s-qr" placeholder="https://menu.example.com" style="flex:1">
             <label style="display:flex;align-items:center;gap:5px;font-family:var(--fmono);font-size:.62rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:600"><input type="checkbox" id="s-qr-on" style="accent-color:var(--gold)"> Показ</label>
@@ -1102,11 +1106,11 @@ body.display #adm-hint{opacity:1;pointer-events:all}
 
       <!-- Promotions -->
       <div class="settings-card">
-        <div class="settings-card-title">💰 Акції та знижки</div>
-        <div class="fg"><label class="lbl">⭐ Пиво дня</label><select class="sel" id="s-feat"></select></div>
+        <div class="settings-card-title">💰 <span data-i18n="a_promo">Акції та знижки</span></div>
+        <div class="fg"><label class="lbl">⭐ <span data-i18n="a_beer_day">Пиво дня</span></label><select class="sel" id="s-feat"></select></div>
         <div class="row2">
-          <div class="fg"><label class="lbl">Знижка (%)</label><input class="inp" id="s-disc" type="number" min="0" max="90" step="5" placeholder="20"></div>
-          <div class="fg"><label class="lbl">Режим</label>
+          <div class="fg"><label class="lbl" data-i18n="a_discount">Знижка (%)</label><input class="inp" id="s-disc" type="number" min="0" max="90" step="5" placeholder="20"></div>
+          <div class="fg"><label class="lbl" data-i18n="a_disc_mode">Режим</label>
             <select class="sel" id="s-disc-mode">
               <option value="off">— Без знижки</option>
               <option value="all">Знижка на все</option>
@@ -1116,26 +1120,26 @@ body.display #adm-hint{opacity:1;pointer-events:all}
           </div>
         </div>
         <div class="row2">
-          <div class="fg"><label class="lbl">Категорія</label>
+          <div class="fg"><label class="lbl" data-i18n="a_disc_cat">Категорія</label>
             <select class="sel" id="s-disc-cat"><option value="">—</option><option>Крафт</option><option>Класика</option><option>Імпорт</option><option>Безалкогольне</option><option>Сезонне</option></select>
           </div>
-          <div class="fg"><label class="lbl">Розклад (год.)</label><input class="inp" id="s-disc-hrs" placeholder="17:00–19:00"></div>
+          <div class="fg"><label class="lbl" data-i18n="a_disc_hrs">Розклад (год.)</label><input class="inp" id="s-disc-hrs" placeholder="17:00–19:00"></div>
         </div>
       </div>
 
       <!-- Licence -->
       <div class="settings-card">
-        <div class="settings-card-title">🔑 Ліцензія</div>
+        <div class="settings-card-title">🔑 <span data-i18n="a_licence">Ліцензія</span></div>
         <div class="fg" style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
           <span class="lic-badge" id="lic-badge">🔒 Free</span>
           <span id="lic-pub" style="font-family:var(--fmono);font-size:.65rem;color:var(--muted)"></span>
         </div>
         <div class="lic-status" id="lic-status">Ліцензія не активована — обмежений режим</div>
         <div class="fg" style="margin-top:12px">
-          <label class="lbl">Ліцензійний ключ</label>
+          <label class="lbl" data-i18n="a_lic_key">Ліцензійний ключ</label>
           <div style="display:flex;gap:6px">
             <input class="inp" id="lic-key-inp" placeholder="PUBBOARD-XXXX-XXXX-XXXX" style="flex:1;font-family:var(--fmono);letter-spacing:1px;text-transform:uppercase">
-            <button class="btn btn-p sm" onclick="saveLicenceKey()">Активувати</button>
+            <button class="btn btn-p sm" onclick="saveLicenceKey()" data-i18n="a_activate">Активувати</button>
           </div>
         </div>
         <div style="margin-top:10px;font-family:var(--fmono);font-size:.6rem;color:var(--muted);line-height:1.6">
@@ -1147,8 +1151,8 @@ body.display #adm-hint{opacity:1;pointer-events:all}
 
       <!-- Ticker & Volumes -->
       <div class="settings-card">
-        <div class="settings-card-title">📢 Тікер та об'єми</div>
-        <div class="fg"><label class="lbl">Бігучий рядок</label><textarea class="ta" id="s-tick" placeholder="Оголошення, акції, події…" style="min-height:60px"></textarea></div>
+        <div class="settings-card-title">📢 <span data-i18n="a_ticker_sec">Тікер та об'єми</span></div>
+        <div class="fg"><label class="lbl" data-i18n="a_ticker_lbl">Бігучий рядок</label><textarea class="ta" id="s-tick" placeholder="Оголошення, акції, події…" style="min-height:60px"></textarea></div>
         <div class="gvlb2" style="margin-top:4px">🍺 Кранове</div><div id="gv-tap"></div>
         <div class="gvlb2" style="margin-top:10px">🍾 Пляшкове</div><div id="gv-bot"></div>
         <div style="text-align:right;margin-top:10px"><button class="btn btn-g sm" onclick="saveGv()">Зберегти об'єми</button></div>
@@ -1156,7 +1160,7 @@ body.display #adm-hint{opacity:1;pointer-events:all}
 
     </div>
     <div class="adm-save-bar">
-      <button class="btn btn-p" onclick="saveSettings()">💾 Зберегти налаштування</button>
+      <button class="btn btn-p" onclick="saveSettings()" data-i18n="a_save_settings">💾 Зберегти налаштування</button>
     </div>
   </div>
 
@@ -1170,7 +1174,7 @@ body.display #adm-hint{opacity:1;pointer-events:all}
       <button class="btn btn-p" onclick="admTab('settings')">🔑 Активувати ліцензію</button>
     </div>
     <div id="notify-content">
-    <div class="sec">🔴 LED Сповіщення</div>
+    <div class="sec" data-i18n="a_led_sec">🔴 LED Сповіщення</div>
     <div class="box">
       <div class="led-adm-list" id="led-adm-list"></div>
       <button class="btn btn-g sm" onclick="ledAdd()" style="margin-bottom:4px">+ Додати</button>
@@ -1178,7 +1182,7 @@ body.display #adm-hint{opacity:1;pointer-events:all}
         <div class="led-srow">Швидкість<input type="range" id="led-spd" min="20" max="200" step="10" value="80" oninput="document.getElementById('led-sv').textContent=this.value"><span class="led-sv" id="led-sv">80</span></div>
         <div style="margin-left:auto;display:flex;gap:7px">
           <button class="btn btn-g sm" onclick="swLed()">▶ Перегляд</button>
-          <button class="btn btn-p" onclick="ledSave()">Зберегти</button>
+          <button class="btn btn-p" onclick="ledSave()" data-i18n="a_save_led">Зберегти</button>
         </div>
       </div>
     </div>
@@ -1187,30 +1191,30 @@ body.display #adm-hint{opacity:1;pointer-events:all}
 
   <!-- ══ TAB: DATA ══ -->
   <div class="adm-pane" id="adm-data">
-    <div class="sec">📜 Журнал змін</div>
+    <div class="sec" data-i18n="a_log_sec">📜 Журнал змін</div>
     <div class="box">
       <div class="audit-list" id="audit-list"></div>
       <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
-        <button class="btn btn-g sm" onclick="clearAudit()">Очистити</button>
+        <button class="btn btn-g sm" onclick="clearAudit()" data-i18n="a_clear_log">Очистити</button>
         <button class="btn btn-g sm" onclick="exportAudit()">Експорт CSV</button>
         <div class="kbd-hint" style="margin-left:auto">Гарячі клавіші: <span class="kbd">N</span>новий <span class="kbd">/</span>пошук <span class="kbd">1-4</span>вид <span class="kbd">Space</span>пауза <span class="kbd">←→</span></div>
       </div>
     </div>
 
-    <div class="sec">📥 Імпорт та експорт</div>
+    <div class="sec" data-i18n="a_imp_sec">📥 Імпорт та експорт</div>
     <div class="box">
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
-        <button class="btn btn-g sm" onclick="exportCsv()">⬇ Експорт CSV</button>
-        <button class="btn btn-g sm" onclick="exportJson()">⬇ Бекап JSON</button>
-        <button class="btn btn-g sm" onclick="printMenu()">🖨 Друк меню</button>
-        <label class="btn btn-g sm" style="cursor:pointer"><input type="file" accept=".json" onchange="importJson(this)" style="display:none">⬆ Відновити з JSON</label>
+        <button class="btn btn-g sm" onclick="exportCsv()" data-i18n="a_exp_csv">⬇ Експорт CSV</button>
+        <button class="btn btn-g sm" onclick="exportJson()" data-i18n="a_exp_json">⬇ Бекап JSON</button>
+        <button class="btn btn-g sm" onclick="printMenu()" data-i18n="a_print">🖨 Друк меню</button>
+        <label class="btn btn-g sm" style="cursor:pointer" data-i18n="a_restore"><input type="file" accept=".json" onchange="importJson(this)" style="display:none">⬆ Відновити з JSON</label>
       </div>
       <div class="fg">
         <label class="lbl">Вставте CSV (name,style,brewery,country,abv,serve,cat,avail,desc,img,vols)</label>
         <textarea class="csv-area" id="csv-in" placeholder="Varvar IPA,IPA,Varvar Brew,Україна,6.5,tap,Крафт,1,Яскраві цитруси,,400:145;1000:320"></textarea>
         <div style="display:flex;gap:8px;margin-top:8px">
-          <button class="btn btn-p sm" onclick="importCsv()">Імпортувати</button>
-          <button class="btn btn-g sm" onclick="document.getElementById('csv-in').value=csvTpl()">Шаблон</button>
+          <button class="btn btn-p sm" onclick="importCsv()" data-i18n="a_imp_csv">Імпортувати</button>
+          <button class="btn btn-g sm" onclick="document.getElementById('csv-in').value=csvTpl()" data-i18n="a_tpl">Шаблон</button>
         </div>
       </div>
     </div>
@@ -1226,23 +1230,23 @@ body.display #adm-hint{opacity:1;pointer-events:all}
       <button class="btn btn-p" onclick="admTab('settings')">🔑 Активувати ліцензію</button>
     </div>
     <div id="iptv-content">
-    <div class="sec">📡 IPTV — Завантаження плейлиста</div>
+    <div class="sec" data-i18n="a_iptv_sec">📡 IPTV — Завантаження плейлиста</div>
     <div class="box">
       <div class="iptv-src-methods">
         <div class="iptv-src-card">
-          <div class="iptv-src-title">🔗 URL M3U</div>
+          <div class="iptv-src-title" data-i18n="a_url_card">🔗 URL M3U</div>
           <div class="fg">
-            <label class="lbl">Посилання на M3U / M3U8</label>
+            <label class="lbl" data-i18n="a_url_lbl">Посилання на M3U / M3U8</label>
             <div style="display:flex;gap:6px">
               <input class="inp" id="iptv-url-inp" placeholder="http://…/playlist.m3u" style="flex:1">
-              <button class="btn btn-p sm" onclick="iptvLoadUrl()">Завантажити</button>
+              <button class="btn btn-p sm" onclick="iptvLoadUrl()" data-i18n="a_load">Завантажити</button>
             </div>
           </div>
         </div>
         <div class="iptv-src-card">
-          <div class="iptv-src-title">📁 Файл M3U</div>
+          <div class="iptv-src-title" data-i18n="a_file_card">📁 Файл M3U</div>
           <div class="fg">
-            <label class="lbl">Виберіть файл з диску (.m3u, .m3u8, .txt)</label>
+            <label class="lbl" data-i18n="a_file_lbl">Виберіть файл з диску (.m3u, .m3u8, .txt)</label>
             <label class="btn btn-g sm" style="cursor:pointer;display:inline-flex">
               <input type="file" accept=".m3u,.m3u8,.txt" onchange="iptvLoadFile(this)" style="display:none">
               📂 Обрати файл
@@ -1250,11 +1254,11 @@ body.display #adm-hint{opacity:1;pointer-events:all}
           </div>
         </div>
         <div class="iptv-src-card">
-          <div class="iptv-src-title">📋 Вставити текст</div>
+          <div class="iptv-src-title" data-i18n="a_paste_card">📋 Вставити текст</div>
           <div class="fg">
-            <label class="lbl">Вставте вміст M3U напряму</label>
+            <label class="lbl" data-i18n="a_paste_lbl">Вставте вміст M3U напряму</label>
             <textarea id="iptv-paste-inp" class="inp" rows="4" placeholder="#EXTM3U&#10;#EXTINF:-1 group-title=&quot;Sport&quot;,BBC Sport&#10;http://stream.example.com/bbc-sport" style="width:100%;resize:vertical;font-family:var(--fmono);font-size:.7rem"></textarea>
-            <button class="btn btn-p sm" style="margin-top:6px" onclick="iptvLoadPaste()">📥 Застосувати</button>
+            <button class="btn btn-p sm" style="margin-top:6px" onclick="iptvLoadPaste()" data-i18n="a_apply">📥 Застосувати</button>
           </div>
         </div>
       </div>
@@ -1263,14 +1267,14 @@ body.display #adm-hint{opacity:1;pointer-events:all}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:10px">
           <div class="iptv-adm-cnt" id="iptv-adm-cnt">0 каналів</div>
           <div style="display:flex;gap:6px">
-            <button class="btn btn-g sm" onclick="iptvToggleAll(true)">Увімкнути всі</button>
-            <button class="btn btn-g sm" onclick="iptvToggleAll(false)">Вимкнути всі</button>
-            <button class="btn btn-d sm" onclick="iptvClearAll()">🗑 Очистити</button>
+            <button class="btn btn-g sm" onclick="iptvToggleAll(true)" data-i18n="a_en_all">Увімкнути всі</button>
+            <button class="btn btn-g sm" onclick="iptvToggleAll(false)" data-i18n="a_dis_all">Вимкнути всі</button>
+            <button class="btn btn-d sm" onclick="iptvClearAll()" data-i18n="a_clear_ch">🗑 Очистити</button>
           </div>
         </div>
         <div class="iptv-adm-list" id="iptv-adm-list"></div>
         <div style="text-align:right;margin-top:10px">
-          <button class="btn btn-p" onclick="iptvSave()">💾 Зберегти</button>
+          <button class="btn btn-p" onclick="iptvSave()" data-i18n="a_save_iptv">💾 Зберегти</button>
         </div>
       </div>
     </div>
@@ -1550,8 +1554,8 @@ let pausedByUser=false;
 
 // ── I18N ──
 const I18N={
-  uk:{allCat:'Всі',pos:'позицій',pos1:'позиція',oos:'НЕМАЄ',last:'ОСТАННІЙ КЕГ',tap:'Кран',bottle:'Пляшка',onTap:'На крані',cat:'Категорій',pubDay:'Пиво дня',happyH:'Happy Hour',menu:'МЕНЮ НА ТЕЛЕФОН',paused:'ПАУЗА',unavail:'Меню тимчасово недоступне'},
-  en:{allCat:'All',pos:'items',pos1:'item',oos:'OUT',last:'LAST KEG',tap:'Draft',bottle:'Bottle',onTap:'On tap',cat:'Categories',pubDay:'Beer of the Day',happyH:'Happy Hour',menu:'MENU ON YOUR PHONE',paused:'PAUSED',unavail:'Menu temporarily unavailable'}
+  uk:{allCat:'Всі',pos:'позицій',pos1:'позиція',oos:'НЕМАЄ',last:'ОСТАННІЙ КЕГ',tap:'Кран',bottle:'Пляшка',onTap:'На крані',cat:'Категорій',pubDay:'Пиво дня',happyH:'Happy Hour',menu:'МЕНЮ НА ТЕЛЕФОН',paused:'ПАУЗА',unavail:'Меню тимчасово недоступне',a_panel:'Панель керування',a_menu:'Меню',a_settings:'Налаштування',a_notify:'Сповіщення',a_data:'Дані',a_preview_as:'Перегляд як:',a_preview_tv:'📺 Переглянути TV',a_venue:'Заклад',a_venue_name:'Назва закладу',a_tagline:'Слоган',a_tv_lang:'Мова TV',a_wx_city:'Місто для погоди',a_check:'Перевірити',a_display:'Дисплей',a_theme:'Тема',a_cards:'Карток на слайді',a_qr:'QR-код (посилання)',a_show:'Показ',a_night:'🌙 Авто-контраст після 19:00',a_show_oos:'💤 Показувати «немає» на TV',a_promo:'Акції та знижки',a_beer_day:'Пиво дня',a_discount:'Знижка (%)',a_disc_mode:'Режим',a_disc_cat:'Категорія',a_disc_hrs:'Розклад (год.)',a_licence:'Ліцензія',a_lic_key:'Ліцензійний ключ',a_activate:'Активувати',a_ticker_sec:'Тікер та об\'єми',a_ticker_lbl:'Бігучий рядок',a_tap_lbl:'🍺 Кранове',a_bot_lbl:'🍾 Пляшкове',a_save_vol:'Зберегти об\'єми',a_save_settings:'💾 Зберегти налаштування',a_slide_every:'Слайд кожні',a_auto:'Авто',a_beer_list:'Список пива',a_add:'+ Додати',a_in_stock:'✓ В наявності',a_out_stock:'✗ Немає',a_last_keg:'⚠ Останній кег',a_rm_tag:'✕ Зняти мітку',a_delete:'🗑 Видалити',a_cancel:'Скасувати',th_photo:'Фото',th_name:'Назва',th_style:'Стиль',th_brewery:'Пивоварня / Країна',th_abv:'ABV',th_type:'Тип',th_vols:'Об\'єми / Ціни',th_status:'Статус',th_actions:'Дії',a_led_sec:'🔴 LED Сповіщення',a_iptv_sec:'📡 IPTV — Завантаження плейлиста',a_url_card:'🔗 URL M3U',a_url_lbl:'Посилання на M3U / M3U8',a_load:'Завантажити',a_file_card:'📁 Файл M3U',a_file_lbl:'Виберіть файл з диску (.m3u .m3u8 .txt)',a_choose:'📂 Обрати файл',a_paste_card:'📋 Вставити текст',a_paste_lbl:'Вставте вміст M3U напряму',a_apply:'📥 Застосувати',a_en_all:'Увімкнути всі',a_dis_all:'Вимкнути всі',a_clear_ch:'🗑 Очистити',a_save_iptv:'💾 Зберегти',a_save_led:'💾 Зберегти',a_log_sec:'📜 Журнал змін',a_clear_log:'Очистити',a_exp_csv:'⬇ Експорт CSV',a_exp_json:'⬇ Бекап JSON',a_print:'🖨 Друк меню',a_restore:'⬆ Відновити з JSON',a_imp_csv:'Імпортувати',a_tpl:'Шаблон',a_imp_sec:'📥 Імпорт та експорт'},
+  en:{allCat:'All',pos:'items',pos1:'item',oos:'OUT',last:'LAST KEG',tap:'Draft',bottle:'Bottle',onTap:'On tap',cat:'Categories',pubDay:'Beer of the Day',happyH:'Happy Hour',menu:'MENU ON YOUR PHONE',paused:'PAUSED',unavail:'Menu temporarily unavailable',a_panel:'Control Panel',a_menu:'Menu',a_settings:'Settings',a_notify:'Notifications',a_data:'Data',a_preview_as:'Preview as:',a_preview_tv:'📺 TV Preview',a_venue:'Venue',a_venue_name:'Venue name',a_tagline:'Tagline',a_tv_lang:'TV Language',a_wx_city:'Weather city',a_check:'Check',a_display:'Display',a_theme:'Theme',a_cards:'Cards per slide',a_qr:'QR code (link)',a_show:'Show',a_night:'🌙 Auto-contrast after 19:00',a_show_oos:'💤 Show out-of-stock on TV',a_promo:'Promotions & Discounts',a_beer_day:'Beer of the Day',a_discount:'Discount (%)',a_disc_mode:'Mode',a_disc_cat:'Category',a_disc_hrs:'Schedule (hrs)',a_licence:'Licence',a_lic_key:'Licence key',a_activate:'Activate',a_ticker_sec:'Ticker & Volumes',a_ticker_lbl:'Running ticker',a_tap_lbl:'🍺 On tap',a_bot_lbl:'🍾 Bottled',a_save_vol:'Save volumes',a_save_settings:'💾 Save settings',a_slide_every:'Slide every',a_auto:'Auto',a_beer_list:'Beer list',a_add:'+ Add',a_in_stock:'✓ Available',a_out_stock:'✗ Out of stock',a_last_keg:'⚠ Last keg',a_rm_tag:'✕ Remove tag',a_delete:'🗑 Delete',a_cancel:'Cancel',th_photo:'Photo',th_name:'Name',th_style:'Style',th_brewery:'Brewery / Country',th_abv:'ABV',th_type:'Type',th_vols:'Volumes / Prices',th_status:'Status',th_actions:'Actions',a_led_sec:'🔴 LED Notifications',a_iptv_sec:'📡 IPTV — Load Playlist',a_url_card:'🔗 URL M3U',a_url_lbl:'Link to M3U / M3U8',a_load:'Load',a_file_card:'📁 File M3U',a_file_lbl:'Choose file from disk (.m3u .m3u8 .txt)',a_choose:'📂 Choose file',a_paste_card:'📋 Paste text',a_paste_lbl:'Paste M3U content directly',a_apply:'📥 Apply',a_en_all:'Enable all',a_dis_all:'Disable all',a_clear_ch:'🗑 Clear',a_save_iptv:'💾 Save',a_save_led:'💾 Save',a_log_sec:'📜 Change Log',a_clear_log:'Clear',a_exp_csv:'⬇ Export CSV',a_exp_json:'⬇ Backup JSON',a_print:'🖨 Print menu',a_restore:'⬆ Restore from JSON',a_imp_csv:'Import',a_tpl:'Template',a_imp_sec:'📥 Import & Export'}
 };
 const T=k=>(I18N[settings.lang||'uk']||I18N.uk)[k]||k;
 
@@ -1571,7 +1575,7 @@ async function load(){
   try{const r=await stGet('pb:l');if(r){const d=JSON.parse(r.value);ledMsgs=d.msgs||ledMsgs;ledSpeed=d.speed||ledSpeed}}catch{}
   try{const r=await stGet('pb:d');if(r){slideDur=+r.value;const e=document.getElementById('s-dur'),v=document.getElementById('s-dv'),te=document.getElementById('tw-dur'),tv=document.getElementById('tw-dv');if(e)e.value=slideDur;if(v)v.textContent=slideDur+' с';if(te)te.value=slideDur;if(tv)tv.textContent=slideDur+' с'}}catch{}
   applyTheme();applySettings();renderAll();iptvLoadFromStorage();
-  licenceCheck();
+  licenceCheck();applyLangAdmin();
 }
 const persist=()=>stSet('pb:b',JSON.stringify(beers));
 const persS=()=>stSet('pb:s',JSON.stringify(settings));
@@ -2212,7 +2216,27 @@ function printMenu(){const pv=document.getElementById('print-view');const avail=
 async function wxCheck(){const city=document.getElementById('s-city').value.trim();const el=document.getElementById('wx-check');el.style.display='inline-flex';el.className='wx-check pending';el.textContent='⏳ Перевірка…';if(!city){el.className='wx-check ok';el.textContent='✓ Геолокація (без міста)';return}try{const r=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=uk`);const j=await r.json();if(j.results&&j.results[0]){const h=j.results[0];el.className='wx-check ok';el.textContent=`✓ ${h.name}, ${h.country||''} (${h.latitude.toFixed(2)}, ${h.longitude.toFixed(2)})`}else{el.className='wx-check err';el.textContent='✗ Місто не знайдено'}}catch(e){el.className='wx-check err';el.textContent='✗ Помилка мережі'}}
 
 // ── LANG ──
-function setLang(l){settings.lang=l;persS();document.getElementById('lang-uk').classList.toggle('on',l==='uk');document.getElementById('lang-en').classList.toggle('on',l==='en');renderTV();renderList()}
+function setLang(l){
+  settings.lang=l;persS();
+  document.querySelectorAll('.lang-uk-btn').forEach(b=>b.classList.toggle('on',l==='uk'));
+  document.querySelectorAll('.lang-en-btn').forEach(b=>b.classList.toggle('on',l==='en'));
+  applyLangAdmin();renderTV();renderList();
+}
+function applyLangAdmin(){
+  // Update text content (last text node, preserving icon spans)
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const v=T(el.dataset.i18n);
+    const textNodes=[...el.childNodes].filter(n=>n.nodeType===3&&n.textContent.trim());
+    if(textNodes.length) textNodes[textNodes.length-1].textContent=v;
+    else if(!el.querySelector('[data-i18n]')) el.textContent=v;
+  });
+  // Update placeholders
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=T(el.dataset.i18nPh);});
+  // Sync lang toggle button states
+  const l=settings.lang||'uk';
+  document.querySelectorAll('.lang-uk-btn').forEach(b=>b.classList.toggle('on',l==='uk'));
+  document.querySelectorAll('.lang-en-btn').forEach(b=>b.classList.toggle('on',l==='en'));
+}
 
 // GV
 function renderGv(){
