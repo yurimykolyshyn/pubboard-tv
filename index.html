@@ -521,7 +521,7 @@ body.nightboost .ltr-ppx{color:#ffd970 !important}
 .tvc-ppx.flash{animation:priceflash 1.2s ease-out;border-radius:3px;padding:0 3px;margin:0 -3px}
 
 /* QR code — draggable floating overlay */
-.tv-qr{position:fixed;bottom:90px;right:18px;width:112px;background:#fff;border-radius:8px;
+.tv-qr{position:fixed;top:72px;right:18px;width:112px;background:#fff;border-radius:8px;
   display:flex;flex-direction:column;align-items:stretch;box-shadow:0 6px 32px rgba(0,0,0,.7);
   border:1px solid rgba(0,0,0,.12);z-index:8500;user-select:none;touch-action:none}
 .tv-qr-bar{padding:5px 8px 4px;background:#efefef;border-radius:8px 8px 0 0;cursor:grab;
@@ -2539,8 +2539,8 @@ function iptvStopPip(){
     const bar=document.getElementById('tv-qr-bar');
     const qr=document.getElementById('tv-qr');
     if(!bar||!qr)return;
-    // Restore saved position
-    try{const p=JSON.parse(localStorage.getItem('pb:qr-pos')||'null');if(p&&p.left!=null){qr.style.left=p.left+'px';qr.style.top=p.top+'px';qr.style.right='auto';qr.style.bottom='auto';}}catch{}
+    // Restore saved position (clear legacy bottom-right default)
+    try{const p=JSON.parse(localStorage.getItem('pb:qr-pos')||'null');if(p&&p.left!=null&&p.top!=null){qr.style.left=p.left+'px';qr.style.top=p.top+'px';qr.style.right='auto';}}catch{}
     bar.addEventListener('mousedown',e=>{
       dragging=true;
       const r=qr.getBoundingClientRect();
