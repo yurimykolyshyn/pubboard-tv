@@ -652,6 +652,15 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
 .settings-card-title{font-family:var(--fmono);font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .settings-card-title::after{content:'';flex:1;height:1px;background:var(--border2)}
 .adm-save-bar{display:flex;justify-content:flex-end;padding:16px 0 4px;border-top:1px solid var(--border2);margin-top:20px}
+/* ── LICENCE ── */
+#lic-watermark{position:fixed;bottom:14px;right:18px;font-family:var(--fmono);font-size:.58rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.22);pointer-events:none;z-index:9000;user-select:none}
+.lic-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:2px;font-family:var(--fmono);font-size:.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:var(--bg2);border:1px solid var(--border2)}
+.lic-status{font-family:var(--fmono);font-size:.68rem;color:var(--muted);margin-top:6px;min-height:16px}
+.lic-gate{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:48px 24px;text-align:center;background:rgba(0,0,0,.45);border:1px solid var(--border2);border-radius:4px;backdrop-filter:blur(4px)}
+.lic-gate-ico{font-size:2.5rem;opacity:.7}
+.lic-gate-title{font-family:var(--fmono);font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.lic-gate-desc{color:var(--cream2);font-size:.85rem;max-width:320px;line-height:1.5}
+.lic-gate-price{font-family:var(--fmono);font-size:.68rem;color:var(--muted);letter-spacing:1px}
 /* ── IPTV VIEW ── */
 .iptv-shell{flex:1;display:flex;flex-direction:column;min-height:0;background:var(--bg)}
 .iptv-body{flex:1;display:flex;min-height:0;overflow:hidden}
@@ -1028,6 +1037,28 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
         </div>
       </div>
 
+      <!-- Licence -->
+      <div class="settings-card">
+        <div class="settings-card-title">🔑 Ліцензія</div>
+        <div class="fg" style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span class="lic-badge" id="lic-badge">🔒 Free</span>
+          <span id="lic-pub" style="font-family:var(--fmono);font-size:.65rem;color:var(--muted)"></span>
+        </div>
+        <div class="lic-status" id="lic-status">Ліцензія не активована — обмежений режим</div>
+        <div class="fg" style="margin-top:12px">
+          <label class="lbl">Ліцензійний ключ</label>
+          <div style="display:flex;gap:6px">
+            <input class="inp" id="lic-key-inp" placeholder="PUBBOARD-XXXX-XXXX-XXXX" style="flex:1;font-family:var(--fmono);letter-spacing:1px;text-transform:uppercase">
+            <button class="btn btn-p sm" onclick="saveLicenceKey()">Активувати</button>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-family:var(--fmono);font-size:.6rem;color:var(--muted);line-height:1.6">
+          🔒 Free: до 10 позицій, водяний знак<br>
+          ✅ Pro (£9/міс): без обмежень, IPTV, LED<br>
+          ⭐ Business (£29/міс): мультилокація
+        </div>
+      </div>
+
       <!-- Ticker & Volumes -->
       <div class="settings-card">
         <div class="settings-card-title">📢 Тікер та об'єми</div>
@@ -1045,6 +1076,14 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
 
   <!-- ══ TAB: NOTIFICATIONS ══ -->
   <div class="adm-pane" id="adm-notify">
+    <div id="notify-lic-gate" class="lic-gate" style="display:none">
+      <div class="lic-gate-ico">🔴</div>
+      <div class="lic-gate-title">Функція Pro</div>
+      <div class="lic-gate-desc">LED-тікер та сповіщення доступні у версії Pro та вище</div>
+      <div class="lic-gate-price">від £9 / місяць</div>
+      <button class="btn btn-p" onclick="admTab('settings')">🔑 Активувати ліцензію</button>
+    </div>
+    <div id="notify-content">
     <div class="sec">🔴 LED Сповіщення</div>
     <div class="box">
       <div class="led-adm-list" id="led-adm-list"></div>
@@ -1057,6 +1096,7 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
         </div>
       </div>
     </div>
+    </div><!-- /notify-content -->
   </div>
 
   <!-- ══ TAB: DATA ══ -->
@@ -1092,6 +1132,14 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
 
   <!-- ══ TAB: IPTV ══ -->
   <div class="adm-pane" id="adm-iptv">
+    <div id="iptv-lic-gate" class="lic-gate" style="display:none">
+      <div class="lic-gate-ico">📡</div>
+      <div class="lic-gate-title">Функція Pro</div>
+      <div class="lic-gate-desc">IPTV та стрімінг каналів доступні у версії Pro та вище</div>
+      <div class="lic-gate-price">від £9 / місяць</div>
+      <button class="btn btn-p" onclick="admTab('settings')">🔑 Активувати ліцензію</button>
+    </div>
+    <div id="iptv-content">
     <div class="sec">📡 IPTV — Завантаження плейлиста</div>
     <div class="box">
       <div class="iptv-src-methods">
@@ -1140,6 +1188,7 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
         </div>
       </div>
     </div>
+    </div><!-- /iptv-content -->
   </div>
 
 </div>
@@ -1147,6 +1196,9 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
 
 <!-- PRINT VIEW -->
 <div id="print-view"></div>
+
+<!-- LICENCE WATERMARK -->
+<div id="lic-watermark">Powered by PubBoard</div>
 
 <!-- TWEAKS PANEL -->
 <div id="tweaks">
@@ -1255,6 +1307,103 @@ const LT_ROWS=9;
 const LED_COL={info:{b:'p-info',m:'c-info',l:'INFO'},warning:{b:'p-warn',m:'c-warn',l:'УВАГА'},alert:{b:'p-alrt',m:'c-alrt',l:'ТЕРМІН.'}};
 const CAT_ICON={Крафт:'🍺',Класика:'🥂',Імпорт:'🌍',Безалкогольне:'🫧',Сезонне:'🌿'};
 
+// ── LICENCE ──
+const LICENCE_ENDPOINT='https://pubboard-licence.YOURSUBDOMAIN.workers.dev/validate';
+const FREE_ITEM_CAP=10;
+const TIER_LVL={free:0,pro:1,business:2};
+let licenceState={valid:false,tier:'free',pub:'',validUntil:null,checkedAt:0};
+function tierGate(req){return(TIER_LVL[licenceState.tier]||0)>=(TIER_LVL[req]||0);}
+
+async function licenceCheck(){
+  const r=await stGet('pb:lic-key');
+  const key=(r?.value||'').trim();
+  if(!key){applyTier('free');return;}
+
+  // Restore cached key to input
+  const inp=document.getElementById('lic-key-inp');
+  if(inp&&!inp.value)inp.value=key;
+
+  // Use fresh cache if available (< 24 h)
+  const cr=await stGet('pb:lic-cache');
+  if(cr){
+    try{
+      const c=JSON.parse(cr.value);
+      if(c.checkedAt&&Date.now()-c.checkedAt<86400000){
+        licenceState=c;applyTier(c.valid?c.tier:'free');return;
+      }
+    }catch{}
+  }
+
+  // Validate online
+  try{
+    const res=await fetch(LICENCE_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key})});
+    const data=await res.json();
+    licenceState={...data,checkedAt:Date.now()};
+    stSet('pb:lic-cache',JSON.stringify(licenceState));
+    applyTier(data.valid?data.tier:'free');
+  }catch{
+    // Offline — fall back to cache
+    if(cr){try{const c=JSON.parse(cr.value);licenceState=c;applyTier(c.valid?c.tier:'free');}catch{applyTier('free');}}
+    else applyTier('free');
+  }
+}
+
+function applyTier(tier){
+  licenceState.tier=tier||'free';
+  const isPro=tierGate('pro');
+
+  // Watermark
+  const wm=document.getElementById('lic-watermark');
+  if(wm)wm.style.display=isPro?'none':'';
+
+  // Gate overlays inside tabs
+  const iptvGate=document.getElementById('iptv-lic-gate');
+  const iptvContent=document.getElementById('iptv-content');
+  const notifyGate=document.getElementById('notify-lic-gate');
+  const notifyContent=document.getElementById('notify-content');
+  if(iptvGate)iptvGate.style.display=isPro?'none':'';
+  if(iptvContent)iptvContent.style.display=isPro?'':'none';
+  if(notifyGate)notifyGate.style.display=isPro?'none':'';
+  if(notifyContent)notifyContent.style.display=isPro?'':'none';
+
+  renderLicenceBadge();
+}
+
+function renderLicenceBadge(){
+  const badge=document.getElementById('lic-badge');
+  const status=document.getElementById('lic-status');
+  const pubEl=document.getElementById('lic-pub');
+  const t=licenceState.tier||'free';
+  const meta={free:{label:'🔒 Free',color:'var(--muted)'},pro:{label:'✅ Pro',color:'#5cb85c'},business:{label:'⭐ Business',color:'var(--gold)'}};
+  const m=meta[t]||meta.free;
+  if(badge){badge.textContent=m.label;badge.style.color=m.color;badge.style.borderColor=m.color;}
+  if(pubEl)pubEl.textContent=licenceState.pub||'';
+  if(status){
+    if(licenceState.valid){
+      const exp=licenceState.validUntil?` · діє до ${licenceState.validUntil}`:'';
+      status.textContent='Ліцензія активна'+exp;
+      status.style.color='#5cb85c';
+    }else{
+      status.textContent='Ліцензія не активована — обмежений режим (до '+FREE_ITEM_CAP+' позицій)';
+      status.style.color='var(--muted)';
+    }
+  }
+}
+
+async function saveLicenceKey(){
+  const inp=document.getElementById('lic-key-inp');
+  const key=(inp?.value||'').trim().toUpperCase();
+  if(!key){toast('Введіть ліцензійний ключ','err');return;}
+  if(inp)inp.value=key;
+  await stSet('pb:lic-key',key);
+  await stSet('pb:lic-cache','{}'); // bust cache
+  const st=document.getElementById('lic-status');
+  if(st){st.textContent='Перевірка ключа…';st.style.color='var(--muted)';}
+  await licenceCheck();
+  if(licenceState.valid)toast('Ліцензію активовано ✓','ok');
+  else toast('Ключ недійсний або прострочений','err');
+}
+
 // ── STATE ──
 let beers=[], settings={name:'THE GOLDEN HOP',tag:'Craft beer & good vibes',ticker:'Happy Hour 17:00–19:00 · -20% на крафти · Жива музика щоп\'ятниці',cols:4,city:'',featId:'',theme:'a',catOrder:TWEAK_DEFAULTS.catOrder.slice(),
   qrUrl:'',qrOn:false,showOos:true,night:true,lang:'uk',
@@ -1297,6 +1446,7 @@ async function load(){
   try{const r=await stGet('pb:l');if(r){const d=JSON.parse(r.value);ledMsgs=d.msgs||ledMsgs;ledSpeed=d.speed||ledSpeed}}catch{}
   try{const r=await stGet('pb:d');if(r){slideDur=+r.value;const e=document.getElementById('s-dur'),v=document.getElementById('s-dv'),te=document.getElementById('tw-dur'),tv=document.getElementById('tw-dv');if(e)e.value=slideDur;if(v)v.textContent=slideDur+' с';if(te)te.value=slideDur;if(tv)tv.textContent=slideDur+' с'}}catch{}
   applyTheme();applySettings();renderAll();iptvLoadFromStorage();
+  licenceCheck();
 }
 const persist=()=>stSet('pb:b',JSON.stringify(beers));
 const persS=()=>stSet('pb:s',JSON.stringify(settings));
@@ -1377,10 +1527,11 @@ function sw(v){
   document.getElementById('t-'+v).classList.add('on');
   if(v==='tv'){ltStopAll();renderTV();startAuto()}
   if(v==='list'){stopAuto();renderList()}
-  if(v==='iptv'){stopAuto();ltStopAll();iptvRender();}
+  if(v==='iptv'){if(!tierGate('pro')){toast('📡 IPTV доступний у версії Pro 🔒','err');return;}stopAuto();ltStopAll();iptvRender();}
   if(v==='adm'){stopAuto();ltStopAll();admTab('beer');renderAdm();renderLedAdm();renderFeatSel();applySettings()}
 }
 function swLed(){
+  if(!tierGate('pro')){toast('🔴 LED тікер доступний у версії Pro 🔒','err');return;}
   const el=document.getElementById('led'), btn=document.getElementById('t-led');
   const on=el.classList.toggle('on');
   btn.classList.toggle('led-on',on);
@@ -1570,7 +1721,9 @@ function featuredHTML(){
 function renderTV(){
   stopAuto();applyNightMode();applyQr();
   const ss=document.getElementById('tv-ss'), dots=document.getElementById('tv-dots'), feat=document.getElementById('tv-feat');
-  const avail=settings.showOos?beers.slice().sort((a,b)=>(a.avail===b.avail?0:a.avail?-1:1)):beers.filter(b=>b.avail);
+  let avail=settings.showOos?beers.slice().sort((a,b)=>(a.avail===b.avail?0:a.avail?-1:1)):beers.filter(b=>b.avail);
+  const freeCapped=!tierGate('pro')&&avail.length>FREE_ITEM_CAP;
+  if(freeCapped)avail=avail.slice(0,FREE_ITEM_CAP);
   if(feat)feat.innerHTML=featuredHTML();
   if(feat)feat.style.display=feat.innerHTML.trim()?'':'none';
   if(!avail.length){ss.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-style:italic;font-size:1.2rem">${T('unavail')}</div>`;dots.innerHTML='';slides=[];return}
@@ -1594,6 +1747,12 @@ function renderTV(){
   });
   curSlide=0;renderTicker(avail,'tv-tick');
   if(autoPlay&&slides.length>1)startAuto();
+  // Free tier cap banner
+  let capBanner=document.getElementById('tv-cap-banner');
+  if(freeCapped){
+    if(!capBanner){capBanner=document.createElement('div');capBanner.id='tv-cap-banner';capBanner.style.cssText='position:absolute;bottom:60px;right:20px;background:rgba(0,0,0,.7);border:1px solid var(--gold);border-radius:4px;padding:8px 14px;font-family:var(--fmono);font-size:.6rem;color:var(--gold);letter-spacing:1px;z-index:100;backdrop-filter:blur(4px)';ss.parentElement.style.position='relative';ss.parentElement.appendChild(capBanner);}
+    capBanner.textContent=`🔒 Показано ${FREE_ITEM_CAP} з ${beers.filter(b=>settings.showOos||b.avail).length} позицій · Оновіться до Pro`;
+  }else if(capBanner)capBanner.remove();
 }
 
 function cardHTML(b,ci){
@@ -1675,7 +1834,9 @@ function renderTicker(avail,id){
 // ── LIST VIEW (card-rows, aligned with TV vocabulary) ──
 function renderList(){
   const ss=document.getElementById('lv-ss'), dots=document.getElementById('lv-dots');
-  const avail=settings.showOos?beers.slice().sort((a,b)=>(a.avail===b.avail?0:a.avail?-1:1)):beers.filter(b=>b.avail);
+  let avail=settings.showOos?beers.slice().sort((a,b)=>(a.avail===b.avail?0:a.avail?-1:1)):beers.filter(b=>b.avail);
+  const lvFreeCapped=!tierGate('pro')&&avail.length>FREE_ITEM_CAP;
+  if(lvFreeCapped)avail=avail.slice(0,FREE_ITEM_CAP);
   renderTicker(beers.filter(b=>b.avail),'lv-tick');
   if(!avail.length){ss.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-style:italic;font-size:1.2rem">${T('unavail')}</div>`;dots.innerHTML='';ltSlides=[];return}
   const groups={};avail.forEach(b=>{if(!groups[b.cat])groups[b.cat]=[];groups[b.cat].push(b)});
