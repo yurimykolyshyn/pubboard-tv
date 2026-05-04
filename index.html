@@ -20,6 +20,17 @@
   --fm:'Inter',sans-serif;--fr:'Inter',sans-serif;--fs:'Inter',sans-serif;--fmono:'JetBrains Mono',monospace;
   --price-color:var(--gold-l);
 }
+/* ── LIGHT MODE (overlays on top of any base theme) ── */
+body.light-mode{
+  --bg:#f0ead8;--bg2:#e8e0ca;--bg3:#dfd6bc;--surface:#d4c9aa;
+  --border:#bdb49a;--border2:#a8a08a;
+  --cream:#1a1510;--cream2:#3d3525;--muted:#7a7060;
+  --white:#f8f3e8;
+}
+body.light-mode #nav{background:var(--bg2);border-bottom-color:var(--border)}
+body.light-mode .adm-sidebar{background:var(--bg2)}
+body.light-mode .adm-content{background:var(--bg3)}
+body.light-mode .tv-shell{background:var(--bg)}
 /* Direction B — Chalkboard Editorial */
 body.theme-b{
   --bg:#1a140e;--bg2:#221a12;--bg3:#2a2015;--surface:#352818;
@@ -750,6 +761,24 @@ body.display #adm-hint{opacity:1;pointer-events:all}
 .size-btn{flex:1;padding:8px 6px;border:2px solid var(--border2);border-radius:4px;background:var(--bg);cursor:pointer;text-align:center;transition:all .2s;color:var(--muted);font-family:var(--fmono);font-weight:700;letter-spacing:.5px}
 .size-btn:hover{border-color:var(--muted);color:var(--cream2)}
 .size-btn.on{border-color:var(--gold);background:rgba(201,146,42,.07);color:var(--gold-l)}
+/* Light/Dark mode cards */
+.mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mode-card{border:2px solid var(--border2);border-radius:5px;padding:12px 10px;cursor:pointer;transition:all .2s;background:var(--bg);position:relative;overflow:hidden}
+.mode-card:hover{border-color:var(--muted)}
+.mode-card.on{border-color:var(--gold);background:rgba(201,146,42,.07)}
+.mode-card.on::after{content:'✓';position:absolute;top:6px;right:8px;font-size:.7rem;color:var(--gold);font-weight:800}
+.mode-preview{height:40px;border-radius:3px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;letter-spacing:1px}
+.mode-preview-dark{background:#0a0908;color:#e8b84b}
+.mode-preview-light{background:#f0ead8;color:#1a1510;border:1px solid #bdb49a}
+/* Font cards */
+.font-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.font-card{border:2px solid var(--border2);border-radius:5px;padding:10px 12px;cursor:pointer;transition:all .2s;background:var(--bg);position:relative}
+.font-card:hover{border-color:var(--muted)}
+.font-card.on{border-color:var(--gold);background:rgba(201,146,42,.07)}
+.font-card.on::after{content:'✓';position:absolute;top:6px;right:8px;font-size:.7rem;color:var(--gold);font-weight:800}
+.font-card-name{font-size:.78rem;font-weight:700;color:var(--cream2);margin-bottom:3px}
+.font-card-sample{font-size:1.05rem;color:var(--gold-l);margin-bottom:4px;line-height:1.2}
+.font-card-meta{font-size:.5rem;color:var(--muted);font-family:var(--fmono);letter-spacing:.5px;text-transform:uppercase}
 /* Demo mode banner */
 #demo-banner{position:sticky;top:-28px;margin:-28px -28px 24px;z-index:50;display:flex;align-items:center;gap:10px;padding:8px 20px;background:rgba(201,146,42,.13);border-bottom:1px solid var(--gold-d);font-family:var(--fmono);font-size:.63rem;color:var(--gold-l);letter-spacing:.5px}
 #demo-banner strong{font-weight:800;color:var(--gold)}
@@ -1343,6 +1372,60 @@ body.display #adm-hint{opacity:1;pointer-events:all}
         </div>
       </div>
 
+      <!-- Light / Dark Mode -->
+      <div class="theme-section" style="grid-column:1/-1">
+        <div class="theme-section-title">☀ Режим освітлення</div>
+        <div class="mode-cards">
+          <div class="mode-card on" id="mode-dark" onclick="setLightMode(false)">
+            <div class="mode-preview mode-preview-dark">🌙 Dark</div>
+            <div class="theme-card-lbl">🌙 Темна тема</div>
+            <div class="theme-card-sub">Класичний паб-стиль</div>
+          </div>
+          <div class="mode-card" id="mode-light" onclick="setLightMode(true)">
+            <div class="mode-preview mode-preview-light">☀ Light</div>
+            <div class="theme-card-lbl">☀ Світла тема</div>
+            <div class="theme-card-sub">Денний / вітринний режим</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Google Fonts -->
+      <div class="theme-section" style="grid-column:1/-1">
+        <div class="theme-section-title">✍ Шрифт інтерфейсу</div>
+        <div class="font-grid">
+          <div class="font-card on" id="fp-inter" data-fp="inter" onclick="setFont('inter')">
+            <div class="font-card-name" style="font-family:'Inter',sans-serif">Inter</div>
+            <div class="font-card-sample" style="font-family:'Inter',sans-serif">The Golden Hop</div>
+            <div class="font-card-meta">Сучасний · Sans-serif</div>
+          </div>
+          <div class="font-card" id="fp-fraunces" data-fp="fraunces" onclick="setFont('fraunces')">
+            <div class="font-card-name" style="font-family:'Fraunces',serif">Fraunces</div>
+            <div class="font-card-sample" style="font-family:'Fraunces',serif">The Golden Hop</div>
+            <div class="font-card-meta">Серіф · Пабний стиль</div>
+          </div>
+          <div class="font-card" id="fp-playfair" data-fp="playfair" onclick="setFont('playfair')">
+            <div class="font-card-name" style="font-family:'Playfair Display',serif">Playfair Display</div>
+            <div class="font-card-sample" style="font-family:'Playfair Display',serif">The Golden Hop</div>
+            <div class="font-card-meta">Елегантний · Серіф</div>
+          </div>
+          <div class="font-card" id="fp-oswald" data-fp="oswald" onclick="setFont('oswald')">
+            <div class="font-card-name" style="font-family:'Oswald',sans-serif">Oswald</div>
+            <div class="font-card-sample" style="font-family:'Oswald',sans-serif">The Golden Hop</div>
+            <div class="font-card-meta">Конденсований · Bold</div>
+          </div>
+          <div class="font-card" id="fp-lora" data-fp="lora" onclick="setFont('lora')">
+            <div class="font-card-name" style="font-family:'Lora',serif">Lora</div>
+            <div class="font-card-sample" style="font-family:'Lora',serif">The Golden Hop</div>
+            <div class="font-card-meta">М'який серіф · Читабельний</div>
+          </div>
+          <div class="font-card" id="fp-rajdhani" data-fp="rajdhani" onclick="setFont('rajdhani')">
+            <div class="font-card-name" style="font-family:'Rajdhani',sans-serif">Rajdhani</div>
+            <div class="font-card-sample" style="font-family:'Rajdhani',sans-serif">The Golden Hop</div>
+            <div class="font-card-meta">Геометричний · Сучасний</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1721,7 +1804,8 @@ let beers=[], settings={name:'THE GOLDEN HOP',tag:'Craft beer & good vibes',tick
   discPct:20,discMode:'off',discCat:'',discHrs:'',
   accent:'amber',accentCustom:null,cardRadius:6,density:'normal',
   clockFmt:'24h',nameSize:'normal',
-  showDate:true,showWeather:true,showTicker:true,showFeat:true,showProg:true};
+  showDate:true,showWeather:true,showTicker:true,showFeat:true,showProg:true,
+  lightMode:false,fontPack:'inter'};
 let gv={tap:{300:{on:false,price:0},400:{on:true,price:130},500:{on:false,price:0},1000:{on:true,price:290}},bottle:{330:{on:true,price:95},500:{on:true,price:120}}};
 let slideDur=10,autoPlay=true,editId=null,activeF='all',photoDraft=null;
 let slides=[],curSlide=0,slideTimer=null;
@@ -1816,13 +1900,51 @@ const ACCENTS={
 };
 const NAME_SIZES={small:'1.5rem',normal:'2.3rem',large:'3.2rem'};
 
+// ── FONT PACKS ──
+const FONT_PACKS={
+  inter:    {url:null, fm:"'Inter',sans-serif",   fr:"'Inter',sans-serif",   fs:"'Inter',sans-serif"},
+  fraunces: {url:null, fm:"'Fraunces',serif",      fr:"'Inter',sans-serif",   fs:"'Fraunces',serif"},
+  playfair: {url:'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap',
+              fm:"'Playfair Display',serif",fr:"'Inter',sans-serif",fs:"'Playfair Display',serif"},
+  oswald:   {url:'https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap',
+              fm:"'Oswald',sans-serif",    fr:"'Oswald',sans-serif",  fs:"'Oswald',sans-serif"},
+  lora:     {url:'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap',
+              fm:"'Lora',serif",           fr:"'Lora',serif",          fs:"'Lora',serif"},
+  rajdhani: {url:'https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap',
+              fm:"'Rajdhani',sans-serif",  fr:"'Rajdhani',sans-serif", fs:"'Rajdhani',sans-serif"},
+};
+const _loadedFonts=new Set(['inter','fraunces']); // already in <head>
+function loadGoogleFont(key){
+  if(_loadedFonts.has(key))return;
+  const pack=FONT_PACKS[key];
+  if(!pack||!pack.url)return;
+  const l=document.createElement('link');l.rel='stylesheet';l.href=pack.url;
+  document.head.appendChild(l);_loadedFonts.add(key);
+}
+function applyFont(){
+  const key=settings.fontPack||'inter';
+  const pack=FONT_PACKS[key]||FONT_PACKS.inter;
+  loadGoogleFont(key);
+  const r=document.documentElement.style;
+  r.setProperty('--fm',pack.fm);r.setProperty('--fr',pack.fr);r.setProperty('--fs',pack.fs);
+  document.querySelectorAll('.font-card').forEach(c=>c.classList.toggle('on',c.dataset.fp===key));
+}
+function setFont(key){settings.fontPack=key;applyFont();persS();renderTV();renderList();}
+function applyLightMode(){
+  const on=!!settings.lightMode;
+  document.body.classList.toggle('light-mode',on);
+  document.getElementById('mode-dark')?.classList.toggle('on',!on);
+  document.getElementById('mode-light')?.classList.toggle('on',on);
+}
+function setLightMode(on){settings.lightMode=on;applyLightMode();persS();}
+
 function applyTheme(){
   const t=settings.theme||'a';
-  const classes=[...document.body.classList].filter(c=>!c.startsWith('theme-')&&!c.startsWith('density-')&&c!=='display');
+  const classes=[...document.body.classList].filter(c=>!c.startsWith('theme-')&&!c.startsWith('density-')&&c!=='display'&&c!=='light-mode');
   document.body.className=classes.join(' ')+' theme-'+t+(settings.density&&settings.density!=='normal'?' density-'+settings.density:'');
   // Theme card selection
   ['a','b'].forEach(k=>{document.getElementById('th-card-'+k)?.classList.toggle('on',k===t);document.getElementById('tw-th-'+k)?.classList.toggle('on',k===t);document.getElementById('th-'+k)?.classList.toggle('on',k===t);});
-  applyAccent();applyCardStyle();applyNameSize();applyDisplayOpts();
+  applyAccent();applyCardStyle();applyNameSize();applyDisplayOpts();applyLightMode();applyFont();
 }
 function setTheme(t){
   settings.theme=t;applyTheme();persS();renderTV();renderList();
