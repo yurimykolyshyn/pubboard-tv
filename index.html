@@ -20,17 +20,6 @@
   --fm:'Inter',sans-serif;--fr:'Inter',sans-serif;--fs:'Inter',sans-serif;--fmono:'JetBrains Mono',monospace;
   --price-color:var(--gold-l);
 }
-/* ── LIGHT MODE (overlays on top of any base theme) ── */
-body.light-mode{
-  --bg:#f0ead8;--bg2:#e8e0ca;--bg3:#dfd6bc;--surface:#d4c9aa;
-  --border:#bdb49a;--border2:#a8a08a;
-  --cream:#1a1510;--cream2:#3d3525;--muted:#7a7060;
-  --white:#f8f3e8;
-}
-body.light-mode #nav{background:var(--bg2);border-bottom-color:var(--border)}
-body.light-mode .adm-sidebar{background:var(--bg2)}
-body.light-mode .adm-content{background:var(--bg3)}
-body.light-mode .tv-shell{background:var(--bg)}
 /* Direction B — Chalkboard Editorial */
 body.theme-b{
   --bg:#1a140e;--bg2:#221a12;--bg3:#2a2015;--surface:#352818;
@@ -368,10 +357,8 @@ body.nightboost .ltr-ppx{color:#ffd970 !important}
 .led-tick-item{font-family:var(--fmono);font-size:1rem;letter-spacing:3px;text-transform:uppercase;color:#dd4422;padding:0 70px;font-weight:600}
 
 /* ═══════════════════════════════════════════════════════
-   ADMIN (unchanged structurally, mild visual tune)
+   ADMIN
 ═══════════════════════════════════════════════════════ */
-#adm-view{overflow-y:auto !important}
-.adm{max-width:1200px;margin:0 auto;padding:32px 24px 80px}
 .sec{font-family:var(--fs);font-size:1rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);
   display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .sec::after{content:'';flex:1;height:1px;background:var(--border2)}
@@ -606,9 +593,12 @@ body.nightboost .tvc-meta,body.nightboost .tvc-desc{color:rgba(255,248,228,.82) 
 /* Language toggle */
 .lang-tgl{display:inline-flex;margin-left:10px;border:1px solid var(--border2);border-radius:3px;overflow:hidden}
 .lang-tgl button{background:none;border:none;padding:4px 9px;font-family:var(--fmono);font-size:.6rem;font-weight:700;
-  letter-spacing:1px;color:var(--muted);cursor:pointer;border-right:1px solid var(--border2)}
+  letter-spacing:1px;color:var(--muted);cursor:pointer;border-right:1px solid var(--border2);transition:all .15s}
 .lang-tgl button:last-child{border-right:none}
 .lang-tgl button.on{background:var(--gold);color:var(--bg)}
+/* Sidebar variant — full-width, slightly larger */
+.lang-tgl-sb{margin-left:0;display:flex;width:100%}
+.lang-tgl-sb button{flex:1;padding:6px 4px;font-size:.58rem;text-align:center}
 
 /* Print menu */
 @media print{
@@ -761,15 +751,6 @@ body.display #adm-hint{opacity:1;pointer-events:all}
 .size-btn{flex:1;padding:8px 6px;border:2px solid var(--border2);border-radius:4px;background:var(--bg);cursor:pointer;text-align:center;transition:all .2s;color:var(--muted);font-family:var(--fmono);font-weight:700;letter-spacing:.5px}
 .size-btn:hover{border-color:var(--muted);color:var(--cream2)}
 .size-btn.on{border-color:var(--gold);background:rgba(201,146,42,.07);color:var(--gold-l)}
-/* Light/Dark mode cards */
-.mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.mode-card{border:2px solid var(--border2);border-radius:5px;padding:12px 10px;cursor:pointer;transition:all .2s;background:var(--bg);position:relative;overflow:hidden}
-.mode-card:hover{border-color:var(--muted)}
-.mode-card.on{border-color:var(--gold);background:rgba(201,146,42,.07)}
-.mode-card.on::after{content:'✓';position:absolute;top:6px;right:8px;font-size:.7rem;color:var(--gold);font-weight:800}
-.mode-preview{height:40px;border-radius:3px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;letter-spacing:1px}
-.mode-preview-dark{background:#0a0908;color:#e8b84b}
-.mode-preview-light{background:#f0ead8;color:#1a1510;border:1px solid #bdb49a}
 /* Font cards */
 .font-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .font-card{border:2px solid var(--border2);border-radius:5px;padding:10px 12px;cursor:pointer;transition:all .2s;background:var(--bg);position:relative}
@@ -1091,9 +1072,9 @@ body.display #adm-hint{opacity:1;pointer-events:all}
         </div>
       </div>
       <button class="adm-preview-btn" data-i18n="a_preview_tv" onclick="sw('tv')">📺 Переглянути TV</button>
-      <div class="lang-tgl" style="display:flex;gap:4px;justify-content:center">
-        <button class="lang-uk-btn on" onclick="setLang('uk')" style="flex:1;padding:5px;font-family:var(--fmono);font-size:.58rem;font-weight:700;border:1px solid var(--border2);background:none;color:var(--muted);border-radius:3px;cursor:pointer;transition:all .15s">UA</button>
-        <button class="lang-en-btn" onclick="setLang('en')" style="flex:1;padding:5px;font-family:var(--fmono);font-size:.58rem;font-weight:700;border:1px solid var(--border2);background:none;color:var(--muted);border-radius:3px;cursor:pointer;transition:all .15s">EN</button>
+      <div class="lang-tgl lang-tgl-sb">
+        <button class="lang-uk-btn on" onclick="setLang('uk')">UA</button>
+        <button class="lang-en-btn" onclick="setLang('en')">EN</button>
       </div>
     </div>
   </aside>
@@ -1166,11 +1147,9 @@ body.display #adm-hint{opacity:1;pointer-events:all}
       <!-- Display -->
       <div class="settings-card">
         <div class="settings-card-title">🖥 <span data-i18n="a_display">Дисплей</span></div>
-        <div class="fg"><label class="lbl" data-i18n="a_theme">Тема</label>
-          <div class="tw-opts">
-            <button class="tw-opt" id="th-a" onclick="setTheme('a')">🏺 Tavern Bold</button>
-            <button class="tw-opt" id="th-b" onclick="setTheme('b')">✒ Chalkboard</button>
-          </div>
+        <div class="fg">
+          <label class="lbl" data-i18n="a_theme">Тема та шрифти</label>
+          <button class="btn btn-g sm" style="width:100%;justify-content:center" onclick="admTab('theme')">🎨 Відкрити вкладку Тема →</button>
         </div>
         <div class="fg"><label class="lbl" data-i18n="a_cards">Карток на слайді</label>
           <select class="sel" id="s-cols"><option value="3">3</option><option value="4" selected>4</option><option value="6">6</option><option value="8">8</option></select>
@@ -1369,23 +1348,6 @@ body.display #adm-hint{opacity:1;pointer-events:all}
             <span class="toggle-item-lbl">📊 Прогрес-бар слайдів</span>
             <span class="toggle-switch"><input type="checkbox" id="tog-prog" checked onchange="setDisplayOpt('showProg',this.checked)"><span class="toggle-track"></span></span>
           </label>
-        </div>
-      </div>
-
-      <!-- Light / Dark Mode -->
-      <div class="theme-section" style="grid-column:1/-1">
-        <div class="theme-section-title">☀ Режим освітлення</div>
-        <div class="mode-cards">
-          <div class="mode-card on" id="mode-dark" onclick="setLightMode(false)">
-            <div class="mode-preview mode-preview-dark">🌙 Dark</div>
-            <div class="theme-card-lbl">🌙 Темна тема</div>
-            <div class="theme-card-sub">Класичний паб-стиль</div>
-          </div>
-          <div class="mode-card" id="mode-light" onclick="setLightMode(true)">
-            <div class="mode-preview mode-preview-light">☀ Light</div>
-            <div class="theme-card-lbl">☀ Світла тема</div>
-            <div class="theme-card-sub">Денний / вітринний режим</div>
-          </div>
         </div>
       </div>
 
@@ -1805,7 +1767,7 @@ let beers=[], settings={name:'THE GOLDEN HOP',tag:'Craft beer & good vibes',tick
   accent:'amber',accentCustom:null,cardRadius:6,density:'normal',
   clockFmt:'24h',nameSize:'normal',
   showDate:true,showWeather:true,showTicker:true,showFeat:true,showProg:true,
-  lightMode:false,fontPack:'inter'};
+  fontPack:'inter'};
 let gv={tap:{300:{on:false,price:0},400:{on:true,price:130},500:{on:false,price:0},1000:{on:true,price:290}},bottle:{330:{on:true,price:95},500:{on:true,price:120}}};
 let slideDur=10,autoPlay=true,editId=null,activeF='all',photoDraft=null;
 let slides=[],curSlide=0,slideTimer=null;
@@ -1930,21 +1892,13 @@ function applyFont(){
   document.querySelectorAll('.font-card').forEach(c=>c.classList.toggle('on',c.dataset.fp===key));
 }
 function setFont(key){settings.fontPack=key;applyFont();persS();renderTV();renderList();}
-function applyLightMode(){
-  const on=!!settings.lightMode;
-  document.body.classList.toggle('light-mode',on);
-  document.getElementById('mode-dark')?.classList.toggle('on',!on);
-  document.getElementById('mode-light')?.classList.toggle('on',on);
-}
-function setLightMode(on){settings.lightMode=on;applyLightMode();persS();}
-
 function applyTheme(){
   const t=settings.theme||'a';
-  const classes=[...document.body.classList].filter(c=>!c.startsWith('theme-')&&!c.startsWith('density-')&&c!=='display'&&c!=='light-mode');
+  const classes=[...document.body.classList].filter(c=>!c.startsWith('theme-')&&!c.startsWith('density-')&&c!=='display');
   document.body.className=classes.join(' ')+' theme-'+t+(settings.density&&settings.density!=='normal'?' density-'+settings.density:'');
   // Theme card selection
-  ['a','b'].forEach(k=>{document.getElementById('th-card-'+k)?.classList.toggle('on',k===t);document.getElementById('tw-th-'+k)?.classList.toggle('on',k===t);document.getElementById('th-'+k)?.classList.toggle('on',k===t);});
-  applyAccent();applyCardStyle();applyNameSize();applyDisplayOpts();applyLightMode();applyFont();
+  ['a','b'].forEach(k=>{document.getElementById('th-card-'+k)?.classList.toggle('on',k===t);document.getElementById('tw-th-'+k)?.classList.toggle('on',k===t);});
+  applyAccent();applyCardStyle();applyNameSize();applyDisplayOpts();applyFont();
 }
 function setTheme(t){
   settings.theme=t;applyTheme();persS();renderTV();renderList();
