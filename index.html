@@ -882,11 +882,11 @@ body.display #adm-hint{opacity:1;pointer-events:all}
 <nav id="nav">
   <div class="logo">Pub<span>Board</span></div>
   <div class="tabs">
-    <button class="tab on" id="t-tv"   onclick="sw('tv')">📺 TV Меню</button>
-    <button class="tab"    id="t-list" onclick="sw('list')">📋 Список</button>
-    <button class="tab"    id="t-iptv" onclick="sw('iptv')">📡 IPTV<span class="pip-active-dot" id="pip-nav-dot"></span></button>
-    <button class="tab"    id="t-led"  onclick="swLed()">🔴 Сповіщення</button>
-    <button class="tab"    id="t-adm"  onclick="sw('adm')">⚙ Адмін</button>
+    <button class="tab on" id="t-tv"   onclick="sw('tv')"   data-i18n="nav_tv">📺 TV Меню</button>
+    <button class="tab"    id="t-list" onclick="sw('list')" data-i18n="nav_list">📋 Список</button>
+    <button class="tab"    id="t-iptv" onclick="sw('iptv')" data-i18n="nav_iptv">📡 IPTV<span class="pip-active-dot" id="pip-nav-dot"></span></button>
+    <button class="tab"    id="t-led"  onclick="swLed()"    data-i18n="nav_led">🔴 Сповіщення</button>
+    <button class="tab"    id="t-adm"  onclick="sw('adm')"  data-i18n="nav_adm">⚙ Адмін</button>
   </div>
 </nav>
 
@@ -1047,7 +1047,7 @@ body.display #adm-hint{opacity:1;pointer-events:all}
       <button class="adm-nav-item" data-tab="settings" data-i18n="a_settings" onclick="admTab('settings')">
         <span class="adm-nav-ico">⚙️</span>Налаштування
       </button>
-      <button class="adm-nav-item" data-tab="theme" onclick="admTab('theme')">
+      <button class="adm-nav-item" data-tab="theme" onclick="admTab('theme')" data-i18n="a_nav_theme">
         <span class="adm-nav-ico">🎨</span>Тема
       </button>
       <div class="adm-nav-div"></div>
@@ -1789,9 +1789,11 @@ const I18N={
     allCat:'Всі',pos:'позицій',pos1:'позиція',oos:'НЕМАЄ',last:'ОСТАННІЙ КЕГ',
     tap:'Кран',bottle:'Пляшка',onTap:'На крані',cat:'Категорій',pubDay:'Пиво дня',
     happyH:'Happy Hour',menu:'МЕНЮ НА ТЕЛЕФОН',paused:'ПАУЗА',unavail:'Меню тимчасово недоступне',
+    // Top nav tabs
+    nav_tv:'📺 TV Меню',nav_list:'📋 Список',nav_iptv:'📡 IPTV',nav_led:'🔴 Сповіщення',nav_adm:'⚙ Адмін',
     // Sidebar / nav
     a_panel:'Панель керування',a_menu:'Меню',a_settings:'Налаштування',
-    a_notify:'Сповіщення',a_data:'Дані',
+    a_nav_theme:'Тема',a_notify:'Сповіщення',a_data:'Дані',
     a_preview_as:'Перегляд як:',a_preview_tv:'📺 Переглянути TV',
     // Settings — Venue
     a_venue:'Заклад',a_venue_name:'Назва закладу',a_tagline:'Слоган',
@@ -1861,8 +1863,11 @@ const I18N={
     allCat:'All',pos:'items',pos1:'item',oos:'OUT',last:'LAST KEG',
     tap:'Draft',bottle:'Bottle',onTap:'On tap',cat:'Categories',pubDay:'Beer of the Day',
     happyH:'Happy Hour',menu:'MENU ON YOUR PHONE',paused:'PAUSED',unavail:'Menu temporarily unavailable',
+    // Top nav tabs
+    nav_tv:'📺 TV Menu',nav_list:'📋 List',nav_iptv:'📡 IPTV',nav_led:'🔴 Notifications',nav_adm:'⚙ Admin',
     // Sidebar / nav
     a_panel:'Control Panel',a_menu:'Menu',a_settings:'Settings',
+    a_nav_theme:'Theme',
     a_notify:'Notifications',a_data:'Data',
     a_preview_as:'Preview as:',a_preview_tv:'📺 TV Preview',
     // Settings — Venue
