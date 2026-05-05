@@ -1149,7 +1149,7 @@ body.display #adm-hint{opacity:1;pointer-events:all}
         <div class="settings-card-title">🖥 <span data-i18n="a_display">Дисплей</span></div>
         <div class="fg">
           <label class="lbl" data-i18n="a_theme">Тема та шрифти</label>
-          <button class="btn btn-g sm" style="width:100%;justify-content:center" onclick="admTab('theme')">🎨 Відкрити вкладку Тема →</button>
+          <button class="btn btn-g sm" style="width:100%;justify-content:center" onclick="admTab('theme')" data-i18n="a_open_theme">🎨 Відкрити вкладку Тема →</button>
         </div>
         <div class="fg"><label class="lbl" data-i18n="a_cards">Карток на слайді</label>
           <select class="sel" id="s-cols"><option value="3">3</option><option value="4" selected>4</option><option value="6">6</option><option value="8">8</option></select>
@@ -1162,10 +1162,10 @@ body.display #adm-hint{opacity:1;pointer-events:all}
         </div>
         <div class="fg" style="display:flex;flex-direction:column;gap:7px">
           <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg2);border:1px solid var(--border2);border-radius:3px;cursor:pointer;font-family:var(--fmono);font-size:.72rem;color:var(--cream2)">
-            <input type="checkbox" id="s-night" style="accent-color:var(--gold);width:14px;height:14px"> 🌙 Авто-контраст після 19:00
+            <input type="checkbox" id="s-night" style="accent-color:var(--gold);width:14px;height:14px"> <span data-i18n="a_night">🌙 Авто-контраст після 19:00</span>
           </label>
           <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg2);border:1px solid var(--border2);border-radius:3px;cursor:pointer;font-family:var(--fmono);font-size:.72rem;color:var(--cream2)">
-            <input type="checkbox" id="s-show-oos" style="accent-color:var(--gold);width:14px;height:14px"> 💤 Показувати «немає» на TV
+            <input type="checkbox" id="s-show-oos" style="accent-color:var(--gold);width:14px;height:14px"> <span data-i18n="a_show_oos">💤 Показувати «немає» на TV</span>
           </label>
         </div>
       </div>
@@ -1178,10 +1178,10 @@ body.display #adm-hint{opacity:1;pointer-events:all}
           <div class="fg"><label class="lbl" data-i18n="a_discount">Знижка (%)</label><input class="inp" id="s-disc" type="number" min="0" max="90" step="5" placeholder="20"></div>
           <div class="fg"><label class="lbl" data-i18n="a_disc_mode">Режим</label>
             <select class="sel" id="s-disc-mode">
-              <option value="off">— Без знижки</option>
-              <option value="all">Знижка на все</option>
-              <option value="cat">Тільки категорія</option>
-              <option value="feat">Тільки пиво дня</option>
+              <option value="off" data-i18n="a_disc_off">— Без знижки</option>
+              <option value="all" data-i18n="a_disc_all_items">Знижка на все</option>
+              <option value="cat" data-i18n="a_disc_cat_only">Тільки категорія</option>
+              <option value="feat" data-i18n="a_disc_feat_only">Тільки пиво дня</option>
             </select>
           </div>
         </div>
@@ -1200,7 +1200,7 @@ body.display #adm-hint{opacity:1;pointer-events:all}
           <span class="lic-badge" id="lic-badge">🔒 Free</span>
           <span id="lic-pub" style="font-family:var(--fmono);font-size:.65rem;color:var(--muted)"></span>
         </div>
-        <div class="lic-status" id="lic-status">Ліцензія не активована — обмежений режим</div>
+        <div class="lic-status" id="lic-status" data-i18n="a_lic_inactive">Ліцензія не активована — обмежений режим</div>
         <div class="fg" style="margin-top:12px">
           <label class="lbl" data-i18n="a_lic_key">Ліцензійний ключ</label>
           <div style="display:flex;gap:6px">
@@ -1208,10 +1208,10 @@ body.display #adm-hint{opacity:1;pointer-events:all}
             <button class="btn btn-p sm" onclick="saveLicenceKey()" data-i18n="a_activate">Активувати</button>
           </div>
         </div>
-        <div style="margin-top:10px;font-family:var(--fmono);font-size:.6rem;color:var(--muted);line-height:1.6">
-          🔒 Free: до 10 позицій, водяний знак<br>
-          ✅ Pro (£9/міс): без обмежень, IPTV, LED<br>
-          ⭐ Business (£29/міс): мультилокація
+        <div style="margin-top:10px;font-family:var(--fmono);font-size:.6rem;color:var(--muted);line-height:1.8">
+          <div data-i18n="a_lic_free">🔒 Free: до 10 позицій, водяний знак</div>
+          <div data-i18n="a_lic_pro">✅ Pro (£9/міс): без обмежень, IPTV, LED</div>
+          <div data-i18n="a_lic_biz">⭐ Business (£29/міс): мультилокація</div>
         </div>
       </div>
 
@@ -1221,7 +1221,7 @@ body.display #adm-hint{opacity:1;pointer-events:all}
         <div class="fg"><label class="lbl" data-i18n="a_ticker_lbl">Бігучий рядок</label><textarea class="ta" id="s-tick" placeholder="Оголошення, акції, події…" style="min-height:60px"></textarea></div>
         <div class="gvlb2" style="margin-top:4px">🍺 Кранове</div><div id="gv-tap"></div>
         <div class="gvlb2" style="margin-top:10px">🍾 Пляшкове</div><div id="gv-bot"></div>
-        <div style="text-align:right;margin-top:10px"><button class="btn btn-g sm" onclick="saveGv()">Зберегти об'єми</button></div>
+        <div style="text-align:right;margin-top:10px"><button class="btn btn-g sm" onclick="saveGv()" data-i18n="a_save_vol">Зберегти об'єми</button></div>
       </div>
 
     </div>
@@ -1236,24 +1236,24 @@ body.display #adm-hint{opacity:1;pointer-events:all}
 
       <!-- Base Theme -->
       <div class="theme-section" style="grid-column:1/-1">
-        <div class="theme-section-title">🎨 Базова тема</div>
+        <div class="theme-section-title" data-i18n="a_base_theme">🎨 Базова тема</div>
         <div class="theme-cards">
           <div class="theme-card on" id="th-card-a" onclick="setTheme('a')">
             <div class="theme-card-preview theme-card-preview-a">THE GOLDEN HOP</div>
             <div class="theme-card-lbl">🏺 Tavern Bold</div>
-            <div class="theme-card-sub">Inter · Монохром · Золото</div>
+            <div class="theme-card-sub" data-i18n="a_th_a_sub">Inter · Монохром · Золото</div>
           </div>
           <div class="theme-card" id="th-card-b" onclick="setTheme('b')">
             <div class="theme-card-preview theme-card-preview-b">The Golden Hop</div>
             <div class="theme-card-lbl">✒ Chalkboard</div>
-            <div class="theme-card-sub">Fraunces · Тепліший фон</div>
+            <div class="theme-card-sub" data-i18n="a_th_b_sub">Fraunces · Тепліший фон</div>
           </div>
         </div>
       </div>
 
       <!-- Accent Color -->
       <div class="theme-section">
-        <div class="theme-section-title">🌈 Акцентний колір</div>
+        <div class="theme-section-title" data-i18n="a_accent_sec">🌈 Акцентний колір</div>
         <div class="accent-row">
           <div class="accent-swatch on" data-accent="amber"  style="background:#c9922a" title="🟡 Amber (за замовч.)" onclick="setAccent('amber')"></div>
           <div class="accent-swatch"    data-accent="copper" style="background:#b8622a" title="🟠 Copper"            onclick="setAccent('copper')"></div>
@@ -1263,7 +1263,7 @@ body.display #adm-hint{opacity:1;pointer-events:all}
           <div class="accent-swatch"    data-accent="crimson"style="background:#b82a2a" title="🔴 Crimson"           onclick="setAccent('crimson')"></div>
         </div>
         <div style="margin-top:12px;display:flex;align-items:center;gap:8px">
-          <label class="lbl" style="margin-bottom:0;white-space:nowrap">Свій колір:</label>
+          <label class="lbl" style="margin-bottom:0;white-space:nowrap" data-i18n="a_custom_col">Свій колір:</label>
           <input type="color" id="accent-custom-color" value="#c9922a" style="width:36px;height:28px;border:none;border-radius:3px;cursor:pointer;background:none;padding:0" oninput="setAccentCustom(this.value)">
           <span style="font-family:var(--fmono);font-size:.62rem;color:var(--muted)" id="accent-hex">#c9922a</span>
         </div>
@@ -1271,81 +1271,81 @@ body.display #adm-hint{opacity:1;pointer-events:all}
 
       <!-- Card Style -->
       <div class="theme-section">
-        <div class="theme-section-title">⬜ Стиль карток</div>
-        <div class="lbl" style="margin-bottom:6px">Кути</div>
+        <div class="theme-section-title" data-i18n="a_card_style_sec">⬜ Стиль карток</div>
+        <div class="lbl" style="margin-bottom:6px" data-i18n="a_corners">Кути</div>
         <div class="radius-row" style="margin-bottom:14px">
           <button class="radius-btn" data-r="0" onclick="setCardRadius(0)">
             <div class="radius-preview" style="border-radius:0px"></div>
-            <div class="radius-lbl">Гострі</div>
+            <div class="radius-lbl" data-i18n="a_sharp">Гострі</div>
           </button>
           <button class="radius-btn on" data-r="6" onclick="setCardRadius(6)">
             <div class="radius-preview" style="border-radius:6px"></div>
-            <div class="radius-lbl">Округлі</div>
+            <div class="radius-lbl" data-i18n="a_rounded">Округлі</div>
           </button>
           <button class="radius-btn" data-r="16" onclick="setCardRadius(16)">
             <div class="radius-preview" style="border-radius:16px"></div>
-            <div class="radius-lbl">М'які</div>
+            <div class="radius-lbl" data-i18n="a_soft">М'які</div>
           </button>
         </div>
-        <div class="lbl" style="margin-bottom:6px">Щільність</div>
+        <div class="lbl" style="margin-bottom:6px" data-i18n="a_density_lbl">Щільність</div>
         <div class="density-row">
           <button class="density-btn" data-d="compact" onclick="setDensity('compact')">
             <div class="density-preview" style="--dp-gap:2px"><div class="density-preview-bar"></div><div class="density-preview-bar"></div><div class="density-preview-bar"></div></div>
-            <div class="density-lbl">Компакт</div>
+            <div class="density-lbl" data-i18n="a_compact">Компакт</div>
           </button>
           <button class="density-btn on" data-d="normal" onclick="setDensity('normal')">
             <div class="density-preview" style="--dp-gap:4px"><div class="density-preview-bar"></div><div class="density-preview-bar"></div><div class="density-preview-bar"></div></div>
-            <div class="density-lbl">Звичайна</div>
+            <div class="density-lbl" data-i18n="a_normal_density">Звичайна</div>
           </button>
           <button class="density-btn" data-d="airy" onclick="setDensity('airy')">
             <div class="density-preview" style="--dp-gap:7px"><div class="density-preview-bar"></div><div class="density-preview-bar"></div><div class="density-preview-bar"></div></div>
-            <div class="density-lbl">Просторна</div>
+            <div class="density-lbl" data-i18n="a_airy">Просторна</div>
           </button>
         </div>
       </div>
 
       <!-- Clock & Header -->
       <div class="theme-section">
-        <div class="theme-section-title">⏰ Годинник і шапка</div>
+        <div class="theme-section-title" data-i18n="a_clock_sec">⏰ Годинник і шапка</div>
         <div class="fg">
-          <div class="lbl" style="margin-bottom:6px">Формат часу</div>
+          <div class="lbl" style="margin-bottom:6px" data-i18n="a_time_fmt">Формат часу</div>
           <div class="size-row">
             <button class="size-btn on" data-fmt="24h" onclick="setClockFmt('24h')" style="font-size:.8rem">24:00</button>
             <button class="size-btn" data-fmt="12h" onclick="setClockFmt('12h')" style="font-size:.8rem">12:00 AM</button>
           </div>
         </div>
         <div class="fg" style="margin-top:14px">
-          <div class="lbl" style="margin-bottom:6px">Розмір назви закладу</div>
+          <div class="lbl" style="margin-bottom:6px" data-i18n="a_name_size">Розмір назви закладу</div>
           <div class="size-row">
-            <button class="size-btn" data-sz="small"  onclick="setNameSize('small')"  style="font-size:.7rem">Аа малий</button>
-            <button class="size-btn on" data-sz="normal" onclick="setNameSize('normal')" style="font-size:.82rem">Аа норм.</button>
-            <button class="size-btn" data-sz="large"  onclick="setNameSize('large')"  style="font-size:1rem">Аа великий</button>
+            <button class="size-btn" data-sz="small"  onclick="setNameSize('small')"  style="font-size:.7rem" data-i18n="a_sz_small">Аа малий</button>
+            <button class="size-btn on" data-sz="normal" onclick="setNameSize('normal')" style="font-size:.82rem" data-i18n="a_sz_normal">Аа норм.</button>
+            <button class="size-btn" data-sz="large"  onclick="setNameSize('large')"  style="font-size:1rem" data-i18n="a_sz_large">Аа великий</button>
           </div>
         </div>
       </div>
 
       <!-- Display Toggles -->
       <div class="theme-section">
-        <div class="theme-section-title">👁 Елементи дисплею</div>
+        <div class="theme-section-title" data-i18n="a_disp_els">👁 Елементи дисплею</div>
         <div class="toggle-row">
           <label class="toggle-item">
-            <span class="toggle-item-lbl">📅 Показувати дату</span>
+            <span class="toggle-item-lbl" data-i18n="a_show_date">📅 Показувати дату</span>
             <span class="toggle-switch"><input type="checkbox" id="tog-date" checked onchange="setDisplayOpt('showDate',this.checked)"><span class="toggle-track"></span></span>
           </label>
           <label class="toggle-item">
-            <span class="toggle-item-lbl">🌤 Показувати погоду</span>
+            <span class="toggle-item-lbl" data-i18n="a_show_wx">🌤 Показувати погоду</span>
             <span class="toggle-switch"><input type="checkbox" id="tog-wx" checked onchange="setDisplayOpt('showWeather',this.checked)"><span class="toggle-track"></span></span>
           </label>
           <label class="toggle-item">
-            <span class="toggle-item-lbl">📢 Бігучий рядок</span>
+            <span class="toggle-item-lbl" data-i18n="a_show_ticker_tog">📢 Бігучий рядок</span>
             <span class="toggle-switch"><input type="checkbox" id="tog-ticker" checked onchange="setDisplayOpt('showTicker',this.checked)"><span class="toggle-track"></span></span>
           </label>
           <label class="toggle-item">
-            <span class="toggle-item-lbl">⭐ Смуга «Пиво дня»</span>
+            <span class="toggle-item-lbl" data-i18n="a_show_feat_tog">⭐ Смуга «Пиво дня»</span>
             <span class="toggle-switch"><input type="checkbox" id="tog-feat" checked onchange="setDisplayOpt('showFeat',this.checked)"><span class="toggle-track"></span></span>
           </label>
           <label class="toggle-item">
-            <span class="toggle-item-lbl">📊 Прогрес-бар слайдів</span>
+            <span class="toggle-item-lbl" data-i18n="a_show_prog_tog">📊 Прогрес-бар слайдів</span>
             <span class="toggle-switch"><input type="checkbox" id="tog-prog" checked onchange="setDisplayOpt('showProg',this.checked)"><span class="toggle-track"></span></span>
           </label>
         </div>
@@ -1353,7 +1353,7 @@ body.display #adm-hint{opacity:1;pointer-events:all}
 
       <!-- Google Fonts -->
       <div class="theme-section" style="grid-column:1/-1">
-        <div class="theme-section-title">✍ Шрифт інтерфейсу</div>
+        <div class="theme-section-title" data-i18n="a_font_sec">✍ Шрифт інтерфейсу</div>
         <div class="font-grid">
           <div class="font-card on" id="fp-inter" data-fp="inter" onclick="setFont('inter')">
             <div class="font-card-name" style="font-family:'Inter',sans-serif">Inter</div>
@@ -1395,20 +1395,20 @@ body.display #adm-hint{opacity:1;pointer-events:all}
   <div class="adm-pane" id="adm-notify">
     <div id="notify-lic-gate" class="lic-gate" style="display:none">
       <div class="lic-gate-ico">🔴</div>
-      <div class="lic-gate-title">Функція Pro</div>
-      <div class="lic-gate-desc">LED-тікер та сповіщення доступні у версії Pro та вище</div>
-      <div class="lic-gate-price">від £9 / місяць</div>
-      <button class="btn btn-p" onclick="admTab('settings')">🔑 Активувати ліцензію</button>
+      <div class="lic-gate-title" data-i18n="a_pro_feat">Функція Pro</div>
+      <div class="lic-gate-desc" data-i18n="a_notify_gate">LED-тікер та сповіщення доступні у версії Pro та вище</div>
+      <div class="lic-gate-price" data-i18n="a_price_from">від £9 / місяць</div>
+      <button class="btn btn-p" onclick="admTab('settings')" data-i18n="a_act_lic">🔑 Активувати ліцензію</button>
     </div>
     <div id="notify-content">
     <div class="sec" data-i18n="a_led_sec">🔴 LED Сповіщення</div>
     <div class="box">
       <div class="led-adm-list" id="led-adm-list"></div>
-      <button class="btn btn-g sm" onclick="ledAdd()" style="margin-bottom:4px">+ Додати</button>
+      <button class="btn btn-g sm" onclick="ledAdd()" style="margin-bottom:4px" data-i18n="a_add">+ Додати</button>
       <div class="led-adm-foot">
-        <div class="led-srow">Швидкість<input type="range" id="led-spd" min="20" max="200" step="10" value="80" oninput="document.getElementById('led-sv').textContent=this.value"><span class="led-sv" id="led-sv">80</span></div>
+        <div class="led-srow"><span data-i18n="a_speed">Швидкість</span><input type="range" id="led-spd" min="20" max="200" step="10" value="80" oninput="document.getElementById('led-sv').textContent=this.value"><span class="led-sv" id="led-sv">80</span></div>
         <div style="margin-left:auto;display:flex;gap:7px">
-          <button class="btn btn-g sm" onclick="swLed()">▶ Перегляд</button>
+          <button class="btn btn-g sm" onclick="swLed()" data-i18n="a_preview_btn">▶ Перегляд</button>
           <button class="btn btn-p" onclick="ledSave()" data-i18n="a_save_led">Зберегти</button>
         </div>
       </div>
@@ -1423,8 +1423,8 @@ body.display #adm-hint{opacity:1;pointer-events:all}
       <div class="audit-list" id="audit-list"></div>
       <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
         <button class="btn btn-g sm" onclick="clearAudit()" data-i18n="a_clear_log">Очистити</button>
-        <button class="btn btn-g sm" onclick="exportAudit()">Експорт CSV</button>
-        <div class="kbd-hint" style="margin-left:auto">Гарячі клавіші: <span class="kbd">N</span>новий <span class="kbd">/</span>пошук <span class="kbd">1-4</span>вид <span class="kbd">Space</span>пауза <span class="kbd">←→</span></div>
+        <button class="btn btn-g sm" onclick="exportAudit()" data-i18n="a_export_audit">Експорт CSV</button>
+        <div class="kbd-hint" style="margin-left:auto"><span data-i18n="a_hotkeys">Гарячі клавіші:</span> <span class="kbd">N</span><span data-i18n="a_hk_new">новий</span> <span class="kbd">/</span><span data-i18n="a_hk_search">пошук</span> <span class="kbd">1-4</span><span data-i18n="a_hk_view">вид</span> <span class="kbd">Space</span><span data-i18n="a_hk_pause">пауза</span> <span class="kbd">←→</span></div>
       </div>
     </div>
 
@@ -1437,7 +1437,7 @@ body.display #adm-hint{opacity:1;pointer-events:all}
         <label class="btn btn-g sm" style="cursor:pointer" data-i18n="a_restore"><input type="file" accept=".json" onchange="importJson(this)" style="display:none">⬆ Відновити з JSON</label>
       </div>
       <div class="fg">
-        <label class="lbl">Вставте CSV (name,style,brewery,country,abv,serve,cat,avail,desc,img,vols)</label>
+        <label class="lbl" data-i18n="a_csv_lbl">Вставте CSV (name,style,brewery,country,abv,serve,cat,avail,desc,img,vols)</label>
         <textarea class="csv-area" id="csv-in" placeholder="Varvar IPA,IPA,Varvar Brew,Україна,6.5,tap,Крафт,1,Яскраві цитруси,,400:145;1000:320"></textarea>
         <div style="display:flex;gap:8px;margin-top:8px">
           <button class="btn btn-p sm" onclick="importCsv()" data-i18n="a_imp_csv">Імпортувати</button>
@@ -1451,10 +1451,10 @@ body.display #adm-hint{opacity:1;pointer-events:all}
   <div class="adm-pane" id="adm-iptv">
     <div id="iptv-lic-gate" class="lic-gate" style="display:none">
       <div class="lic-gate-ico">📡</div>
-      <div class="lic-gate-title">Функція Pro</div>
-      <div class="lic-gate-desc">IPTV та стрімінг каналів доступні у версії Pro та вище</div>
-      <div class="lic-gate-price">від £9 / місяць</div>
-      <button class="btn btn-p" onclick="admTab('settings')">🔑 Активувати ліцензію</button>
+      <div class="lic-gate-title" data-i18n="a_pro_feat">Функція Pro</div>
+      <div class="lic-gate-desc" data-i18n="a_iptv_gate">IPTV та стрімінг каналів доступні у версії Pro та вище</div>
+      <div class="lic-gate-price" data-i18n="a_price_from">від £9 / місяць</div>
+      <button class="btn btn-p" onclick="admTab('settings')" data-i18n="a_act_lic">🔑 Активувати ліцензію</button>
     </div>
     <div id="iptv-content">
     <div class="sec" data-i18n="a_iptv_sec">📡 IPTV — Завантаження плейлиста</div>
@@ -1476,7 +1476,7 @@ body.display #adm-hint{opacity:1;pointer-events:all}
             <label class="lbl" data-i18n="a_file_lbl">Виберіть файл з диску (.m3u, .m3u8, .txt)</label>
             <label class="btn btn-g sm" style="cursor:pointer;display:inline-flex">
               <input type="file" accept=".m3u,.m3u8,.txt" onchange="iptvLoadFile(this)" style="display:none">
-              📂 Обрати файл
+              <span data-i18n="a_choose">📂 Обрати файл</span>
             </label>
           </div>
         </div>
@@ -1785,8 +1785,150 @@ let pausedByUser=false;
 
 // ── I18N ──
 const I18N={
-  uk:{allCat:'Всі',pos:'позицій',pos1:'позиція',oos:'НЕМАЄ',last:'ОСТАННІЙ КЕГ',tap:'Кран',bottle:'Пляшка',onTap:'На крані',cat:'Категорій',pubDay:'Пиво дня',happyH:'Happy Hour',menu:'МЕНЮ НА ТЕЛЕФОН',paused:'ПАУЗА',unavail:'Меню тимчасово недоступне',a_panel:'Панель керування',a_menu:'Меню',a_settings:'Налаштування',a_notify:'Сповіщення',a_data:'Дані',a_preview_as:'Перегляд як:',a_preview_tv:'📺 Переглянути TV',a_venue:'Заклад',a_venue_name:'Назва закладу',a_tagline:'Слоган',a_tv_lang:'Мова TV',a_wx_city:'Місто для погоди',a_check:'Перевірити',a_display:'Дисплей',a_theme:'Тема',a_cards:'Карток на слайді',a_qr:'QR-код (посилання)',a_show:'Показ',a_night:'🌙 Авто-контраст після 19:00',a_show_oos:'💤 Показувати «немає» на TV',a_promo:'Акції та знижки',a_beer_day:'Пиво дня',a_discount:'Знижка (%)',a_disc_mode:'Режим',a_disc_cat:'Категорія',a_disc_hrs:'Розклад (год.)',a_licence:'Ліцензія',a_lic_key:'Ліцензійний ключ',a_activate:'Активувати',a_ticker_sec:'Тікер та об\'єми',a_ticker_lbl:'Бігучий рядок',a_tap_lbl:'🍺 Кранове',a_bot_lbl:'🍾 Пляшкове',a_save_vol:'Зберегти об\'єми',a_save_settings:'💾 Зберегти налаштування',a_slide_every:'Слайд кожні',a_auto:'Авто',a_beer_list:'Список пива',a_add:'+ Додати',a_in_stock:'✓ В наявності',a_out_stock:'✗ Немає',a_last_keg:'⚠ Останній кег',a_rm_tag:'✕ Зняти мітку',a_delete:'🗑 Видалити',a_cancel:'Скасувати',th_photo:'Фото',th_name:'Назва',th_style:'Стиль',th_brewery:'Пивоварня / Країна',th_abv:'ABV',th_type:'Тип',th_vols:'Об\'єми / Ціни',th_status:'Статус',th_actions:'Дії',a_led_sec:'🔴 LED Сповіщення',a_iptv_sec:'📡 IPTV — Завантаження плейлиста',a_url_card:'🔗 URL M3U',a_url_lbl:'Посилання на M3U / M3U8',a_load:'Завантажити',a_file_card:'📁 Файл M3U',a_file_lbl:'Виберіть файл з диску (.m3u .m3u8 .txt)',a_choose:'📂 Обрати файл',a_paste_card:'📋 Вставити текст',a_paste_lbl:'Вставте вміст M3U напряму',a_apply:'📥 Застосувати',a_en_all:'Увімкнути всі',a_dis_all:'Вимкнути всі',a_clear_ch:'🗑 Очистити',a_save_iptv:'💾 Зберегти',a_save_led:'💾 Зберегти',a_log_sec:'📜 Журнал змін',a_clear_log:'Очистити',a_exp_csv:'⬇ Експорт CSV',a_exp_json:'⬇ Бекап JSON',a_print:'🖨 Друк меню',a_restore:'⬆ Відновити з JSON',a_imp_csv:'Імпортувати',a_tpl:'Шаблон',a_imp_sec:'📥 Імпорт та експорт'},
-  en:{allCat:'All',pos:'items',pos1:'item',oos:'OUT',last:'LAST KEG',tap:'Draft',bottle:'Bottle',onTap:'On tap',cat:'Categories',pubDay:'Beer of the Day',happyH:'Happy Hour',menu:'MENU ON YOUR PHONE',paused:'PAUSED',unavail:'Menu temporarily unavailable',a_panel:'Control Panel',a_menu:'Menu',a_settings:'Settings',a_notify:'Notifications',a_data:'Data',a_preview_as:'Preview as:',a_preview_tv:'📺 TV Preview',a_venue:'Venue',a_venue_name:'Venue name',a_tagline:'Tagline',a_tv_lang:'TV Language',a_wx_city:'Weather city',a_check:'Check',a_display:'Display',a_theme:'Theme',a_cards:'Cards per slide',a_qr:'QR code (link)',a_show:'Show',a_night:'🌙 Auto-contrast after 19:00',a_show_oos:'💤 Show out-of-stock on TV',a_promo:'Promotions & Discounts',a_beer_day:'Beer of the Day',a_discount:'Discount (%)',a_disc_mode:'Mode',a_disc_cat:'Category',a_disc_hrs:'Schedule (hrs)',a_licence:'Licence',a_lic_key:'Licence key',a_activate:'Activate',a_ticker_sec:'Ticker & Volumes',a_ticker_lbl:'Running ticker',a_tap_lbl:'🍺 On tap',a_bot_lbl:'🍾 Bottled',a_save_vol:'Save volumes',a_save_settings:'💾 Save settings',a_slide_every:'Slide every',a_auto:'Auto',a_beer_list:'Beer list',a_add:'+ Add',a_in_stock:'✓ Available',a_out_stock:'✗ Out of stock',a_last_keg:'⚠ Last keg',a_rm_tag:'✕ Remove tag',a_delete:'🗑 Delete',a_cancel:'Cancel',th_photo:'Photo',th_name:'Name',th_style:'Style',th_brewery:'Brewery / Country',th_abv:'ABV',th_type:'Type',th_vols:'Volumes / Prices',th_status:'Status',th_actions:'Actions',a_led_sec:'🔴 LED Notifications',a_iptv_sec:'📡 IPTV — Load Playlist',a_url_card:'🔗 URL M3U',a_url_lbl:'Link to M3U / M3U8',a_load:'Load',a_file_card:'📁 File M3U',a_file_lbl:'Choose file from disk (.m3u .m3u8 .txt)',a_choose:'📂 Choose file',a_paste_card:'📋 Paste text',a_paste_lbl:'Paste M3U content directly',a_apply:'📥 Apply',a_en_all:'Enable all',a_dis_all:'Disable all',a_clear_ch:'🗑 Clear',a_save_iptv:'💾 Save',a_save_led:'💾 Save',a_log_sec:'📜 Change Log',a_clear_log:'Clear',a_exp_csv:'⬇ Export CSV',a_exp_json:'⬇ Backup JSON',a_print:'🖨 Print menu',a_restore:'⬆ Restore from JSON',a_imp_csv:'Import',a_tpl:'Template',a_imp_sec:'📥 Import & Export'}
+  uk:{
+    allCat:'Всі',pos:'позицій',pos1:'позиція',oos:'НЕМАЄ',last:'ОСТАННІЙ КЕГ',
+    tap:'Кран',bottle:'Пляшка',onTap:'На крані',cat:'Категорій',pubDay:'Пиво дня',
+    happyH:'Happy Hour',menu:'МЕНЮ НА ТЕЛЕФОН',paused:'ПАУЗА',unavail:'Меню тимчасово недоступне',
+    // Sidebar / nav
+    a_panel:'Панель керування',a_menu:'Меню',a_settings:'Налаштування',
+    a_notify:'Сповіщення',a_data:'Дані',
+    a_preview_as:'Перегляд як:',a_preview_tv:'📺 Переглянути TV',
+    // Settings — Venue
+    a_venue:'Заклад',a_venue_name:'Назва закладу',a_tagline:'Слоган',
+    a_tv_lang:'Мова TV',a_wx_city:'Місто для погоди',a_check:'Перевірити',
+    // Settings — Display
+    a_display:'Дисплей',a_theme:'Тема та шрифти',a_open_theme:'🎨 Відкрити вкладку Тема →',
+    a_cards:'Карток на слайді',a_qr:'QR-код (посилання)',a_show:'Показ',
+    a_night:'🌙 Авто-контраст після 19:00',a_show_oos:'💤 Показувати «немає» на TV',
+    // Settings — Promos
+    a_promo:'Акції та знижки',a_beer_day:'Пиво дня',
+    a_discount:'Знижка (%)',a_disc_mode:'Режим',a_disc_cat:'Категорія',a_disc_hrs:'Розклад (год.)',
+    a_disc_off:'— Без знижки',a_disc_all_items:'Знижка на все',
+    a_disc_cat_only:'Тільки категорія',a_disc_feat_only:'Тільки пиво дня',
+    // Settings — Licence
+    a_licence:'Ліцензія',a_lic_key:'Ліцензійний ключ',a_activate:'Активувати',
+    a_lic_inactive:'Ліцензія не активована — обмежений режим',
+    a_lic_free:'🔒 Free: до 10 позицій, водяний знак',
+    a_lic_pro:'✅ Pro (£9/міс): без обмежень, IPTV, LED',
+    a_lic_biz:'⭐ Business (£29/міс): мультилокація',
+    a_lic_info:'🔒 Free: до 10 позицій, водяний знак\n✅ Pro (£9/міс): без обмежень, IPTV, LED\n⭐ Business (£29/міс): мультилокація',
+    // Settings — Ticker/Volumes
+    a_ticker_sec:'Тікер та об\'єми',a_ticker_lbl:'Бігучий рядок',
+    a_tap_lbl:'🍺 Кранове',a_bot_lbl:'🍾 Пляшкове',
+    a_save_vol:'Зберегти об\'єми',a_save_settings:'💾 Зберегти налаштування',
+    // Beer list controls
+    a_slide_every:'Слайд кожні',a_auto:'Авто',a_beer_list:'Список пива',
+    a_add:'+ Додати',a_in_stock:'✓ В наявності',a_out_stock:'✗ Немає',
+    a_last_keg:'⚠ Останній кег',a_rm_tag:'✕ Зняти мітку',a_delete:'🗑 Видалити',a_cancel:'Скасувати',
+    // Table headers
+    th_photo:'Фото',th_name:'Назва',th_style:'Стиль',th_brewery:'Пивоварня / Країна',
+    th_abv:'ABV',th_type:'Тип',th_vols:'Об\'єми / Ціни',th_status:'Статус',th_actions:'Дії',
+    // Pro gate
+    a_pro_feat:'Функція Pro',a_price_from:'від £9 / місяць',a_act_lic:'🔑 Активувати ліцензію',
+    a_notify_gate:'LED-тікер та сповіщення доступні у версії Pro та вище',
+    a_iptv_gate:'IPTV та стрімінг каналів доступні у версії Pro та вище',
+    // Notifications tab
+    a_led_sec:'🔴 LED Сповіщення',a_speed:'Швидкість',a_preview_btn:'▶ Перегляд',
+    a_save_led:'💾 Зберегти',
+    // IPTV tab
+    a_iptv_sec:'📡 IPTV — Завантаження плейлиста',
+    a_url_card:'🔗 URL M3U',a_url_lbl:'Посилання на M3U / M3U8',a_load:'Завантажити',
+    a_file_card:'📁 Файл M3U',a_file_lbl:'Виберіть файл з диску (.m3u .m3u8 .txt)',
+    a_choose:'📂 Обрати файл',
+    a_paste_card:'📋 Вставити текст',a_paste_lbl:'Вставте вміст M3U напряму',a_apply:'📥 Застосувати',
+    a_en_all:'Увімкнути всі',a_dis_all:'Вимкнути всі',a_clear_ch:'🗑 Очистити',a_save_iptv:'💾 Зберегти',
+    // Data tab
+    a_log_sec:'📜 Журнал змін',a_clear_log:'Очистити',a_export_audit:'Експорт CSV',
+    a_hotkeys:'Гарячі клавіші:',a_hk_new:'новий',a_hk_search:'пошук',a_hk_view:'вид',a_hk_pause:'пауза',
+    a_csv_lbl:'Вставте CSV (name,style,brewery,country,abv,serve,cat,avail,desc,img,vols)',
+    a_imp_sec:'📥 Імпорт та експорт',
+    a_exp_csv:'⬇ Експорт CSV',a_exp_json:'⬇ Бекап JSON',a_print:'🖨 Друк меню',
+    a_restore:'⬆ Відновити з JSON',a_imp_csv:'Імпортувати',a_tpl:'Шаблон',
+    // Theme tab
+    a_base_theme:'🎨 Базова тема',a_th_a_sub:'Inter · Монохром · Золото',a_th_b_sub:'Fraunces · Тепліший фон',
+    a_accent_sec:'🌈 Акцентний колір',a_custom_col:'Свій колір:',
+    a_card_style_sec:'⬜ Стиль карток',a_corners:'Кути',
+    a_sharp:'Гострі',a_rounded:'Округлі',a_soft:'М\'які',
+    a_density_lbl:'Щільність',a_compact:'Компакт',a_normal_density:'Звичайна',a_airy:'Просторна',
+    a_clock_sec:'⏰ Годинник і шапка',a_time_fmt:'Формат часу',a_name_size:'Розмір назви закладу',
+    a_sz_small:'Аа малий',a_sz_normal:'Аа норм.',a_sz_large:'Аа великий',
+    a_disp_els:'👁 Елементи дисплею',
+    a_show_date:'📅 Показувати дату',a_show_wx:'🌤 Показувати погоду',
+    a_show_ticker_tog:'📢 Бігучий рядок',a_show_feat_tog:'⭐ Смуга «Пиво дня»',a_show_prog_tog:'📊 Прогрес-бар слайдів',
+    a_font_sec:'✍ Шрифт інтерфейсу',
+  },
+  en:{
+    allCat:'All',pos:'items',pos1:'item',oos:'OUT',last:'LAST KEG',
+    tap:'Draft',bottle:'Bottle',onTap:'On tap',cat:'Categories',pubDay:'Beer of the Day',
+    happyH:'Happy Hour',menu:'MENU ON YOUR PHONE',paused:'PAUSED',unavail:'Menu temporarily unavailable',
+    // Sidebar / nav
+    a_panel:'Control Panel',a_menu:'Menu',a_settings:'Settings',
+    a_notify:'Notifications',a_data:'Data',
+    a_preview_as:'Preview as:',a_preview_tv:'📺 TV Preview',
+    // Settings — Venue
+    a_venue:'Venue',a_venue_name:'Venue name',a_tagline:'Tagline',
+    a_tv_lang:'TV Language',a_wx_city:'Weather city',a_check:'Check',
+    // Settings — Display
+    a_display:'Display',a_theme:'Theme & Fonts',a_open_theme:'🎨 Open Theme tab →',
+    a_cards:'Cards per slide',a_qr:'QR code (link)',a_show:'Show',
+    a_night:'🌙 Auto-contrast after 19:00',a_show_oos:'💤 Show out-of-stock on TV',
+    // Settings — Promos
+    a_promo:'Promotions & Discounts',a_beer_day:'Beer of the Day',
+    a_discount:'Discount (%)',a_disc_mode:'Mode',a_disc_cat:'Category',a_disc_hrs:'Schedule (hrs)',
+    a_disc_off:'— No discount',a_disc_all_items:'All items',
+    a_disc_cat_only:'By category only',a_disc_feat_only:'Beer of the day only',
+    // Settings — Licence
+    a_licence:'Licence',a_lic_key:'Licence key',a_activate:'Activate',
+    a_lic_inactive:'Licence not activated — limited mode',
+    a_lic_free:'🔒 Free: up to 10 items, watermark',
+    a_lic_pro:'✅ Pro (£9/mo): unlimited, IPTV, LED',
+    a_lic_biz:'⭐ Business (£29/mo): multi-location',
+    a_lic_info:'🔒 Free: up to 10 items, watermark\n✅ Pro (£9/mo): unlimited, IPTV, LED\n⭐ Business (£29/mo): multi-location',
+    // Settings — Ticker/Volumes
+    a_ticker_sec:'Ticker & Volumes',a_ticker_lbl:'Running ticker',
+    a_tap_lbl:'🍺 On tap',a_bot_lbl:'🍾 Bottled',
+    a_save_vol:'Save volumes',a_save_settings:'💾 Save settings',
+    // Beer list controls
+    a_slide_every:'Slide every',a_auto:'Auto',a_beer_list:'Beer list',
+    a_add:'+ Add',a_in_stock:'✓ Available',a_out_stock:'✗ Out of stock',
+    a_last_keg:'⚠ Last keg',a_rm_tag:'✕ Remove tag',a_delete:'🗑 Delete',a_cancel:'Cancel',
+    // Table headers
+    th_photo:'Photo',th_name:'Name',th_style:'Style',th_brewery:'Brewery / Country',
+    th_abv:'ABV',th_type:'Type',th_vols:'Volumes / Prices',th_status:'Status',th_actions:'Actions',
+    // Pro gate
+    a_pro_feat:'Pro Feature',a_price_from:'from £9 / month',a_act_lic:'🔑 Activate Licence',
+    a_notify_gate:'LED ticker & notifications available in Pro and above',
+    a_iptv_gate:'IPTV streaming available in Pro and above',
+    // Notifications tab
+    a_led_sec:'🔴 LED Notifications',a_speed:'Speed',a_preview_btn:'▶ Preview',
+    a_save_led:'💾 Save',
+    // IPTV tab
+    a_iptv_sec:'📡 IPTV — Load Playlist',
+    a_url_card:'🔗 URL M3U',a_url_lbl:'Link to M3U / M3U8',a_load:'Load',
+    a_file_card:'📁 File M3U',a_file_lbl:'Choose file from disk (.m3u .m3u8 .txt)',
+    a_choose:'📂 Choose file',
+    a_paste_card:'📋 Paste text',a_paste_lbl:'Paste M3U content directly',a_apply:'📥 Apply',
+    a_en_all:'Enable all',a_dis_all:'Disable all',a_clear_ch:'🗑 Clear',a_save_iptv:'💾 Save',
+    // Data tab
+    a_log_sec:'📜 Change Log',a_clear_log:'Clear',a_export_audit:'Export CSV',
+    a_hotkeys:'Hotkeys:',a_hk_new:'new',a_hk_search:'search',a_hk_view:'view',a_hk_pause:'pause',
+    a_csv_lbl:'Paste CSV (name,style,brewery,country,abv,serve,cat,avail,desc,img,vols)',
+    a_imp_sec:'📥 Import & Export',
+    a_exp_csv:'⬇ Export CSV',a_exp_json:'⬇ Backup JSON',a_print:'🖨 Print menu',
+    a_restore:'⬆ Restore from JSON',a_imp_csv:'Import',a_tpl:'Template',
+    // Theme tab
+    a_base_theme:'🎨 Base Theme',a_th_a_sub:'Inter · Monochrome · Gold',a_th_b_sub:'Fraunces · Warmer palette',
+    a_accent_sec:'🌈 Accent Colour',a_custom_col:'Custom:',
+    a_card_style_sec:'⬜ Card Style',a_corners:'Corners',
+    a_sharp:'Sharp',a_rounded:'Rounded',a_soft:'Soft',
+    a_density_lbl:'Density',a_compact:'Compact',a_normal_density:'Normal',a_airy:'Airy',
+    a_clock_sec:'⏰ Clock & Header',a_time_fmt:'Time format',a_name_size:'Venue name size',
+    a_sz_small:'Aa small',a_sz_normal:'Aa normal',a_sz_large:'Aa large',
+    a_disp_els:'👁 Display Elements',
+    a_show_date:'📅 Show date',a_show_wx:'🌤 Show weather',
+    a_show_ticker_tog:'📢 Ticker',a_show_feat_tog:'⭐ Beer of the Day strip',a_show_prog_tog:'📊 Slide progress bar',
+    a_font_sec:'✍ Interface Font',
+  }
 };
 const T=k=>(I18N[settings.lang||'uk']||I18N.uk)[k]||k;
 
